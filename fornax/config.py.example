@@ -1,0 +1,8 @@
+# Local config file - rename to config.py
+
+ARCHIVESSPACE = {
+    "baseurl": "http://localhost:8089",
+    "username": "admin",
+    "password": "admin",
+    "repo_id": "2"
+}

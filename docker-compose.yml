@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: example
   web:
     build: .
-    # entrypoint: /code/entrypoint.sh
+    entrypoint: /code/entrypoint.sh
     volumes:
       - .:/code
     ports:
