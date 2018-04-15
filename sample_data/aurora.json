@@ -1,0 +1,83 @@
+{
+    "url": "http://10.9.3.3:8000/api/transfers/959/",
+    "organization": "http://10.9.3.3:8000/api/orgs/1/",
+    "bag_it_name": "valid_bag",
+    "process_status": 75,
+    "file_size": "440",
+    "file_type": "ZIP",
+    "appraisal_note": "",
+    "additional_error_info": null,
+    "metadata": {
+        "source_organization": "Ford Foundation",
+        "external_identifier": "records-2017-11-04T14:40:17.118401",
+        "title": "Grant to the Village Green Preservation Society",
+        "record_creators": [
+            "Custard Pie Appreciation Consortium",
+            "Desperate Dan Appreciation Society"
+        ],
+        "internal_sender_description": "Grant awarded to the Village Green Preservation Society for the purpose of \"preserving the old ways from being abused, protecting the new ways for me and for you\"",
+        "date_start": "2000-05-14T00:00:00-04:00",
+        "date_end": "2002-06-22T00:00:00-04:00",
+        "record_type": "grant records",
+        "language": [
+            "eng"
+        ],
+        "bag_count": "",
+        "bag_group_identifier": "",
+        "payload_oxum": "435255.8",
+        "bagit_profile_identifier": "https://raw.githubusercontent.com/RockefellerArchiveCenter/project_electron/master/transfer/organizational-bag-profile.json",
+        "bagging_date": "2017-11-04T14:40:17-04:00"
+    },
+    "notifications": [
+        {
+            "url": "http://10.9.3.3:8000/api/events/23195/",
+            "type": null,
+            "summary": "Bag accessioned",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2018-03-16 19:51:00+00:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/events/23190/",
+            "type": null,
+            "summary": "Transfer accepted by appraisal archivist",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2018-03-16 19:46:43+00:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/events/21542/",
+            "type": "Reject",
+            "summary": "Archive Saved",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2017-11-29 21:24:02+00:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/events/21543/",
+            "type": "Reject",
+            "summary": "Passed Bag Validation",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2017-11-29 21:24:02+00:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/events/21544/",
+            "type": "Reject",
+            "summary": "Passed RAC Bag Profile Validation",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2017-11-29 21:24:02+00:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/events/21545/",
+            "type": "Reject",
+            "summary": "Bag Passed All Validation",
+            "object": "http://10.9.3.3:8000/api/transfers/959/",
+            "result": null,
+            "endTime": "2017-11-29 21:24:02+00:00"
+        }
+    ],
+    "created_time": "2018-03-16T15:51:00-04:00",
+    "modified_time": "2017-11-29T16:24:02-05:00"
+}

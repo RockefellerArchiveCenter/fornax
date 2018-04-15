@@ -29,11 +29,11 @@ class SIPViewSet(viewsets.ModelViewSet):
     def create(self, request):
         sip = SIP(
             aurora_uri=request.data['url'],
-            component_uri=request.data['component_uri'],
+            component_uri=request.data['url'],
             process_status=10,
-            machine_file_path='',
+            machine_file_path=request.data['bag_it_name'],
             machine_file_upload_time=datetime.now(),
-            machine_file_identifier='',
+            machine_file_identifier=request.data['bag_it_name']+str(datetime.now())
         )
         sip.save()
         sip_serializer = SIPSerializer(sip, context={'request': request})

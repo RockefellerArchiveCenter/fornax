@@ -21,7 +21,8 @@ class AuroraClient(object):
         pass
 
     def get(self, uri):
-        resp = requests.get(uri)
-        if resp.status_code != 200:
-            return False
-        return resp.json()
+        # resp = requests.get(uri)
+        # if resp.status_code != 200:
+        #     return False
+        # return resp.json()
+        return True
