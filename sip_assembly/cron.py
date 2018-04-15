@@ -9,21 +9,19 @@ from structlog import wrap_logger
 import time
 from uuid import uuid4
 from sip_assembly.models import SIP
+from sip_assembly.assemblers import SIPAssembler
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
-def read_time(time_filepath, log):
-    if isfile(time_filepath):
-        with open(time_filepath, 'rb') as pickle_handle:
-            last_export = str(pickle.load(pickle_handle))
-    else:
-        last_export = 0
-    log.debug("Got last update time of {time}".format(time=last_export))
-    return last_export
+class RunSIPAssembly(CronJobBase):
+    RUN_EVERY_MINS = 0
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = 'sip_assembly.run_sip_assembly'
+    assembler = SIPAssembler()
 
-
-def update_time(export_time, time_filepath, log):
-    with open(time_filepath, 'wb') as pickle_handle:
-        pickle.dump(export_time, pickle_handle)
-    log.debug("Last update time set to {time}".format(time=export_time))
+    def do(self):
+        sips_to_process = SIP.objects.filter(process_status=10)
+        for sip in sips_to_process:
+            if sip.machine_file_path.exists():
+                assembler.run(sip)

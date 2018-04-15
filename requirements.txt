@@ -1,10 +1,9 @@
-Django>1.8,<=2
+Django<=2
 mysqlclient
 djangorestframework
 coreapi
 django_cron
 health-check
-ArchivesSnake
-jq
 structlog
 uuid
+bagit

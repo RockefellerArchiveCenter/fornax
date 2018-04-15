@@ -1,4 +1,7 @@
+import bagit
+import datetime
 from django.db import models
+from sip_assembly.clients import AuroraClient
 
 
 class SIP(models.Model):
@@ -18,6 +21,36 @@ class SIP(models.Model):
     machine_file_identifier = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
+
+    def validate(self):
+        bag = bagit.Bag(self.machine_file_path)
+        return bag.validate()
+
+    def create_rights_csv(self, rights_uris):
+        for uri in rights_uris:
+            rights_data = AuroraClient().get(uri)
+            rights_statement = RightsStatement(
+                sip=self.sip,
+                basis=rights_data['basis']
+            )
+            rights_statement.save()
+            rights_statement.save_csv(self.machine_file_path)
+        return True
+
+    def create_submission_docs(self):
+        return True
+
+    def update_bag_info(self):
+        bag = bagit.Bag(self.machine_file_path)
+        # bag.info['key'] = "blah"
+        return bag.save()
+
+    def rebag(self):
+        bag = bagit.Bag(self.machine_file_path)
+        return bag.save(manifest=True)
+
+    def send_to_archivematica(self):
+        return True
 
 
 class RightsStatement(models.Model):
@@ -64,3 +97,7 @@ class RightsStatement(models.Model):
     doc_id_role = models.CharField(max_length=255, blank=True, null=True)
     doc_id_type = models.CharField(max_length=255, blank=True, null=True)
     doc_id_value = models.CharField(max_length=255, blank=True, null=True)
+
+    def save_csv(self, filepath):
+        # save the rightsstatement as CSV at the designated filepath
+        return True
