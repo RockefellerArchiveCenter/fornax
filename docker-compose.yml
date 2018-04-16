@@ -7,6 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: example
   web:
     build: .
+    environment:
+      - TRAVIS=${TRAVIS}
     entrypoint: /code/entrypoint.sh
     volumes:
       - .:/code
