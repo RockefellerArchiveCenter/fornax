@@ -1,5 +1,6 @@
 import json
 from os.path import join, isdir
+from os import getenv
 import random
 import shutil
 from django.test import TestCase
@@ -45,5 +46,6 @@ class ComponentTest(TestCase):
 
     def test_sips(self):
         self.create_sip()
-        self.aurora_client()
-        self.process_sip()
+        if getenv('TRAVIS') != 'true':
+            self.aurora_client()
+            self.process_sip()
