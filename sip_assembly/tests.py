@@ -1,12 +1,13 @@
 import json
-from os.path import join
+from os.path import join, isdir
 import random
+import shutil
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIRequestFactory, force_authenticate
 from django.contrib.auth.models import User
 from fornax import settings
-from sip_assembly.cron import RunSIPAssembly
+from sip_assembly.cron import AssembleSIPs
 from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.views import SIPViewSet
 from sip_assembly.clients import AuroraClient
@@ -18,8 +19,10 @@ class ComponentTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create_user('aurora', 'aurora@example.com', 'aurorapass')
-        with open(join(settings.BASE_DIR, 'sample_data/aurora.json'), 'r') as json_file:
+        with open(join(settings.BASE_DIR, 'fixtures/json/aurora.json'), 'r') as json_file:
             self.aurora_data = json.load(json_file)
+        if not isdir(settings.UPLOAD_DIR):
+            shutil.copytree(join(settings.BASE_DIR, 'fixtures/bags/'), settings.UPLOAD_DIR)
 
     def create_sip(self):
         print('*** Creating new SIPs ***')
@@ -38,7 +41,7 @@ class ComponentTest(TestCase):
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        self.assertTrue(RunSIPAssembly())
+        self.assertTrue(AssembleSIPs().do())
 
     def test_sips(self):
         self.create_sip()

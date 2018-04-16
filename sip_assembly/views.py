@@ -1,7 +1,9 @@
 from datetime import datetime
 import logging
+import os
 from structlog import wrap_logger
 from uuid import uuid4
+from fornax import settings
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.views.generic import View
@@ -29,12 +31,14 @@ class SIPViewSet(viewsets.ModelViewSet):
     def create(self, request):
         sip = SIP(
             aurora_uri=request.data['url'],
-            component_uri=request.data['url'],
             process_status=10,
-            machine_file_path=request.data['bag_it_name'],
+            machine_file_path=os.path.join(settings.UPLOAD_DIR, request.data['bag_it_name']), # do we need this?
             machine_file_upload_time=datetime.now(),
-            machine_file_identifier=request.data['bag_it_name']+str(datetime.now())
+            machine_file_identifier=request.data['bag_it_name']+str(datetime.now()) # use this from Aurora
         )
         sip.save()
+        if 'rights_statements' in request.data:
+            for uri in request.data['rights']:
+                sip.save_rights_statements(uri)
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)

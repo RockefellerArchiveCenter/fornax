@@ -7,3 +7,4 @@ health-check
 structlog
 uuid
 bagit
+psutil

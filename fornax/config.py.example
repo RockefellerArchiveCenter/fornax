@@ -6,3 +6,7 @@ ARCHIVESSPACE = {
     "password": "admin",
     "repo_id": "2"
 }
+
+UPLOAD_DIR = 'uploads'
+PROCESSING_DIR = 'processing'
+TRANSFER_SOURCE_DIR = 'transfer_source'
