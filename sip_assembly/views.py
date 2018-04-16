@@ -39,6 +39,6 @@ class SIPViewSet(viewsets.ModelViewSet):
         sip.save()
         if 'rights_statements' in request.data:
             for uri in request.data['rights']:
-                sip.save_rights_statements(uri)
+                RightsStatement().save_rights_statements(uri, sip)
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)

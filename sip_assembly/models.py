@@ -19,43 +19,15 @@ class SIP(models.Model):
         (90, "Delivered to Archivematica Transfer Source")
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
-    machine_file_path = models.CharField(max_length=100)
-    machine_file_upload_time = models.DateTimeField()
-    machine_file_identifier = models.CharField(max_length=255, unique=True)
+    machine_file_path = models.CharField(max_length=100) #review (bag_path)
+    machine_file_upload_time = models.DateTimeField() #review (bag_upload?)
+    machine_file_identifier = models.CharField(max_length=255, unique=True) #review - do we need this?? (bag_identifier)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
 
     def validate(self):
         bag = bagit.Bag(self.machine_file_path)
         return bag.validate()
-
-    def save_rights_statements(self, uri):
-        client = AuroraClient()
-        rights_data = client.get(uri)
-        if getattr(rights_data, 'basis') == 'Other':
-            basis_key = 'other_rights'
-        else:
-            basis_key = getattr(rights_data, 'basis').lower()
-        if 'rights_granted' in rights_data:
-            for grant in rights_data['rights_granted']:
-                rights_statement = RightsStatement(
-                    sip=self,
-                    basis=getattr(rights_data, 'basis'),
-                    status=getattr(rights_data, 'copyright_status', None),
-                    determination_date=getattr(rights_data, '{}_determination_date'.format(basis_key), None),
-                    jurisdiction=getattr(rights_data, '{}_jurisdiction'.format(basis_key), None),
-                    start_date=getattr(rights_data, '{}_start_date'.format(basis_key), None),
-                    end_date=getattr(rights_data, '{}_end_date'.format(basis_key), None),
-                    terms=getattr(rights_data, 'license_terms', None),
-                    citation=getattr(rights_data, 'statute_citation', None),
-                    note=getattr(rights_data, '{}_note'.format(basis_key), None),
-                    grant_act=getattr(grant, 'act', None),
-                    grant_restriction=getattr(grant, 'restriction', None),
-                    grant_start_date=getattr(grant, 'start_date', None),
-                    grant_end_date=getattr(grant, 'end_date', None),
-                    rights_granted_note=getattr(grant, 'rights_granted_note', None),
-                )
-                rights_statement.save()
 
     def create_rights_csv(self):
         for rights_statement in RightsStatement.objects.filter(sip=self):
@@ -66,6 +38,7 @@ class SIP(models.Model):
     def create_submission_docs(self):
         return True
 
+    # what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.machine_file_path)
@@ -133,6 +106,34 @@ class RightsStatement(models.Model):
     doc_id_role = models.CharField(max_length=255, blank=True, null=True)
     doc_id_type = models.CharField(max_length=255, blank=True, null=True)
     doc_id_value = models.CharField(max_length=255, blank=True, null=True)
+
+    def initial_save(self, uri, sip):
+        client = AuroraClient()
+        rights_data = client.get(uri)
+        if getattr(rights_data, 'basis') == 'Other':
+            basis_key = 'other_rights'
+        else:
+            basis_key = getattr(rights_data, 'basis').lower()
+        if 'rights_granted' in rights_data:
+            for grant in rights_data['rights_granted']:
+                rights_statement = RightsStatement(
+                    sip=sip,
+                    basis=getattr(rights_data, 'basis'),
+                    status=getattr(rights_data, 'copyright_status', None),
+                    determination_date=getattr(rights_data, '{}_determination_date'.format(basis_key), None),
+                    jurisdiction=getattr(rights_data, '{}_jurisdiction'.format(basis_key), None),
+                    start_date=getattr(rights_data, '{}_start_date'.format(basis_key), None),
+                    end_date=getattr(rights_data, '{}_end_date'.format(basis_key), None),
+                    terms=getattr(rights_data, 'license_terms', None),
+                    citation=getattr(rights_data, 'statute_citation', None),
+                    note=getattr(rights_data, '{}_note'.format(basis_key), None),
+                    grant_act=getattr(grant, 'act', None),
+                    grant_restriction=getattr(grant, 'restriction', None),
+                    grant_start_date=getattr(grant, 'start_date', None),
+                    grant_end_date=getattr(grant, 'end_date', None),
+                    rights_granted_note=getattr(grant, 'rights_granted_note', None),
+                )
+                rights_statement.save()
 
     def save_csv(self, filepath):
         # save the rightsstatement as CSV at the designated filepath

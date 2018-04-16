@@ -28,7 +28,7 @@ class SIPAssembler(object):
             print("Submission docs created")
 
             print("Updating bag-info.txt")
-            if not sip.update_bag_info(): # what exactly needs to be updated here? Component URI?
+            if not sip.update_bag_info():
                 print("Error updating bag-info.txt")
                 return False
             sip.process_status = 60
