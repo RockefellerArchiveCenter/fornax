@@ -2,8 +2,17 @@
 
 A microservice to create Archivematica-compliant Submission Information Packages (SIPs)
 
-
 [![Build Status](https://travis-ci.org/RockefellerArchiveCenter/fornax.svg?branch=master)](https://travis-ci.org/RockefellerArchiveCenter/fornax)
+
+## Assumptions
+
+Fornax currently makes the following assumptions:
+- The files for incoming SIPs will have passed through Aurora, and therefore will:
+  - be structured as valid bags
+  - not contain viruses
+  - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
+- All bags will have a unique name, and that name will be reflected in the `machine_file_name` field of JSON responses available from Aurora's `transfers` endpoint.
+- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py`.
 
 ## Setup
 
