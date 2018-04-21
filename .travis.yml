@@ -3,7 +3,8 @@ sudo: required
 services:
   - docker
 env:
-  - DOCKER_COMPOSE_VERSION: 1.18.0
+  global:
+    - DOCKER_COMPOSE_VERSION: 1.18.0
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -11,5 +12,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - cp fornax/config.py.example fornax/config.py
   - docker-compose up -d
+  - sleep 20s
+install: true
 script:
   - docker-compose exec web python manage.py test
