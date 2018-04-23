@@ -20,9 +20,25 @@ class AuroraClient(object):
         #   log.error("Couldn't authenticate to Aurora")
         pass
 
-    def get(self, uri):
+    def get_rights_statements(self, uri):
         # resp = requests.get(uri)
         # if resp.status_code != 200:
         #     return False
-        # return resp.json()
-        return True
+        # return resp.json()['rights_statements']
+        return [{
+            "note": "Closed for 137 days from end date",
+            "determination_date": "2018-04-11",
+            "end_date": "2126-06-16",
+            "rights_granted": [
+                {
+                    "act": "disseminate",
+                    "start_date": "1982-05-14",
+                    "end_date": "1999-06-17",
+                    "rights_granted_note": "Dissemination is restricted for 10 years after end date",
+                    "restriction": "disallow"
+                }
+            ],
+            "rights_basis": "Copyright",
+            "jurisdiction": "us",
+            "start_date": "1982-05-14"
+        }]

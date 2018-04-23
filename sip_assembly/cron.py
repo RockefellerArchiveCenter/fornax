@@ -49,6 +49,4 @@ class AssembleSIPs(CronJobBase):
         for sip in SIP.objects.filter(process_status=10):
             if not self.has_open_files(sip):
                 print("Assembling SIP: {}".format(sip.machine_file_path))
-                if not assembler.run(sip):
-                    return False
-        return True
+                assembler.run(sip)

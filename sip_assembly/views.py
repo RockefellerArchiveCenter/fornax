@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.views.generic import View
 from sip_assembly.assemblers import SIPAssembler
-from sip_assembly.models import SIP
+from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.serializers import SIPSerializer
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
@@ -38,7 +38,7 @@ class SIPViewSet(viewsets.ModelViewSet):
         )
         sip.save()
         if 'rights_statements' in request.data:
-            for uri in request.data['rights']:
-                RightsStatement().save_rights_statements(uri, sip)
+            for uri in request.data['rights_statements']:
+                RightsStatement().initial_save(uri, sip)
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)

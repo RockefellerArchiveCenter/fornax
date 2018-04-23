@@ -1,5 +1,8 @@
 import bagit
+import csv
 import datetime
+from os import listdir, makedirs
+from os.path import join, isfile, exists, dirname
 from django.db import models
 from sip_assembly.clients import AuroraClient
 
@@ -109,32 +112,57 @@ class RightsStatement(models.Model):
 
     def initial_save(self, uri, sip):
         client = AuroraClient()
-        rights_data = client.get(uri)
-        if getattr(rights_data, 'basis') == 'Other':
-            basis_key = 'other_rights'
-        else:
-            basis_key = getattr(rights_data, 'basis').lower()
-        if 'rights_granted' in rights_data:
-            for grant in rights_data['rights_granted']:
-                rights_statement = RightsStatement(
-                    sip=sip,
-                    basis=getattr(rights_data, 'basis'),
-                    status=getattr(rights_data, 'copyright_status', None),
-                    determination_date=getattr(rights_data, '{}_determination_date'.format(basis_key), None),
-                    jurisdiction=getattr(rights_data, '{}_jurisdiction'.format(basis_key), None),
-                    start_date=getattr(rights_data, '{}_start_date'.format(basis_key), None),
-                    end_date=getattr(rights_data, '{}_end_date'.format(basis_key), None),
-                    terms=getattr(rights_data, 'license_terms', None),
-                    citation=getattr(rights_data, 'statute_citation', None),
-                    note=getattr(rights_data, '{}_note'.format(basis_key), None),
-                    grant_act=getattr(grant, 'act', None),
-                    grant_restriction=getattr(grant, 'restriction', None),
-                    grant_start_date=getattr(grant, 'start_date', None),
-                    grant_end_date=getattr(grant, 'end_date', None),
-                    rights_granted_note=getattr(grant, 'rights_granted_note', None),
-                )
-                rights_statement.save()
+        rights_statements = client.get_rights_statements(uri)
+        for rights_data in rights_statements:
+            if 'rights_granted' in rights_data:
+                for grant in rights_data['rights_granted']:
+                    rights_statement = RightsStatement(
+                        sip=sip,
+                        basis=rights_data.get('rights_basis'),
+                        status=rights_data.get('copyright_status', None),
+                        determination_date=rights_data.get('determination_date', None),
+                        jurisdiction=rights_data.get('jurisdiction', None),
+                        start_date=rights_data.get('start_date', None),
+                        end_date=rights_data.get('end_date', None),
+                        terms=rights_data.get('license_terms', None),
+                        citation=rights_data.get('statute_citation', None),
+                        note=rights_data.get('note', None),
+                        grant_act=grant.get('act', None),
+                        grant_restriction=grant.get('restriction', None),
+                        grant_start_date=grant.get('start_date', None),
+                        grant_end_date=grant.get('end_date', None),
+                        rights_granted_note=grant.get('rights_granted_note', None),
+                    )
+                    rights_statement.save()
+                    print(rights_statement.__dict__)
 
-    def save_csv(self, filepath):
-        # save the rightsstatement as CSV at the designated filepath
-        return True
+    def save_csv(self, target):
+        filepath = join(target, 'metadata', 'rights.csv')
+        mode = 'w'
+        firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
+                    'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+                    'grant_restriction', 'grant_start_date', 'grant_end_date',
+                    'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+        if isfile(filepath):
+            mode = 'a'
+            firstrow = None
+        try:
+            if not exists(dirname(filepath)):
+                makedirs(dirname(filepath))
+            with open(filepath, mode) as csvfile:
+                csvwriter = csv.writer(csvfile)
+                if firstrow:
+                    print("writing headers")
+                    csvwriter.writerow(firstrow)
+                for file in listdir(join(target, 'data')):
+                    print("writing row for {}".format(file))
+                    csvwriter.writerow(
+                        [file, self.basis, self.status, self.determination_date,
+                         self.jurisdiction, self.start_date, self.end_date,
+                         self.terms, self.citation, self.note, self.grant_act,
+                         self.grant_restriction, self.grant_start_date,
+                         self.grant_end_date, self.rights_granted_note,
+                         self.doc_id_type, self.doc_id_value, self.doc_id_role])
+            return True
+        except Exception as e:
+            print(e)
