@@ -109,9 +109,7 @@ class RightsStatement(models.Model):
     doc_id_type = models.CharField(max_length=255, blank=True, null=True)
     doc_id_value = models.CharField(max_length=255, blank=True, null=True)
 
-    def initial_save(self, uri, sip):
-        client = AuroraClient()
-        rights_statements = client.get_rights_statements(uri)
+    def initial_save(self, rights_statements, sip):
         for rights_data in rights_statements:
             if 'rights_granted' in rights_data:
                 for grant in rights_data['rights_granted']:
