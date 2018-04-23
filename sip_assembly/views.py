@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.views.generic import View
 from sip_assembly.assemblers import SIPAssembler
-from sip_assembly.models import SIP
+from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.serializers import SIPSerializer
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
@@ -32,13 +32,11 @@ class SIPViewSet(viewsets.ModelViewSet):
         sip = SIP(
             aurora_uri=request.data['url'],
             process_status=10,
-            machine_file_path=os.path.join(settings.UPLOAD_DIR, request.data['bag_it_name']), # do we need this?
-            machine_file_upload_time=datetime.now(),
-            machine_file_identifier=request.data['bag_it_name']+str(datetime.now()) # use this from Aurora
+            bag_path=os.path.join(settings.UPLOAD_DIR, request.data['bag_it_name']), # do we need this?
+            bag_identifier=request.data['bag_it_name']+str(datetime.now()) # use this from Aurora
         )
         sip.save()
         if 'rights_statements' in request.data:
-            for uri in request.data['rights']:
-                RightsStatement().save_rights_statements(uri, sip)
+            RightsStatement().initial_save(request.data['rights_statements'], sip)
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)

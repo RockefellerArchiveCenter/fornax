@@ -38,11 +38,11 @@ class ComponentTest(TestCase):
 
     def aurora_client(self):
         print('*** Testing Aurora client ***')
-        self.assertTrue(AuroraClient().get(self.aurora_data['url']))
+        self.assertIsNot(False, AuroraClient().get_rights_statements(self.aurora_data['url']))
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        self.assertTrue(AssembleSIPs().do())
+        self.assertIsNot(False, AssembleSIPs().do())
 
     def test_sips(self):
         self.create_sip()
