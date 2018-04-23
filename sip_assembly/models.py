@@ -22,19 +22,18 @@ class SIP(models.Model):
         (90, "Delivered to Archivematica Transfer Source")
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
-    machine_file_path = models.CharField(max_length=100) #review (bag_path)
-    machine_file_upload_time = models.DateTimeField() #review (bag_upload?)
-    machine_file_identifier = models.CharField(max_length=255, unique=True) #review - do we need this?? (bag_identifier)
+    bag_path = models.CharField(max_length=100)
+    bag_identifier = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
 
     def validate(self):
-        bag = bagit.Bag(self.machine_file_path)
+        bag = bagit.Bag(self.bag_path)
         return bag.validate()
 
     def create_rights_csv(self):
         for rights_statement in RightsStatement.objects.filter(sip=self):
-            if not rights_statement.save_csv(self.machine_file_path):
+            if not rights_statement.save_csv(self.bag_path):
                 return False
         return True
 
@@ -44,7 +43,7 @@ class SIP(models.Model):
     # what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
         try:
-            bag = bagit.Bag(self.machine_file_path)
+            bag = bagit.Bag(self.bag_path)
             # bag.info['key'] = "blah"
             bag.save()
             return True
@@ -54,7 +53,7 @@ class SIP(models.Model):
 
     def update_manifests(self):
         try:
-            bag = bagit.Bag(self.machine_file_path)
+            bag = bagit.Bag(self.bag_path)
             bag.save(manifests=True)
             return True
         except Exception as e:
@@ -105,7 +104,7 @@ class RightsStatement(models.Model):
     grant_restriction = models.CharField(choices=GRANT_RESTRICTION_CHOICES, max_length=64)
     grant_start_date = models.DateField(blank=True, null=True)
     grant_end_date = models.DateField(blank=True, null=True)
-    rights_granted_note = models.TextField()
+    grant_note = models.TextField()
     doc_id_role = models.CharField(max_length=255, blank=True, null=True)
     doc_id_type = models.CharField(max_length=255, blank=True, null=True)
     doc_id_value = models.CharField(max_length=255, blank=True, null=True)
@@ -125,16 +124,15 @@ class RightsStatement(models.Model):
                         start_date=rights_data.get('start_date', None),
                         end_date=rights_data.get('end_date', None),
                         terms=rights_data.get('license_terms', None),
-                        citation=rights_data.get('statute_citation', None),
+                        citation=rights_data.get('citation', None),
                         note=rights_data.get('note', None),
                         grant_act=grant.get('act', None),
                         grant_restriction=grant.get('restriction', None),
                         grant_start_date=grant.get('start_date', None),
                         grant_end_date=grant.get('end_date', None),
-                        rights_granted_note=grant.get('rights_granted_note', None),
+                        grant_note=grant.get('rights_granted_note', None),
                     )
                     rights_statement.save()
-                    print(rights_statement.__dict__)
 
     def save_csv(self, target):
         filepath = join(target, 'metadata', 'rights.csv')
@@ -152,16 +150,14 @@ class RightsStatement(models.Model):
             with open(filepath, mode) as csvfile:
                 csvwriter = csv.writer(csvfile)
                 if firstrow:
-                    print("writing headers")
                     csvwriter.writerow(firstrow)
                 for file in listdir(join(target, 'data')):
-                    print("writing row for {}".format(file))
                     csvwriter.writerow(
                         [file, self.basis, self.status, self.determination_date,
                          self.jurisdiction, self.start_date, self.end_date,
                          self.terms, self.citation, self.note, self.grant_act,
                          self.grant_restriction, self.grant_start_date,
-                         self.grant_end_date, self.rights_granted_note,
+                         self.grant_end_date, self.grant_note,
                          self.doc_id_type, self.doc_id_value, self.doc_id_role])
             return True
         except Exception as e:
