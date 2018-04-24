@@ -37,10 +37,11 @@ class SIP(models.Model):
                 return False
         return True
 
+    # TODO: Build this out
     def create_submission_docs(self):
         return True
 
-    # what exactly needs to be updated here? Component URI?
+    # TODO: what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
@@ -65,7 +66,7 @@ class SIP(models.Model):
 
 
 class RightsStatement(models.Model):
-    sip = models.ForeignKey(SIP, on_delete="CASCADE")
+    sip = models.ForeignKey(SIP, on_delete="CASCADE", related_name='rights_statements')
     BASIS_CHOICES = (
         ('Copyright', 'Copyright'),
         ('Statute', 'Statute'),
@@ -116,7 +117,7 @@ class RightsStatement(models.Model):
                     rights_statement = RightsStatement(
                         sip=sip,
                         basis=rights_data.get('rights_basis'),
-                        status=rights_data.get('copyright_status', None),
+                        status=rights_data.get('status', None),
                         determination_date=rights_data.get('determination_date', None),
                         jurisdiction=rights_data.get('jurisdiction', None),
                         start_date=rights_data.get('start_date', None),

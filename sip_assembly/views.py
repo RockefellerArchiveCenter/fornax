@@ -11,6 +11,7 @@ from sip_assembly.assemblers import SIPAssembler
 from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.serializers import SIPSerializer
 from rest_framework import viewsets, generics, status
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 

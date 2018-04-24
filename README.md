@@ -56,7 +56,17 @@ By default a new superuser is created. See `entrypoint.sh` for those users and a
 
 ### Authentication
 
-In progress
+This application uses [JSON Web Token Authentication](). In order to get a token, you must POST a valid username and password to the `/get-token/` endpoint:
+
+    curl http://localhost:8000/get-token/ -d username=user&password=pass123
+
+The response will contain a token
+
+    { 'token' : '9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b' }
+
+This token key should be included in the `Authorization` header of your requests, prefixed by the string "JWT" followed by whitespace.
+
+    Authorization: JWT 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
 
 ### Creating SIPs
 

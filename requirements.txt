@@ -1,6 +1,7 @@
 Django<=2
 mysqlclient
 djangorestframework
+djangorestframework-jwt
 coreapi
 django_cron
 health-check

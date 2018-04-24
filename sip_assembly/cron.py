@@ -37,6 +37,8 @@ class AssembleSIPs(CronJobBase):
         return file_list
 
     def has_open_files(self, sip):
+        if not os.path.isdir(sip.bag_path):
+            return True
         if set(self.open_files()).intersection(set(self.dir_list(sip.bag_path))):
             print(set(self.open_files()).intersection(set(self.dir_list(sip.bag_path))))
             return True
@@ -47,7 +49,9 @@ class AssembleSIPs(CronJobBase):
 
         print("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         for sip in SIP.objects.filter(process_status=10):
-            if not self.has_open_files(sip):
-                print("Assembling SIP: {}".format(sip.bag_path))
+            if self.has_open_files(sip):
+                print("Files for SIP {} are not fully transferred, skipping".format(sip.bag_identifier))
+            else:
+                print("Assembling SIP {}".format(sip.bag_identifier))
                 if assembler.run(sip):
                     continue

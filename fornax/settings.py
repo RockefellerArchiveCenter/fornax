@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'sip_assembly',
     'django_cron',
     'rest_framework',
-    'rest_framework.authtoken',
     'health_check',
 ]
 
@@ -139,7 +138,11 @@ TRANSFER_SOURCE_DIR = CF.TRANSFER_SOURCE_DIR
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 25
+    'PAGE_SIZE': 25,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 structlog.configure(
