@@ -18,8 +18,11 @@ class SIPAssembler(object):
             sip.process_status = 30
 
             print("Restructuring SIP")
-            if not sip.restructure():
-                print("Error restructuring SIP")
+            if not sip.move_objects():
+                print("Error moving existing objects")
+                return False
+            if not sip.create_structure():
+                print("Error creating new directories")
                 return False
             sip.process_status = 35
             print("SIP restructured")

@@ -33,7 +33,7 @@ class SIPViewSet(viewsets.ModelViewSet):
         sip = SIP(
             aurora_uri=request.data['url'],
             process_status=10,
-            bag_path=os.path.join(settings.UPLOAD_DIR, request.data['bag_it_name']), # do we need this?
+            bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, request.data['bag_it_name']),
             bag_identifier=request.data['bag_it_name']+str(datetime.now()) # use this from Aurora
         )
         sip.save()

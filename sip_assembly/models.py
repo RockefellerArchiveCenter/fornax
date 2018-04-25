@@ -31,16 +31,28 @@ class SIP(models.Model):
         bag = bagit.Bag(self.bag_path)
         return bag.validate()
 
-    def restructure(self):
-        src = self.data_dir
-        dest = join(self.data_dir, 'objects')
+    def move_objects(self):
+        src = join(self.bag_path, 'data')
+        dest = join(self.bag_path, 'data', 'objects')
         try:
             if not exists(dest):
                 makedirs(dest)
             for fname in listdir(src):
-                print(fname)
                 if fname != 'objects':
                     rename(join(src, fname), join(dest, fname))
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def create_structure(self):
+        log_dir = join(self.bag_path, 'data', 'logs')
+        md_dir = join(self.bag_path, 'data', 'metadata')
+        docs_dir = join(self.bag_path, 'data', 'metadata', 'submissionDocumentation')
+        try:
+            for dir in [log_dir, md_dir, docs_dir]:
+                if not exists(dir):
+                    makedirs(dir)
             return True
         except Exception as e:
             print(e)
@@ -54,14 +66,7 @@ class SIP(models.Model):
 
     # TODO: Build this out
     def create_submission_docs(self):
-        docs_dir = join(self.data_dir, 'metadata', 'submissionDocumentation')
-        try:
-            if not exists(docs_dir):
-                makedirs(docs_dir)
-            return True
-        except Exception as e:
-            print(e)
-            return False
+        return True
 
     # TODO: what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
