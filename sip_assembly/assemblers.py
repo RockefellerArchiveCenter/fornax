@@ -1,4 +1,7 @@
 from sip_assembly.models import SIP
+from os.path import join
+
+from fornax import settings
 
 
 class SIPAssembler(object):
@@ -7,11 +10,19 @@ class SIPAssembler(object):
         try:
             # move to processing dir
             sip.process_status = 20
+            sip.data_dir = join(settings.BASE_DIR, sip.bag_path, 'data')
 
             print("Validating SIP")
             if not sip.validate():
                 return False
             sip.process_status = 30
+
+            print("Restructuring SIP")
+            if not sip.restructure():
+                print("Error restructuring SIP")
+                return False
+            sip.process_status = 35
+            print("SIP restructured")
 
             print("Creating rights statements")
             if not sip.create_rights_csv():

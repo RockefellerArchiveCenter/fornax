@@ -11,9 +11,8 @@ from fornax import settings
 from sip_assembly.cron import AssembleSIPs
 from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.views import SIPViewSet
-from sip_assembly.clients import AuroraClient
 
-sip_count = 5
+sip_count = 1
 
 
 class ComponentTest(TestCase):
@@ -36,10 +35,6 @@ class ComponentTest(TestCase):
         self.assertEqual(len(SIP.objects.all()), sip_count, "Incorrect number of SIPs created")
         return SIP.objects.all()
 
-    def aurora_client(self):
-        print('*** Testing Aurora client ***')
-        self.assertIsNot(False, AuroraClient().get_rights_statements(self.aurora_data['url']))
-
     def process_sip(self):
         print('*** Processing SIPs ***')
         self.assertIsNot(False, AssembleSIPs().do())
@@ -47,5 +42,4 @@ class ComponentTest(TestCase):
     def test_sips(self):
         self.create_sip()
         if getenv('TRAVIS') != 'true':
-            self.aurora_client()
             self.process_sip()

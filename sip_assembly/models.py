@@ -1,10 +1,9 @@
 import bagit
 import csv
 import datetime
-from os import listdir, makedirs
+from os import listdir, makedirs, rename
 from os.path import join, isfile, exists, dirname
 from django.db import models
-from sip_assembly.clients import AuroraClient
 
 
 class SIP(models.Model):
@@ -14,6 +13,7 @@ class SIP(models.Model):
         (10, "New transfer created"),
         (20, "SIP files moved to processing"),
         (30, "SIP validated according to BagIt"),
+        (30, "SIP restructured"),
         (40, "PREMIS CSV rights added"),
         (50, "Submission documentation added"),
         (60, "bag-info.txt updated"),
@@ -31,6 +31,21 @@ class SIP(models.Model):
         bag = bagit.Bag(self.bag_path)
         return bag.validate()
 
+    def restructure(self):
+        src = self.data_dir
+        dest = join(self.data_dir, 'objects')
+        try:
+            if not exists(dest):
+                makedirs(dest)
+            for fname in listdir(src):
+                print(fname)
+                if fname != 'objects':
+                    rename(join(src, fname), join(dest, fname))
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def create_rights_csv(self):
         for rights_statement in RightsStatement.objects.filter(sip=self):
             if not rights_statement.save_csv(self.bag_path):
@@ -39,7 +54,14 @@ class SIP(models.Model):
 
     # TODO: Build this out
     def create_submission_docs(self):
-        return True
+        docs_dir = join(self.data_dir, 'metadata', 'submissionDocumentation')
+        try:
+            if not exists(docs_dir):
+                makedirs(docs_dir)
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
     # TODO: what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
@@ -134,7 +156,7 @@ class RightsStatement(models.Model):
                     rights_statement.save()
 
     def save_csv(self, target):
-        filepath = join(target, 'metadata', 'rights.csv')
+        filepath = join(target, 'data', 'metadata', 'rights.csv')
         mode = 'w'
         firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
                     'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
