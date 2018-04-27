@@ -8,5 +8,6 @@ ARCHIVESSPACE = {
 }
 
 UPLOAD_DIR = 'uploads'
+TEST_UPLOAD_DIR = 'test_uploads'
 PROCESSING_DIR = 'processing'
 TRANSFER_SOURCE_DIR = 'transfer_source'

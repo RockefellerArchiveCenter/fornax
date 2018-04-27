@@ -10,12 +10,13 @@ class SIPAssembler(object):
         try:
             # move to processing dir
             sip.process_status = 20
-            sip.data_dir = join(settings.BASE_DIR, sip.bag_path, 'data')
+            sip.save()
 
             print("Validating SIP")
             if not sip.validate():
                 return False
             sip.process_status = 30
+            sip.save()
 
             print("Restructuring SIP")
             if not sip.move_objects():
@@ -25,6 +26,7 @@ class SIPAssembler(object):
                 print("Error creating new directories")
                 return False
             sip.process_status = 35
+            sip.save()
             print("SIP restructured")
 
             print("Creating rights statements")
@@ -32,6 +34,7 @@ class SIPAssembler(object):
                 print("Error creating rights statements")
                 return False
             sip.process_status = 40
+            sip.save()
             print("Rights statements added to SIP")
 
             print("Creating submission docs")
@@ -39,6 +42,7 @@ class SIPAssembler(object):
                 print("Error creating submission docs")
                 return False
             sip.process_status = 50
+            sip.save()
             print("Submission docs created")
 
             print("Updating bag-info.txt")
@@ -46,6 +50,7 @@ class SIPAssembler(object):
                 print("Error updating bag-info.txt")
                 return False
             sip.process_status = 60
+            sip.save()
             print("Bag-info.txt updated")
 
             print("Updating manifests")
@@ -53,6 +58,7 @@ class SIPAssembler(object):
                 print("Error updating manifests")
                 return False
             sip.process_status = 70
+            sip.save()
             print("Manifests updated")
 
             print("Validating SIP")
@@ -60,6 +66,7 @@ class SIPAssembler(object):
                 print("Error validating SIP")
                 return False
             sip.process_status = 80
+            sip.save()
             print("SIP validated")
 
             print("Sending SIP to Archivematica")
@@ -67,6 +74,7 @@ class SIPAssembler(object):
                 print("Error sending SIP to Archivematica")
                 return False
             sip.process_status = 90
+            sip.save()
             print("SIP sent to Archivematica")
 
             return True

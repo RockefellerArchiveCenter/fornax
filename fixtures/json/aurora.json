@@ -2,6 +2,7 @@
     "url": "http://10.9.3.3:8000/api/transfers/1013/",
     "organization": "http://10.9.3.3:8000/api/orgs/1/",
     "bag_it_name": "valid_bag",
+    "identifier": "valid_bag",
     "process_status": 70,
     "file_size": "47",
     "file_type": "OTHER",

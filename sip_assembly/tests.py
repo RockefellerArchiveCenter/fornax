@@ -1,6 +1,6 @@
 import json
 from os.path import join, isdir
-from os import getenv
+from os import listdir
 import random
 import shutil
 from django.test import TestCase
@@ -12,34 +12,39 @@ from sip_assembly.cron import AssembleSIPs
 from sip_assembly.models import SIP, RightsStatement
 from sip_assembly.views import SIPViewSet
 
-sip_count = 1
+data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
+bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 
 
 class ComponentTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = User.objects.create_user('aurora', 'aurora@example.com', 'aurorapass')
-        with open(join(settings.BASE_DIR, 'fixtures/json/aurora.json'), 'r') as json_file:
-            self.aurora_data = json.load(json_file)
-        if not isdir(settings.UPLOAD_DIR):
-            shutil.copytree(join(settings.BASE_DIR, 'fixtures/bags/'), settings.UPLOAD_DIR)
+        if isdir(settings.TEST_UPLOAD_DIR):
+            shutil.rmtree(settings.TEST_UPLOAD_DIR)
+        shutil.copytree(bag_fixture_dir, settings.TEST_UPLOAD_DIR)
 
     def create_sip(self):
         print('*** Creating new SIPs ***')
-        for n in range(sip_count):
-            request = self.factory.post(reverse('sip-list'), self.aurora_data, format='json')
-            force_authenticate(request, user=self.user)
-            response = SIPViewSet.as_view(actions={"post": "create"})(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
-            print('Created SIP {name}'.format(name=response.data['url']))
-        self.assertEqual(len(SIP.objects.all()), sip_count, "Incorrect number of SIPs created")
+        for f in listdir(data_fixture_dir):
+            with open(join(data_fixture_dir, f), 'r') as json_file:
+                aurora_data = json.load(json_file)
+                request = self.factory.post(reverse('sip-list'), aurora_data, format='json')
+                force_authenticate(request, user=self.user)
+                response = SIPViewSet.as_view(actions={"post": "create"})(request)
+                self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+                print('Created SIP {name}'.format(name=response.data['url']))
+        self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
         return SIP.objects.all()
 
     def process_sip(self):
         print('*** Processing SIPs ***')
         self.assertIsNot(False, AssembleSIPs().do())
 
+    def tearDown(self):
+        if isdir(settings.TEST_UPLOAD_DIR):
+            shutil.rmtree(settings.TEST_UPLOAD_DIR)
+
     def test_sips(self):
         self.create_sip()
-        if getenv('TRAVIS') != 'true':
-            self.process_sip()
+        self.process_sip()
