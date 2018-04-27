@@ -29,6 +29,7 @@ class SIP(models.Model):
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
     bag_identifier = models.CharField(max_length=255, unique=True)
+    component_uri = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
 
@@ -74,11 +75,10 @@ class SIP(models.Model):
     def create_submission_docs(self):
         return True
 
-    # TODO: what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
-            # bag.info['key'] = "blah"
+            bag.info['Internal-Sender-Identifier'] = self.component_uri
             bag.save()
             return True
         except Exception as e:

@@ -37,7 +37,8 @@ class SIPViewSet(viewsets.ModelViewSet):
             aurora_uri=request.data['url'],
             process_status=10,
             bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, request.data['identifier']),
-            bag_identifier=request.data['identifier']
+            bag_identifier=request.data['identifier'],
+            component_uri=request.data['component_uri']
         )
         sip.save()
         log.debug("SIP saved", object=sip, request_id=str(uuid4()))
