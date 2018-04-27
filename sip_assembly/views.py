@@ -32,14 +32,18 @@ class SIPViewSet(viewsets.ModelViewSet):
     queryset = SIP.objects.all().order_by('-created_time')
 
     def create(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
         sip = SIP(
             aurora_uri=request.data['url'],
             process_status=10,
             bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, request.data['identifier']),
-            bag_identifier=request.data['identifier']
+            bag_identifier=request.data['identifier'],
+            component_uri=request.data['component_uri']
         )
         sip.save()
+        log.debug("SIP saved", object=sip, request_id=str(uuid4()))
         if 'rights_statements' in request.data:
-            RightsStatement().initial_save(request.data['rights_statements'], sip)
+            RightsStatement().initial_save(request.data['rights_statements'], sip, log)
+            log.debug("Rights Statement for SIP saved", object=sip, request_id=str(uuid4()))
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)

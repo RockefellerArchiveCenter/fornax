@@ -1,9 +1,14 @@
 import bagit
 import csv
 import datetime
+import logging
 from os import listdir, makedirs, rename
 from os.path import join, isfile, exists, dirname
+from structlog import wrap_logger
+
 from django.db import models
+
+logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 class SIP(models.Model):
@@ -24,6 +29,7 @@ class SIP(models.Model):
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
     bag_identifier = models.CharField(max_length=255, unique=True)
+    component_uri = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
 
@@ -42,7 +48,7 @@ class SIP(models.Model):
                     rename(join(src, fname), join(dest, fname))
             return True
         except Exception as e:
-            print(e)
+            logging.error("Error moving objects: {}".format(e), object=self)
             return False
 
     def create_structure(self):
@@ -55,7 +61,7 @@ class SIP(models.Model):
                     makedirs(dir)
             return True
         except Exception as e:
-            print(e)
+            logging.error("Error creating new SIP structure: {}".format(e), object=self)
             return False
 
     def create_rights_csv(self):
@@ -64,19 +70,19 @@ class SIP(models.Model):
                 return False
         return True
 
-    # TODO: Build this out
+    # Right now this is a placeholder. There is currently no use case for adding
+    # submission documentation, but we might think of one in the future.
     def create_submission_docs(self):
         return True
 
-    # TODO: what exactly needs to be updated here? Component URI?
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
-            # bag.info['key'] = "blah"
+            bag.info['Internal-Sender-Identifier'] = self.component_uri
             bag.save()
             return True
         except Exception as e:
-            print(e)
+            logging.error("Error updating bag-info metadata: {}".format(e), object=self)
             return False
 
     def update_manifests(self):
@@ -85,7 +91,7 @@ class SIP(models.Model):
             bag.save(manifests=True)
             return True
         except Exception as e:
-            print(e)
+            logging.error("Error updating bag manifests: {}".format(e), object=self)
             return False
 
     def send_to_archivematica(self):
@@ -137,7 +143,7 @@ class RightsStatement(models.Model):
     doc_id_type = models.CharField(max_length=255, blank=True, null=True)
     doc_id_value = models.CharField(max_length=255, blank=True, null=True)
 
-    def initial_save(self, rights_statements, sip):
+    def initial_save(self, rights_statements, sip, log):
         for rights_data in rights_statements:
             if 'rights_granted' in rights_data:
                 for grant in rights_data['rights_granted']:
@@ -159,6 +165,7 @@ class RightsStatement(models.Model):
                         grant_note=grant.get('rights_granted_note', None),
                     )
                     rights_statement.save()
+                    log.debug("Rights statement saved", object=rights_statement)
 
     def save_csv(self, target):
         filepath = join(target, 'data', 'metadata', 'rights.csv')
@@ -185,6 +192,8 @@ class RightsStatement(models.Model):
                          self.grant_restriction, self.grant_start_date,
                          self.grant_end_date, self.grant_note,
                          self.doc_id_type, self.doc_id_value, self.doc_id_role])
+                    logging.debug("Row for Rights Statement created in rights.csv", object=self)
+            logging.debug("rights.csv saved", object=filepath)
             return True
         except Exception as e:
-            print(e)
+            logging.error("Error saving rights.csv: {}".format(e), object=self)

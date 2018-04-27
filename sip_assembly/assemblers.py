@@ -1,81 +1,98 @@
-from sip_assembly.models import SIP
 from os.path import join
+import logging
+from structlog import wrap_logger
+from uuid import uuid4
 
 from fornax import settings
+from sip_assembly.models import SIP
+
+logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 class SIPAssembler(object):
 
     def run(self, sip):
+        self.log = logger.new(object=sip)
         try:
             # move to processing dir
             sip.process_status = 20
             sip.save()
+            self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
 
             print("Validating SIP")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.validate():
+                self.log.error("SIP invalid")
                 return False
             sip.process_status = 30
             sip.save()
+            self.log.debug("SIP validated")
 
             print("Restructuring SIP")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.move_objects():
-                print("Error moving existing objects")
+                self.log.error("Error moving existing objects")
                 return False
             if not sip.create_structure():
-                print("Error creating new directories")
+                self.log.error("Error creating new directories")
                 return False
             sip.process_status = 35
             sip.save()
-            print("SIP restructured")
+            self.log.debug("SIP restructured")
 
             print("Creating rights statements")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.create_rights_csv():
-                print("Error creating rights statements")
+                self.log.error("Error creating rights statements")
                 return False
             sip.process_status = 40
             sip.save()
-            print("Rights statements added to SIP")
+            self.log.debug("Rights statements added to SIP")
 
             print("Creating submission docs")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.create_submission_docs():
-                print("Error creating submission docs")
+                self.log.error("Error creating submission docs")
                 return False
             sip.process_status = 50
             sip.save()
-            print("Submission docs created")
+            self.log.debug("Submission docs created")
 
             print("Updating bag-info.txt")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.update_bag_info():
-                print("Error updating bag-info.txt")
+                self.log.error("Error updating bag-info.txt")
                 return False
             sip.process_status = 60
             sip.save()
-            print("Bag-info.txt updated")
+            self.log.debug("Bag-info.txt updated")
 
             print("Updating manifests")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.update_manifests():
-                print("Error updating manifests")
+                self.log.error("Error updating manifests")
                 return False
             sip.process_status = 70
             sip.save()
-            print("Manifests updated")
+            self.log.debug("Manifests updated")
 
             print("Validating SIP")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.validate():
-                print("Error validating SIP")
+                self.log.error("Error validating SIP")
                 return False
             sip.process_status = 80
             sip.save()
-            print("SIP validated")
+            self.log.debug("SIP validated")
 
             print("Sending SIP to Archivematica")
+            self.log.bind(request_id=str(uuid4()))
             if not sip.send_to_archivematica():
-                print("Error sending SIP to Archivematica")
+                self.log.error("Error sending SIP to Archivematica")
                 return False
             sip.process_status = 90
             sip.save()
-            print("SIP sent to Archivematica")
+            self.log.debug("SIP sent to Archivematica")
 
             return True
 
