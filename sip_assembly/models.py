@@ -69,7 +69,8 @@ class SIP(models.Model):
                 return False
         return True
 
-    # TODO: Build this out
+    # Right now this is a placeholder. There is currently no use case for adding
+    # submission documentation, but we might think of one in the future.
     def create_submission_docs(self):
         return True
 
