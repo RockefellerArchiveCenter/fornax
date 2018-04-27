@@ -45,13 +45,14 @@ class AssembleSIPs(CronJobBase):
         return False
 
     def do(self):
+        self.log = logger.new(transaction_id=str(uuid4()))
         assembler = SIPAssembler()
 
-        print("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
+        self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         for sip in SIP.objects.filter(process_status=10):
             if self.has_open_files(sip):
-                print("Files for SIP {} are not fully transferred, skipping".format(sip.bag_identifier))
+                self.log.debug("Files for SIP are not fully transferred, skipping", object=sip.bag_identifier)
             else:
-                print("Assembling SIP {}".format(sip.bag_identifier))
+                self.log.debug("Assembling SIP", object=sip.bag_identifier)
                 if assembler.run(sip):
                     continue
