@@ -1,3 +1,4 @@
+from os import getenv
 from os.path import join
 import logging
 from structlog import wrap_logger
@@ -87,7 +88,7 @@ class SIPAssembler(object):
 
             print("Sending SIP to Archivematica")
             self.log.bind(request_id=str(uuid4()))
-            if not sip.send_to_archivematica():
+            if not sip.send_to_archivematica(join(settings.TRANSFER_SOURCE_DIR, sip.bag_identifier)):
                 self.log.error("Error sending SIP to Archivematica")
                 return False
             sip.process_status = 90

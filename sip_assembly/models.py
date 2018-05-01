@@ -4,6 +4,7 @@ import datetime
 import logging
 from os import listdir, makedirs, rename
 from os.path import join, isfile, exists, dirname
+import shutil
 from structlog import wrap_logger
 
 from django.db import models
@@ -48,7 +49,7 @@ class SIP(models.Model):
                     rename(join(src, fname), join(dest, fname))
             return True
         except Exception as e:
-            logging.error("Error moving objects: {}".format(e), object=self)
+            logger.error("Error moving objects: {}".format(e), object=self)
             return False
 
     def create_structure(self):
@@ -61,7 +62,7 @@ class SIP(models.Model):
                     makedirs(dir)
             return True
         except Exception as e:
-            logging.error("Error creating new SIP structure: {}".format(e), object=self)
+            logger.error("Error creating new SIP structure: {}".format(e), object=self)
             return False
 
     def create_rights_csv(self):
@@ -82,7 +83,7 @@ class SIP(models.Model):
             bag.save()
             return True
         except Exception as e:
-            logging.error("Error updating bag-info metadata: {}".format(e), object=self)
+            logger.error("Error updating bag-info metadata: {}".format(e), object=self)
             return False
 
     def update_manifests(self):
@@ -91,11 +92,16 @@ class SIP(models.Model):
             bag.save(manifests=True)
             return True
         except Exception as e:
-            logging.error("Error updating bag manifests: {}".format(e), object=self)
+            logger.error("Error updating bag manifests: {}".format(e), object=self)
             return False
 
-    def send_to_archivematica(self):
-        return True
+    def send_to_archivematica(self, dest):
+        try:
+            shutil.copytree(self.bag_path, dest)
+            return True
+        except Exception as e:
+            logger.error("Error sending to Archivematica: {}".format(e), object=self)
+            return False
 
 
 class RightsStatement(models.Model):
@@ -192,8 +198,8 @@ class RightsStatement(models.Model):
                          self.grant_restriction, self.grant_start_date,
                          self.grant_end_date, self.grant_note,
                          self.doc_id_type, self.doc_id_value, self.doc_id_role])
-                    logging.debug("Row for Rights Statement created in rights.csv", object=self)
-            logging.debug("rights.csv saved", object=filepath)
+                    logger.debug("Row for Rights Statement created in rights.csv", object=self)
+            logger.debug("rights.csv saved", object=filepath)
             return True
         except Exception as e:
-            logging.error("Error saving rights.csv: {}".format(e), object=self)
+            logger.error("Error saving rights.csv: {}".format(e), object=self)
