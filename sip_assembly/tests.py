@@ -42,10 +42,9 @@ class ComponentTest(TestCase):
         self.assertIsNot(False, AssembleSIPs().do())
 
     def tearDown(self):
-        if isdir(settings.TEST_UPLOAD_DIR):
-            shutil.rmtree(settings.TEST_UPLOAD_DIR)
-        if isdir(settings.TRANSFER_SOURCE_DIR):
-            shutil.rmtree(settings.TRANSFER_SOURCE_DIR)
+        for d in [settings.TEST_UPLOAD_DIR, settings.TRANSFER_SOURCE_DIR, settings.PROCESSING_DIR]:
+            if isdir(d):
+                shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()

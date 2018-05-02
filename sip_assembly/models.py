@@ -1,5 +1,6 @@
 import bagit
 import csv
+from csvvalidator import *
 import datetime
 import logging
 from os import listdir, makedirs, rename
@@ -37,7 +38,7 @@ class SIP(models.Model):
     def move_to_directory(self, dest):
         try:
             self.validate()
-            shutil.copytree(self.bag_path, dest)
+            shutil.move(self.bag_path, dest)
             self.bag_path = dest
             self.save()
             self.validate()
@@ -83,6 +84,43 @@ class SIP(models.Model):
             if not rights_statement.save_csv(self.bag_path):
                 return False
         return True
+
+    def validate_rights_csv(self):
+        field_names = (
+               'file', 'basis', 'status', 'determination_date', 'jurisdiction',
+               'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+               'grant_restriction', 'grant_start_date', 'grant_end_date',
+               'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role'
+               )
+
+        validator = CSVValidator(field_names)
+
+        validator.add_header_check('EX1', 'bad header')
+        validator.add_record_length_check('EX2', 'unexpected record length')
+        validator.add_value_check('basis', enumeration('Copyright', 'Statute', 'License', 'Other'),
+                                  'EX3', 'invalid basis')
+        validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown'),
+                                  'EX4', 'invalid status')
+        validator.add_value_check('grant_act', enumeration('publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete'),
+                                  'EX5', 'invalid act')
+        validator.add_value_check('grant_restriction', enumeration('allow', 'disallow', 'conditional'),
+                                  'EX6', 'invalid restriction')
+        for field in ['file', 'note', 'grant_note']:
+            validator.add_value_check(field, str,
+                                      'EX7', 'field must exist')
+        for field in ['determination_date', 'start_date', 'end_date', 'grant_start_date', 'grant_end_date']:
+            validator.add_value_check(field, datetime_string('%Y-%m-%d'),
+                                      'EX8', 'invalid date format')
+
+        with open(join(self.bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
+            data = csv.reader(csvfile)
+            problems = validator.validate(data)
+            if problems:
+                for problem in problems:
+                    logger.error(problem)
+                return False
+            else:
+                return True
 
     # Right now this is a placeholder. There is currently no use case for adding
     # submission documentation, but we might think of one in the future.

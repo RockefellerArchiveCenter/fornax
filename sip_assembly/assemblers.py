@@ -41,6 +41,9 @@ class SIPAssembler(object):
             if not sip.create_rights_csv():
                 self.log.error("Error creating rights statements")
                 return False
+            if not sip.validate_rights_csv():
+                self.log.error("rights.csv is invalid")
+                return False
             sip.process_status = 40
             sip.save()
             self.log.debug("Rights statements added to SIP")
