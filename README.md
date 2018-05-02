@@ -73,8 +73,7 @@ This token key should be included in the `Authorization` header of your requests
 SIPs will be created when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
 
 SIP Assembly consists of the following steps (the `SIPAssembler` class):
-- Moving the SIP to the processing directory
-- Validating the SIP against the BagIt specification
+- Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
   - Adding an empty 'logs' directory
@@ -83,8 +82,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
 - Adding a URI to `bag-info.txt` using the `Internal-Sender-Identifier` field
 - Updating bag manifests to account for restructuring and changes to files
-- Validating the restructured SIP against the BagIt specification
-- Delivering the SIP to the Archivematica Transfer Source
+- Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving)
 
 
 ## Logging

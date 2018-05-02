@@ -35,7 +35,17 @@ class SIP(models.Model):
     modified_time = models.DateTimeField(auto_now_add=True)
 
     def move_to_directory(self, dest):
-        return True
+        try:
+            self.validate()
+            shutil.copytree(self.bag_path, dest)
+            self.bag_path = dest
+            self.save()
+            self.validate()
+            return True
+        except Exception as e:
+            logger.error("Error moving to directory {}: {}".format(dest, e), object=self)
+            return False
+        # update self.bag_path
 
     def validate(self):
         bag = bagit.Bag(self.bag_path)
@@ -96,14 +106,6 @@ class SIP(models.Model):
             return True
         except Exception as e:
             logger.error("Error updating bag manifests: {}".format(e), object=self)
-            return False
-
-    def send_to_archivematica(self, dest):
-        try:
-            shutil.copytree(self.bag_path, dest)
-            return True
-        except Exception as e:
-            logger.error("Error sending to Archivematica: {}".format(e), object=self)
             return False
 
 

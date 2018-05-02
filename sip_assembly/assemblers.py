@@ -17,21 +17,12 @@ class SIPAssembler(object):
         try:
             print("Moving SIP to processing directory")
             self.log.bind(request_id=str(uuid4()))
-            if not sip.move_to_directory(settings.PROCESSING_DIR):
+            if not sip.move_to_directory(join(settings.BASE_DIR, settings.PROCESSING_DIR, sip.bag_identifier)):
                 self.log.error("SIP invalid")
                 return False
             sip.process_status = 20
             sip.save()
             self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
-
-            print("Validating SIP")
-            self.log.bind(request_id=str(uuid4()))
-            if not sip.validate():
-                self.log.error("SIP invalid")
-                return False
-            sip.process_status = 30
-            sip.save()
-            self.log.debug("SIP validated")
 
             print("Restructuring SIP")
             self.log.bind(request_id=str(uuid4()))
@@ -41,7 +32,7 @@ class SIPAssembler(object):
             if not sip.create_structure():
                 self.log.error("Error creating new directories")
                 return False
-            sip.process_status = 35
+            sip.process_status = 30
             sip.save()
             self.log.debug("SIP restructured")
 
@@ -81,18 +72,9 @@ class SIPAssembler(object):
             sip.save()
             self.log.debug("Manifests updated")
 
-            print("Validating SIP")
-            self.log.bind(request_id=str(uuid4()))
-            if not sip.validate():
-                self.log.error("Error validating SIP")
-                return False
-            sip.process_status = 80
-            sip.save()
-            self.log.debug("SIP validated")
-
             print("Sending SIP to Archivematica")
             self.log.bind(request_id=str(uuid4()))
-            if not sip.move_to_directory(join(settings.TRANSFER_SOURCE_DIR, sip.bag_identifier)):
+            if not sip.move_to_directory(join(settings.BASE_DIR, settings.TRANSFER_SOURCE_DIR, sip.bag_identifier)):
                 self.log.error("Error sending SIP to Archivematica")
                 return False
             sip.process_status = 90
