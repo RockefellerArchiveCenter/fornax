@@ -1,6 +1,6 @@
 import json
 from os.path import join, isdir
-from os import listdir
+from os import listdir, environ, getenv
 import random
 import shutil
 from django.test import TestCase
@@ -44,7 +44,12 @@ class ComponentTest(TestCase):
     def tearDown(self):
         if isdir(settings.TEST_UPLOAD_DIR):
             shutil.rmtree(settings.TEST_UPLOAD_DIR)
+        if isdir(settings.TRANSFER_SOURCE_DIR):
+            shutil.rmtree(settings.TRANSFER_SOURCE_DIR)
 
     def test_sips(self):
-        self.create_sip()
+        sips = self.create_sip()
+        for sip in sips:
+            sip.bag_path = join(settings.TEST_UPLOAD_DIR, sip.bag_identifier)
+            sip.save()
         self.process_sip()
