@@ -12,7 +12,7 @@ Fornax currently makes the following assumptions:
   - not contain viruses
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
 - All bags will have a unique name, and that name will be reflected in the `machine_file_name` field of JSON responses available from Aurora's `transfers` endpoint.
-- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py`.
+- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP) unknown to Fornax.
 
 ## Setup
 
@@ -70,11 +70,26 @@ This token key should be included in the `Authorization` header of your requests
 
 ### Creating SIPs
 
-In progress
+SIPs will be created when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
+
+SIP Assembly consists of the following steps (the `SIPAssembler` class):
+- Moving the SIP to the processing directory
+- Validating the SIP against the BagIt specification
+- Restructuring the SIP for Archivematica compliance by:
+  - Moving objects in the `data` directory to `data/objects`
+  - Adding an empty 'logs' directory
+  - Adding a `metadata` directory containing a `submissionDocumentation` subdirectory
+- Creating `rights.csv` and adding it to the `metadata` directory
+- Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
+- Adding a URI to `bag-info.txt` using the `Internal-Sender-Identifier` field
+- Updating bag manifests to account for restructuring and changes to files
+- Validating the restructured SIP against the BagIt specification
+- Delivering the SIP to the Archivematica Transfer Source
+
 
 ## Logging
 
-Fornax uses `structlog` to output structured JSON logs. Logging can be configured in `settings.py`.
+Fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
 
 
 ## License

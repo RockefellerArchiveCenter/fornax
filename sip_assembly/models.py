@@ -33,6 +33,9 @@ class SIP(models.Model):
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
 
+    def move_to_directory(self, dest):
+        return True
+
     def validate(self):
         bag = bagit.Bag(self.bag_path)
         return bag.validate()

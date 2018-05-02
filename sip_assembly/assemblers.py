@@ -14,7 +14,11 @@ class SIPAssembler(object):
     def run(self, sip):
         self.log = logger.new(object=sip)
         try:
-            # move to processing dir
+            print("Moving SIP to processing directory")
+            self.log.bind(request_id=str(uuid4()))
+            if not sip.move_to_directory(settings.PROCESSING_DIR):
+                self.log.error("SIP invalid")
+                return False
             sip.process_status = 20
             sip.save()
             self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
@@ -87,7 +91,7 @@ class SIPAssembler(object):
 
             print("Sending SIP to Archivematica")
             self.log.bind(request_id=str(uuid4()))
-            if not sip.send_to_archivematica():
+            if not sip.move_to_directory():
                 self.log.error("Error sending SIP to Archivematica")
                 return False
             sip.process_status = 90
