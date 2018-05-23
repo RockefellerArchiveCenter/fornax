@@ -19,7 +19,6 @@ class SIPAssembler(object):
                 print("Moving SIP to processing directory")
                 self.log.bind(request_id=str(uuid4()))
                 if not sip.move_to_directory(join(settings.BASE_DIR, settings.PROCESSING_DIR, sip.bag_identifier)):
-                    self.log.error("SIP invalid")
                     return False
                 sip.process_status = 20
                 sip.save()
@@ -29,7 +28,6 @@ class SIPAssembler(object):
                 print("Restructuring SIP")
                 self.log.bind(request_id=str(uuid4()))
                 if not sip.move_objects():
-                    self.log.error("Error moving existing objects")
                     return False
                 if not sip.create_structure():
                     self.log.error("Error creating new directories")

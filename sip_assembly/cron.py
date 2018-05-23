@@ -26,5 +26,4 @@ class AssembleSIPs(CronJobBase):
                 self.log.debug("Files for SIP are not fully transferred, skipping", object=sip.bag_identifier)
             else:
                 self.log.debug("Assembling SIP", object=sip.bag_identifier)
-                if assembler.run(sip):
-                    continue
+                assembler.run(sip)
