@@ -82,12 +82,11 @@ WSGI_APPLICATION = 'fornax.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': 'example',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
         'HOST': 'db',
-        'PORT': 3306,
+        'PORT': 5432,
     }
 }
 
