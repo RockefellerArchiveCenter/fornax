@@ -3,8 +3,9 @@ import csv
 from csvvalidator import *
 import datetime
 import logging
-from os import listdir, makedirs, rename
-from os.path import join, isfile, exists, dirname
+from os import listdir, makedirs, rename, walk
+from os.path import join, isfile, isdir, exists, dirname
+import psutil
 import shutil
 from structlog import wrap_logger
 
@@ -34,6 +35,30 @@ class SIP(models.Model):
     component_uri = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
+
+    def open_files(self):
+        path_list = []
+        for proc in psutil.process_iter():
+            open_files = proc.open_files()
+            if open_files:
+                for fileObj in open_files:
+                    path_list.append(fileObj.path)
+        return path_list
+
+    def dir_list(self, dir):
+        file_list = []
+        for path, subdirs, files in walk(dir):
+            for name in files:
+                file_list.append(join(path, name))
+        return file_list
+
+    def has_open_files(self):
+        if not isdir(self.bag_path):
+            return True
+        if set(self.open_files()).intersection(set(self.dir_list(self.bag_path))):
+            print(set(self.open_files()).intersection(set(self.dir_list(self.bag_path))))
+            return True
+        return False
 
     def move_to_directory(self, dest):
         try:
