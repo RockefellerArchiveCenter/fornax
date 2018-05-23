@@ -13,6 +13,9 @@ logger.setLevel(logging.DEBUG)
 logger = wrap_logger(logger)
 
 
+class SIPAssemblyError(Exception): pass
+
+
 class SIPAssembler(object):
     def __init__(self, test=None, aurora_client=None):
         if test:
@@ -106,7 +109,12 @@ class SIPAssembler(object):
                 sip.save()
                 self.log.debug("SIP sent to Archivematica")
 
+                sip_data = sip.data
+                sip.data['process_status'] = 80
+                if not self.aurora_client.update(sip.aurora_uri, sip_data):
+                    return False
+
             return True
 
         except Exception as e:
-            print(e)
+            raise SIPAssemblyError("Error assembling SIP: {}".format(e))

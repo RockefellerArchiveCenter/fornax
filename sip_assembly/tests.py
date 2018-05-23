@@ -3,10 +3,13 @@ from os.path import join, isdir
 from os import listdir, environ, getenv
 import random
 import shutil
+import vcr
+
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIRequestFactory, force_authenticate
-from django.contrib.auth.models import User
+
 from fornax import settings
 from sip_assembly.cron import AssembleSIPs
 from sip_assembly.models import SIP
@@ -14,6 +17,14 @@ from sip_assembly.views import SIPViewSet
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
+sip_assembly_vcr = vcr.VCR(
+    serializer='json',
+    cassette_library_dir='fixtures/cassettes',
+    record_mode='once',
+    match_on=['path', 'method'],
+    filter_query_parameters=['username', 'password'],
+    filter_headers=['Authorization', 'X-ArchivesSpace-Session'],
+)
 
 
 class ComponentTest(TestCase):
@@ -41,7 +52,8 @@ class ComponentTest(TestCase):
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        self.assertIsNot(False, AssembleSIPs().do(test=True))
+        with sip_assembly_vcr.use_cassette('process_sip.json'):
+            self.assertIsNot(False, AssembleSIPs().do(test=True))
 
     def tearDown(self):
         for d in [settings.TEST_UPLOAD_DIR, settings.TEST_TRANSFER_SOURCE_DIR, settings.TEST_PROCESSING_DIR]:
