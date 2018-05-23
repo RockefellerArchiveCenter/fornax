@@ -38,7 +38,7 @@ class SIPViewSet(viewsets.ModelViewSet):
             process_status=10,
             bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, request.data['identifier']),
             bag_identifier=request.data['identifier'],
-            component_uri=request.data['component_uri']
+            component_uri=request.data.get('component_uri', None)
         )
         sip.save()
         log.debug("SIP saved", object=sip, request_id=str(uuid4()))

@@ -1,14 +1,14 @@
 # Local config file - rename to config.py
 
-ARCHIVESSPACE = {
+AURORA = {
     "baseurl": "http://localhost:8089",
     "username": "admin",
     "password": "admin",
-    "repo_id": "2"
 }
 
 UPLOAD_DIR = 'uploads'
 TEST_UPLOAD_DIR = 'test_uploads'
 PROCESSING_DIR = 'processing'
+TEST_PROCESSING_DIR = 'test_processing'
 TRANSFER_SOURCE_DIR = 'transfer_source'
 TEST_TRANSFER_SOURCE_DIR = 'test_transfer_source'

@@ -2,6 +2,7 @@
 .archivessnake.yml
 *.pickle
 uploads/*
+.coverage
 
 ### Django ###
 *.log

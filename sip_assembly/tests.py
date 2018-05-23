@@ -39,10 +39,10 @@ class ComponentTest(TestCase):
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        self.assertIsNot(False, AssembleSIPs().do())
+        self.assertIsNot(False, AssembleSIPs().do(test=True))
 
     def tearDown(self):
-        for d in [settings.TEST_UPLOAD_DIR, settings.TRANSFER_SOURCE_DIR, settings.PROCESSING_DIR]:
+        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_TRANSFER_SOURCE_DIR, settings.TEST_PROCESSING_DIR]:
             if isdir(d):
                 shutil.rmtree(d)
 

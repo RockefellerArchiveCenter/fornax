@@ -3,14 +3,21 @@ import csv
 from csvvalidator import *
 import datetime
 import logging
-from os import listdir, makedirs, rename
-from os.path import join, isfile, exists, dirname
+from os import listdir, makedirs, rename, walk
+from os.path import join, isfile, isdir, exists, dirname
+import psutil
 import shutil
 from structlog import wrap_logger
 
 from django.db import models
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
+
+
+class SIPError(Exception): pass
+
+
+class RightsError(Exception): pass
 
 
 class SIP(models.Model):
@@ -31,9 +38,32 @@ class SIP(models.Model):
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
     bag_identifier = models.CharField(max_length=255, unique=True)
-    component_uri = models.CharField(max_length=255, unique=True)
     created_time = models.DateTimeField(auto_now=True)
     modified_time = models.DateTimeField(auto_now_add=True)
+
+    def open_files(self):
+        path_list = []
+        for proc in psutil.process_iter():
+            open_files = proc.open_files()
+            if open_files:
+                for fileObj in open_files:
+                    path_list.append(fileObj.path)
+        return path_list
+
+    def dir_list(self, dir):
+        file_list = []
+        for path, subdirs, files in walk(dir):
+            for name in files:
+                file_list.append(join(path, name))
+        return file_list
+
+    def has_open_files(self):
+        if not isdir(self.bag_path):
+            return True
+        if set(self.open_files()).intersection(set(self.dir_list(self.bag_path))):
+            print(set(self.open_files()).intersection(set(self.dir_list(self.bag_path))))
+            return True
+        return False
 
     def move_to_directory(self, dest):
         try:
@@ -44,9 +74,8 @@ class SIP(models.Model):
             self.validate()
             return True
         except Exception as e:
-            logger.error("Error moving to directory {}: {}".format(dest, e), object=self)
-            return False
-        # update self.bag_path
+            logger.error("Error moving SIP to directory {}: {}".format(dest, e), object=self)
+            raise SIPError("Error moving SIP to directory {}: {}".format(dest, e))
 
     def validate(self):
         bag = bagit.Bag(self.bag_path)
@@ -64,7 +93,7 @@ class SIP(models.Model):
             return True
         except Exception as e:
             logger.error("Error moving objects: {}".format(e), object=self)
-            return False
+            raise SIPError("Error moving objects: {}".format(e))
 
     def create_structure(self):
         log_dir = join(self.bag_path, 'data', 'logs')
@@ -77,13 +106,11 @@ class SIP(models.Model):
             return True
         except Exception as e:
             logger.error("Error creating new SIP structure: {}".format(e), object=self)
-            return False
+            raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
         for rights_statement in RightsStatement.objects.filter(sip=self):
-            if not rights_statement.save_csv(self.bag_path):
-                return False
-        return True
+            return rights_statement.save_csv(self.bag_path)
 
     def validate_rights_csv(self):
         field_names = (
@@ -118,7 +145,7 @@ class SIP(models.Model):
             if problems:
                 for problem in problems:
                     logger.error(problem)
-                return False
+                raise RightsError(problems)
             else:
                 return True
 
@@ -135,7 +162,7 @@ class SIP(models.Model):
             return True
         except Exception as e:
             logger.error("Error updating bag-info metadata: {}".format(e), object=self)
-            return False
+            raise SIPError("Error updating bag-info metadata: {}".format(e))
 
     def update_manifests(self):
         try:
@@ -144,7 +171,7 @@ class SIP(models.Model):
             return True
         except Exception as e:
             logger.error("Error updating bag manifests: {}".format(e), object=self)
-            return False
+            raise SIPError("Error updating bag manifests: {}".format(e))
 
 
 class RightsStatement(models.Model):
@@ -246,3 +273,4 @@ class RightsStatement(models.Model):
             return True
         except Exception as e:
             logger.error("Error saving rights.csv: {}".format(e), object=self)
+            raise RightsError("Error saving rights.csv: {}".format(e))

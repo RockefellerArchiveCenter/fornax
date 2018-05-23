@@ -12,7 +12,7 @@
       <meta name="robots" content="NONE,NOARCHIVE" />
       {% endblock %}
 
-      <title>{% block title %}{% if name %}{{ name }} – {% endif %}fornax{% endblock %}</title>
+      <title>{% block title %}{% if name %}{{ name }} – {% endif %}Fornax{% endblock %}</title>
 
       {% block style %}
       <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}">
@@ -31,7 +31,7 @@
              role="navigation" aria-label="{% trans "navbar" %}">
           <div class="container">
             {% block branding %}
-            <a class="navbar-brand" rel="nofollow" href="/">fornax</a>
+            <a class="navbar-brand" rel="nofollow" href="/">Fornax</a>
             {% endblock %}
             <ul class="navbar-nav mr-auto">
               <li class="nav-item"><a class="nav-link" href="{% url 'sip-list' %}">SIPs</a></li>
