@@ -16,9 +16,9 @@ class AssembleSIPs(CronJobBase):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = 'sip_assembly.assemble_sips'
 
-    def do(self):
+    def do(self, test=None):
         self.log = logger.new(transaction_id=str(uuid4()))
-        assembler = SIPAssembler()
+        assembler = SIPAssembler(test=test)
 
         self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         for sip in SIP.objects.filter(process_status=10):

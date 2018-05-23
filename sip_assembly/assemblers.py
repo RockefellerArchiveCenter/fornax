@@ -11,6 +11,13 @@ logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 class SIPAssembler(object):
+    def __init__(self, test=None):
+        if test:
+            self.processing_dir = settings.TEST_PROCESSING_DIR
+            self.transfer_source = settings.TEST_TRANSFER_SOURCE_DIR
+        else:
+            self.processing_dir = settings.PROCESSING_DIR
+            self.transfer_source = settings.TRANSFER_SOURCE_DIR
 
     def run(self, sip):
         self.log = logger.new(object=sip)
@@ -18,7 +25,7 @@ class SIPAssembler(object):
             if int(sip.process_status) < 20:
                 print("Moving SIP to processing directory")
                 self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(join(settings.BASE_DIR, settings.PROCESSING_DIR, sip.bag_identifier)):
+                if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
                     return False
                 sip.process_status = 20
                 sip.save()
@@ -82,7 +89,7 @@ class SIPAssembler(object):
             if int(sip.process_status) < 90:
                 print("Sending SIP to Archivematica")
                 self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(join(settings.BASE_DIR, settings.TRANSFER_SOURCE_DIR, sip.bag_identifier)):
+                if not sip.move_to_directory(join(settings.BASE_DIR, self.transfer_source, sip.bag_identifier)):
                     self.log.error("Error sending SIP to Archivematica")
                     return False
                 sip.process_status = 90
