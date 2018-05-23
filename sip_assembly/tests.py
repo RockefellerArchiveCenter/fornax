@@ -9,7 +9,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from django.contrib.auth.models import User
 from fornax import settings
 from sip_assembly.cron import AssembleSIPs
-from sip_assembly.models import SIP, RightsStatement
+from sip_assembly.models import SIP
 from sip_assembly.views import SIPViewSet
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
@@ -26,15 +26,17 @@ class ComponentTest(TestCase):
 
     def create_sip(self):
         print('*** Creating new SIPs ***')
+        sip_count = 0
         for f in listdir(data_fixture_dir):
             with open(join(data_fixture_dir, f), 'r') as json_file:
                 aurora_data = json.load(json_file)
                 request = self.factory.post(reverse('sip-list'), aurora_data, format='json')
                 force_authenticate(request, user=self.user)
                 response = SIPViewSet.as_view(actions={"post": "create"})(request)
+                sip_count += len(aurora_data['transfers'])
                 self.assertEqual(response.status_code, 200, "Wrong HTTP code")
-                print('Created SIP {name}'.format(name=response.data['url']))
-        self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
+                print('Created SIPs')
+        self.assertEqual(len(SIP.objects.all()), sip_count, "Incorrect number of SIPs created")
         return SIP.objects.all()
 
     def process_sip(self):

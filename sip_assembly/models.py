@@ -42,6 +42,12 @@ class SIP(models.Model):
     last_modified = models.DateTimeField(auto_now_add=True)
     data = JSONField(null=True, blank=True)
 
+    def archivesspace_identifier(self):
+        for identifier in self.data['external_identifiers']:
+            if identifier['source'] == 'archivesspace':
+                return identifier['identifier']
+        return None
+
     def open_files(self):
         path_list = []
         for proc in psutil.process_iter():
@@ -110,7 +116,7 @@ class SIP(models.Model):
             raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
-        for rights_statement in self['rights_statements']:
+        for rights_statement in self.data['rights_statements']:
             filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
             mode = 'w'
             firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
@@ -190,7 +196,7 @@ class SIP(models.Model):
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
-            bag.info['Internal-Sender-Identifier'] = self.component_uri
+            bag.info['Internal-Sender-Identifier'] = self.archivesspace_identifier()
             bag.save()
             return True
         except Exception as e:

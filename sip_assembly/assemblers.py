@@ -6,30 +6,39 @@ from uuid import uuid4
 
 from fornax import settings
 from sip_assembly.models import SIP
+from sip_assembly.clients import AuroraClient
 
-logger = wrap_logger(logger=logging.getLogger(__name__))
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger = wrap_logger(logger)
 
 
 class SIPAssembler(object):
-    def __init__(self, test=None):
+    def __init__(self, test=None, aurora_client=None):
         if test:
             self.processing_dir = settings.TEST_PROCESSING_DIR
             self.transfer_source = settings.TEST_TRANSFER_SOURCE_DIR
         else:
             self.processing_dir = settings.PROCESSING_DIR
             self.transfer_source = settings.TRANSFER_SOURCE_DIR
+        self.aurora_client = aurora_client if aurora_client else AuroraClient()
 
     def run(self, sip):
         self.log = logger.new(object=sip)
         try:
             if int(sip.process_status) < 20:
-                print("Moving SIP to processing directory")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
-                    return False
-                sip.process_status = 20
+                data = self.aurora_client.retrieve(sip.aurora_uri)
+                sip.data = data
                 sip.save()
-                self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
+
+                if sip.archivesspace_identifier():
+                    print("Moving SIP to processing directory")
+                    self.log.bind(request_id=str(uuid4()))
+                    if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
+                        return False
+                    sip.process_status = 20
+                    sip.save()
+                    self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
 
             if int(sip.process_status) < 30:
                 print("Restructuring SIP")
@@ -46,12 +55,13 @@ class SIPAssembler(object):
             if int(sip.process_status) < 40:
                 print("Creating rights statements")
                 self.log.bind(request_id=str(uuid4()))
-                if not sip.create_rights_csv():
-                    self.log.error("Error creating rights statements")
-                    return False
-                if not sip.validate_rights_csv():
-                    self.log.error("rights.csv is invalid")
-                    return False
+                if sip.data['rights_statements']:
+                    if not sip.create_rights_csv():
+                        self.log.error("Error creating rights statements")
+                        return False
+                    if not sip.validate_rights_csv():
+                        self.log.error("rights.csv is invalid")
+                        return False
                 sip.process_status = 40
                 sip.save()
                 self.log.debug("Rights statements added to SIP")
