@@ -1,0 +1,48 @@
+{
+    "url": "http://10.9.3.3:8000/api/accessions/16/",
+    "creators": [
+        {
+            "name": "Office of Grants Administration",
+            "type": "organization"
+        }
+    ],
+    "external_identifiers": [],
+    "transfers": [
+        {
+            "url": "http://10.9.3.3:8000/api/transfers/687/",
+            "identifier": "BoardFord",
+            "created_time": "2018-05-16T16:30:48-04:00",
+            "modified_time": "2017-11-22T15:02:05-05:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/transfers/688/",
+            "identifier": "CommsFord",
+            "created_time": "2018-05-16T16:30:48-04:00",
+            "modified_time": "2017-11-22T15:02:05-05:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/transfers/689/",
+            "identifier": "GrantsFord",
+            "created_time": "2018-05-16T16:30:48-04:00",
+            "modified_time": "2017-11-22T15:02:05-05:00"
+        }
+    ],
+    "organization": "Rockefeller Archive Center",
+    "title": "Rockefeller Archive Center, Office of Grants Administration grant records",
+    "accession_number": "2018.003",
+    "accession_date": "2018-05-16T16:30:48-04:00",
+    "language": "spa",
+    "start_date": "2000-05-14T00:00:00-04:00",
+    "end_date": "2002-06-22T00:00:00-04:00",
+    "extent_files": 16,
+    "extent_size": 870510,
+    "description": "Grants awarded to the Village Green Preservation Society for the purpose of \"preserving the old ways from being abused, protecting the new ways for me and for you\"",
+    "access_restrictions": "Access restrictions",
+    "use_restrictions": "Use restrictions",
+    "resource": "/repositories/2/resources/1",
+    "acquisition_type": "donation",
+    "appraisal_note": "",
+    "created": "2018-05-16T16:30:48.136666-04:00",
+    "last_modified": "2018-05-16T16:30:48.136680-04:00",
+    "rights_statements": []
+}

@@ -29,8 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'sip-list'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,12 +80,11 @@ WSGI_APPLICATION = 'fornax.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': 'example',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
         'HOST': 'db',
-        'PORT': 3306,
+        'PORT': 5432,
     }
 }
 
@@ -138,6 +135,10 @@ PROCESSING_DIR = CF.PROCESSING_DIR
 TEST_PROCESSING_DIR = CF.TEST_PROCESSING_DIR
 TRANSFER_SOURCE_DIR = CF.TRANSFER_SOURCE_DIR
 TEST_TRANSFER_SOURCE_DIR = CF.TEST_TRANSFER_SOURCE_DIR
+
+CRON_CLASSES = [
+    "sip_assembly.cron.AssembleSIPs",
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

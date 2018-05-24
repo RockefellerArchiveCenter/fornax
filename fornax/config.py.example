@@ -1,7 +1,7 @@
 # Local config file - rename to config.py
 
 AURORA = {
-    "baseurl": "http://localhost:8089",
+    "baseurl": "http://localhost:8000/api/",
     "username": "admin",
     "password": "admin",
 }

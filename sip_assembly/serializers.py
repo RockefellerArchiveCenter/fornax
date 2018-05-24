@@ -1,17 +1,16 @@
 from rest_framework import serializers
-from sip_assembly.models import SIP, RightsStatement
-
-
-class RightsStatementSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = RightsStatement
-        exclude = ('id', 'sip')
+from sip_assembly.models import SIP
 
 
 class SIPSerializer(serializers.HyperlinkedModelSerializer):
-    rights_statements = RightsStatementSerializer(many=True)
 
     class Meta:
         model = SIP
-        fields = '__all__'
+        fields = ('url', 'bag_identifier', 'aurora_uri', 'process_status', 'data', 'created', 'last_modified')
+
+
+class SIPListSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = SIP
+        fields = ('url', 'bag_identifier', 'aurora_uri', 'process_status', 'created', 'last_modified')

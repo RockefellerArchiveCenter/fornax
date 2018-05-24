@@ -41,6 +41,7 @@ SIPs will be created when a POST request is sent to the `sips` endpoint.
 SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP until the next time the routine is run.
 
 SIP Assembly consists of the following steps (the `SIPAssembler` class):
+- Getting data from Aurora and checking to see if that data contains an ArchivesSpace identifier. If it does, that means that metadata about that transfer has been stored in ArchivesSpace.
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
@@ -62,6 +63,7 @@ Fornax currently makes the following assumptions:
   - be virus-free
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
 - All bags will have a unique name, and that name will be reflected in the `machine_file_name` field of JSON responses available from Aurora's `transfers` endpoint.
+- SIPs will be created from a POST request to the `sips` endpoint.
 - All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). Fornax doesn't care how or when they get there, it will just handle them when they arrive.
 - For an example of the data Fornax expects from Aurora (both bags and JSON), see the `fixtures/` directory.
 
@@ -72,8 +74,8 @@ Fornax currently makes the following assumptions:
 |--------|-----|---|---|---|
 |GET|/sips| |200|Returns a list of SIPs|
 |GET|/sips/{id}| |200|Returns data about an individual SIP|
-|POST|/sips||200|Creates a SIP object from an transfer in Aurora. |
-|GET|/status||200|Return the status of the microservice
+|POST|/sips||200|Creates a SIP object from an transfer in Aurora.|
+|GET|/status||200|Return the status of the microservice|
 
 
 ### Authentication

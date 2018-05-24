@@ -9,6 +9,7 @@ import psutil
 import shutil
 from structlog import wrap_logger
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
@@ -22,7 +23,6 @@ class RightsError(Exception): pass
 
 class SIP(models.Model):
     aurora_uri = models.URLField()
-    component_uri = models.URLField(null=True, blank=True)
     PROCESS_STATUS_CHOICES = (
         (10, "New transfer created"),
         (20, "SIP files moved to processing"),
@@ -33,13 +33,21 @@ class SIP(models.Model):
         (60, "bag-info.txt updated"),
         (70, "Manifests updated"),
         (80, "SIP validated"),
-        (90, "Delivered to Archivematica Transfer Source")
+        (90, "Delivered to Archivematica Transfer Source"),
+        (95, "Transfer status updated in Aurora")
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
     bag_identifier = models.CharField(max_length=255, unique=True)
-    created_time = models.DateTimeField(auto_now=True)
-    modified_time = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now_add=True)
+    data = JSONField(null=True, blank=True)
+
+    def archivesspace_identifier(self):
+        for identifier in self.data['external_identifiers']:
+            if identifier['source'] == 'archivesspace':
+                return identifier['identifier']
+        return False
 
     def open_files(self):
         path_list = []
@@ -109,8 +117,40 @@ class SIP(models.Model):
             raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
-        for rights_statement in RightsStatement.objects.filter(sip=self):
-            return rights_statement.save_csv(self.bag_path)
+        for rights_statement in self.data['rights_statements']:
+            filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
+            mode = 'w'
+            firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
+                        'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+                        'grant_restriction', 'grant_start_date', 'grant_end_date',
+                        'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+            if isfile(filepath):
+                mode = 'a'
+                firstrow = None
+            try:
+                if not exists(dirname(filepath)):
+                    makedirs(dirname(filepath))
+                with open(filepath, mode) as csvfile:
+                    csvwriter = csv.writer(csvfile)
+                    if firstrow:
+                        csvwriter.writerow(firstrow)
+                    for file in listdir(join(target, 'data')):
+                        csvwriter.writerow(
+                            [file, rights_statement.basis, rights_statement.status,
+                             rights_statement.determination_date, rights_statement.jurisdiction,
+                             rights_statement.start_date, rights_statement.end_date,
+                             rights_statement.terms, rights_statement.citation,
+                             rights_statement.note, rights_statement.grant_act,
+                             rights_statement.grant_restriction, rights_statement.grant_start_date,
+                             rights_statement.grant_end_date, rights_statement.grant_note,
+                             rights_statement.doc_id_type, rights_statement.doc_id_value,
+                             rights_statement.doc_id_role])
+                    logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
+                logger.debug("rights.csv saved", object=filepath)
+                return True
+            except Exception as e:
+                logger.error("Error saving rights.csv: {}".format(e), object=self)
+                raise RightsError("Error saving rights.csv: {}".format(e))
 
     def validate_rights_csv(self):
         field_names = (
@@ -157,7 +197,7 @@ class SIP(models.Model):
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
-            bag.info['Internal-Sender-Identifier'] = self.component_uri
+            bag.info['Internal-Sender-Identifier'] = self.archivesspace_identifier()
             bag.save()
             return True
         except Exception as e:
@@ -172,105 +212,3 @@ class SIP(models.Model):
         except Exception as e:
             logger.error("Error updating bag manifests: {}".format(e), object=self)
             raise SIPError("Error updating bag manifests: {}".format(e))
-
-
-class RightsStatement(models.Model):
-    sip = models.ForeignKey(SIP, on_delete="CASCADE", related_name='rights_statements')
-    BASIS_CHOICES = (
-        ('Copyright', 'Copyright'),
-        ('Statute', 'Statute'),
-        ('License', 'License'),
-        ('Other', 'Other')
-    )
-    basis = models.CharField(choices=BASIS_CHOICES, max_length=64)
-    STATUS_CHOICES = (
-        ('copyrighted', 'copyrighted'),
-        ('public domain', 'public domain'),
-        ('unknown', 'unknown'),
-    )
-    status = models.CharField(choices=STATUS_CHOICES, max_length=64, null=True, blank=True)
-    determination_date = models.DateField(blank=True, null=True)
-    jurisdiction = models.CharField(max_length=2, blank=True, null=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
-    terms = models.TextField(blank=True, null=True)
-    citation = models.TextField(blank=True, null=True)
-    note = models.TextField()
-    GRANT_ACT_CHOICES = (
-        ('publish', 'Publish'),
-        ('disseminate', 'Disseminate'),
-        ('replicate', 'Replicate'),
-        ('migrate', 'Migrate'),
-        ('modify', 'Modify'),
-        ('use', 'Use'),
-        ('delete', 'Delete'),
-    )
-    grant_act = models.CharField(choices=GRANT_ACT_CHOICES, max_length=64)
-    GRANT_RESTRICTION_CHOICES = (
-        ('allow', 'Allow'),
-        ('disallow', 'Disallow'),
-        ('conditional', 'Conditional'),
-    )
-    grant_restriction = models.CharField(choices=GRANT_RESTRICTION_CHOICES, max_length=64)
-    grant_start_date = models.DateField(blank=True, null=True)
-    grant_end_date = models.DateField(blank=True, null=True)
-    grant_note = models.TextField()
-    doc_id_role = models.CharField(max_length=255, blank=True, null=True)
-    doc_id_type = models.CharField(max_length=255, blank=True, null=True)
-    doc_id_value = models.CharField(max_length=255, blank=True, null=True)
-
-    def initial_save(self, rights_statements, sip, log):
-        for rights_data in rights_statements:
-            if 'rights_granted' in rights_data:
-                for grant in rights_data['rights_granted']:
-                    rights_statement = RightsStatement(
-                        sip=sip,
-                        basis=rights_data.get('rights_basis'),
-                        status=rights_data.get('status', None),
-                        determination_date=rights_data.get('determination_date', None),
-                        jurisdiction=rights_data.get('jurisdiction', None),
-                        start_date=rights_data.get('start_date', None),
-                        end_date=rights_data.get('end_date', None),
-                        terms=rights_data.get('license_terms', None),
-                        citation=rights_data.get('citation', None),
-                        note=rights_data.get('note', None),
-                        grant_act=grant.get('act', None),
-                        grant_restriction=grant.get('restriction', None),
-                        grant_start_date=grant.get('start_date', None),
-                        grant_end_date=grant.get('end_date', None),
-                        grant_note=grant.get('rights_granted_note', None),
-                    )
-                    rights_statement.save()
-                    log.debug("Rights statement saved", object=rights_statement)
-
-    def save_csv(self, target):
-        filepath = join(target, 'data', 'metadata', 'rights.csv')
-        mode = 'w'
-        firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
-                    'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
-                    'grant_restriction', 'grant_start_date', 'grant_end_date',
-                    'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
-        if isfile(filepath):
-            mode = 'a'
-            firstrow = None
-        try:
-            if not exists(dirname(filepath)):
-                makedirs(dirname(filepath))
-            with open(filepath, mode) as csvfile:
-                csvwriter = csv.writer(csvfile)
-                if firstrow:
-                    csvwriter.writerow(firstrow)
-                for file in listdir(join(target, 'data')):
-                    csvwriter.writerow(
-                        [file, self.basis, self.status, self.determination_date,
-                         self.jurisdiction, self.start_date, self.end_date,
-                         self.terms, self.citation, self.note, self.grant_act,
-                         self.grant_restriction, self.grant_start_date,
-                         self.grant_end_date, self.grant_note,
-                         self.doc_id_type, self.doc_id_value, self.doc_id_role])
-                    logger.debug("Row for Rights Statement created in rights.csv", object=self)
-            logger.debug("rights.csv saved", object=filepath)
-            return True
-        except Exception as e:
-            logger.error("Error saving rights.csv: {}".format(e), object=self)
-            raise RightsError("Error saving rights.csv: {}".format(e))
