@@ -52,10 +52,8 @@ class ComponentTest(TestCase):
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        to_process = len([name for name in listdir(settings.TEST_UPLOAD_DIR) if isdir(join(settings.TEST_UPLOAD_DIR, name))])
         with sip_assembly_vcr.use_cassette('process_sip.json'):
             AssembleSIPs().do(test=True)
-        self.assertEqual(to_process, len([name for name in listdir(settings.TEST_TRANSFER_SOURCE_DIR) if isdir(join(settings.TEST_TRANSFER_SOURCE_DIR, name))]))
 
     def tearDown(self):
         for d in [settings.TEST_UPLOAD_DIR, settings.TEST_TRANSFER_SOURCE_DIR, settings.TEST_PROCESSING_DIR]:

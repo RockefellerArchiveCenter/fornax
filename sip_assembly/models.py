@@ -33,7 +33,8 @@ class SIP(models.Model):
         (60, "bag-info.txt updated"),
         (70, "Manifests updated"),
         (80, "SIP validated"),
-        (90, "Delivered to Archivematica Transfer Source")
+        (90, "Delivered to Archivematica Transfer Source"),
+        (95, "Transfer status updated in Aurora")
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
@@ -46,7 +47,7 @@ class SIP(models.Model):
         for identifier in self.data['external_identifiers']:
             if identifier['source'] == 'archivesspace':
                 return identifier['identifier']
-        return None
+        return False
 
     def open_files(self):
         path_list = []

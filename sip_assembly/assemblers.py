@@ -33,15 +33,16 @@ class SIPAssembler(object):
                 data = self.aurora_client.retrieve(sip.aurora_uri)
                 sip.data = data
                 sip.save()
+                if not sip.archivesspace_identifier():
+                    return False
 
-                if sip.archivesspace_identifier():
-                    print("Moving SIP to processing directory")
-                    self.log.bind(request_id=str(uuid4()))
-                    if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
-                        return False
-                    sip.process_status = 20
-                    sip.save()
-                    self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
+                print("Moving SIP to processing directory")
+                self.log.bind(request_id=str(uuid4()))
+                if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
+                    return False
+                sip.process_status = 20
+                sip.save()
+                self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
 
             if int(sip.process_status) < 30:
                 print("Restructuring SIP")
@@ -109,10 +110,17 @@ class SIPAssembler(object):
                 sip.save()
                 self.log.debug("SIP sent to Archivematica")
 
+            if int(sip.process_status) < 95:
+                print("Updating transfer status in Aurora")
+                self.log.bind(request_id=str(uuid4()))
                 sip_data = sip.data
                 sip.data['process_status'] = 80
                 if not self.aurora_client.update(sip.aurora_uri, sip_data):
+                    self.log.error("Error updating transfer status in Aurora")
                     return False
+                sip.process_status = 95
+                sip.save()
+                self.log.debug("Transfer status updated in Aurora")
 
             return True
 
