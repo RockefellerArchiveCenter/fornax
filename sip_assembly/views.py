@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from fornax import settings
 from sip_assembly.assemblers import SIPAssembler
 from sip_assembly.models import SIP
-from sip_assembly.serializers import SIPSerializer
+from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
@@ -28,8 +28,12 @@ class HomeView(View):
 class SIPViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     model = SIP
-    serializer_class = SIPSerializer
     queryset = SIP.objects.all().order_by('-created')
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return SIPListSerializer
+        return SIPSerializer
 
     def create(self, request):
         log = logger.new(transaction_id=str(uuid4()))
