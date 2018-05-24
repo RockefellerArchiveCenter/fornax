@@ -1,4 +1,3 @@
-194577a7e20bdcc7afbb718f502c134c  data/.DS_Store
 ab5419a320533af4759ad8a931cbb788  data/2010 PRD 206 FF.pdf
 3a68000b886c10f1a99706fd043f8173  data/2010 PRD 206 FN.pdf
 18a8fa23ffaf33d739c203b41f3be0c2  data/DACS_Finding Aid Template.docx
