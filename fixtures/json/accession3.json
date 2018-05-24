@@ -9,8 +9,20 @@
     "external_identifiers": [],
     "transfers": [
         {
+            "url": "http://10.9.3.3:8000/api/transfers/687/",
+            "identifier": "BoardFord",
+            "created_time": "2018-05-16T16:30:48-04:00",
+            "modified_time": "2017-11-22T15:02:05-05:00"
+        },
+        {
             "url": "http://10.9.3.3:8000/api/transfers/688/",
-            "identifier": "valid_bagorg152017-11-2215:02:02.581913",
+            "identifier": "CommsFord",
+            "created_time": "2018-05-16T16:30:48-04:00",
+            "modified_time": "2017-11-22T15:02:05-05:00"
+        },
+        {
+            "url": "http://10.9.3.3:8000/api/transfers/689/",
+            "identifier": "GrantsFord",
             "created_time": "2018-05-16T16:30:48-04:00",
             "modified_time": "2017-11-22T15:02:05-05:00"
         }
