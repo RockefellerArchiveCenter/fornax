@@ -46,10 +46,8 @@ class RetrieveFailed(CronJobBase):
     def do(self):
         self.log = logger.new(transaction_id=str(uuid4()))
         aurora_client = AuroraClient()
-        accessions = aurora_client.retrieve('accessions/?process_status=20')['results']
-        self.log.debug("Found {} accessions to process".format(len(accessions)))
-        for accession in accessions:
-            try:
+        try:
+            for accession in aurora_client.retrieve_paged('accessions/', params={"process_status": 20}):
                 data = aurora_client.retrieve(accession['url'])
                 for transfer in data['transfers']:
                     sip = SIP(
@@ -62,6 +60,6 @@ class RetrieveFailed(CronJobBase):
                     self.log.debug("SIP saved", object=sip, request_id=str(uuid4()))
                 data['process_status'] = 30
                 aurora_client.update(data['url'], data)
-            except Exception as e:
-                self.log.error("Error getting accessions: {}".format(e), object=accession['url'])
-                print(e)
+        except Exception as e:
+            self.log.error("Error getting accessions: {}".format(e), object=accession['url'])
+            print(e)
