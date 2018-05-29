@@ -26,6 +26,22 @@ class HomeView(View):
 
 
 class SIPViewSet(viewsets.ModelViewSet):
+    """
+    get:
+    Return data about a SIP, identified by a primary key.
+
+    list:
+    Return paginated data about all SIPs, ordered by most recently created.
+
+    create:
+    Create a new SIP.
+
+    destroy:
+    Delete a SIP, identified by a primary key.
+
+    update:
+    Edit data about an existing SIP.
+    """
     permission_classes = (IsAuthenticated,)
     model = SIP
     queryset = SIP.objects.all().order_by('-created')
