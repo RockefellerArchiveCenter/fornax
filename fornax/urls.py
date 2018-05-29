@@ -20,15 +20,28 @@ from sip_assembly.views import SIPViewSet, HomeView
 from sip_assembly.models import *
 from rest_framework import routers, serializers, viewsets
 from rest_framework.authtoken import views as authtoken_views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 router = routers.DefaultRouter()
 router.register(r'sips', SIPViewSet)
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Fornax API",
+      default_version='v1',
+      description="API for Fornax",
+      contact=openapi.Contact(email="archive@rockarch.org"),
+      license=openapi.License(name="MIT License"),
+   ),
+   validators=['flex', 'ssv'],
+   public=False,
+)
 
 urlpatterns = [
     re_path(r'^$', HomeView.as_view(), name='home'),
     url(r'^', include(router.urls)),
     re_path(r'^sips', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^status/', include('health_check.urls')),
-    url(r'^sips/status', include('health_check.api.urls')),
+    url(r'^status/', include('health_check.api.urls')),
     re_path(r'^admin/', admin.site.urls),
+    url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
 ]

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'sip_assembly',
     'django_cron',
     'rest_framework',
+    'drf_yasg',
     'health_check',
 ]
 
