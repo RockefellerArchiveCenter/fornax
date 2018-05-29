@@ -11,7 +11,7 @@ from django.urls import reverse
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from fornax import settings
-from sip_assembly.cron import AssembleSIPs
+from sip_assembly.cron import AssembleSIPs, RetrieveFailed
 from sip_assembly.models import SIP
 from sip_assembly.views import SIPViewSet
 
@@ -57,6 +57,11 @@ class ComponentTest(TestCase):
             AssembleSIPs().do(test=True)
         self.assertEqual(to_process, len([name for name in listdir(settings.TEST_TRANSFER_SOURCE_DIR) if isdir(join(settings.TEST_TRANSFER_SOURCE_DIR, name))]))
 
+    def retrieve_failed(self):
+        print('*** Retrieving failed accessions ***')
+        with sip_assembly_vcr.use_cassette('retrieve_failed.json'):
+            RetrieveFailed().do()
+
     def tearDown(self):
         for d in [settings.TEST_UPLOAD_DIR, settings.TEST_TRANSFER_SOURCE_DIR, settings.TEST_PROCESSING_DIR]:
             if isdir(d):
@@ -68,3 +73,4 @@ class ComponentTest(TestCase):
             sip.bag_path = join(settings.TEST_UPLOAD_DIR, sip.bag_identifier)
             sip.save()
         self.process_sip()
+        self.retrieve_failed()

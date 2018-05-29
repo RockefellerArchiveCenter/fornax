@@ -139,6 +139,7 @@ TEST_TRANSFER_SOURCE_DIR = CF.TEST_TRANSFER_SOURCE_DIR
 
 CRON_CLASSES = [
     "sip_assembly.cron.AssembleSIPs",
+    "sip_assembly.cron.RetrieveFailed",
 ]
 
 REST_FRAMEWORK = {

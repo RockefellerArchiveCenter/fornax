@@ -1,0 +1,341 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://10.9.3.3:8000/api/get-token/",
+                "body": "r3dact3d",
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "34"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:54 GMT"
+                    ],
+                    "Content-Length": [
+                        "176"
+                    ],
+                    "Allow": [
+                        "POST, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept"
+                    ]
+                },
+                "body": {
+                    "string": "{\"token\":\"r3dact3d\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "GET",
+                "uri": "http://10.9.3.3:8000/api/accessions/?process_status=20",
+                "body": null,
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:54 GMT"
+                    ],
+                    "Content-Length": [
+                        "509"
+                    ],
+                    "Allow": [
+                        "GET, HEAD, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ]
+                },
+                "body": {
+                    "string": "{\"count\":2,\"next\":null,\"previous\":null,\"results\":[{\"url\":\"http://10.9.3.3:8000/api/accessions/33/\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.011\",\"created\":\"2018-05-29T09:56:33.370717-04:00\",\"last_modified\":\"2018-05-26T15:01:16.619788-04:00\"},{\"url\":\"http://10.9.3.3:8000/api/accessions/34/\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.010\",\"created\":\"2018-05-29T09:56:27.247492-04:00\",\"last_modified\":\"2018-05-26T15:01:29.925753-04:00\"}]}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "GET",
+                "uri": "http://10.9.3.3:8000/api/accessions/33/",
+                "body": null,
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:54 GMT"
+                    ],
+                    "Content-Length": [
+                        "1107"
+                    ],
+                    "Allow": [
+                        "GET, PUT, PATCH, HEAD, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ]
+                },
+                "body": {
+                    "string": "{\"url\":\"http://10.9.3.3:8000/api/accessions/33/\",\"creators\":[],\"external_identifiers\":[],\"transfers\":[{\"url\":\"http://10.9.3.3:8000/api/transfers/691/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701345\",\"created_time\":\"2018-05-28T15:22:31-04:00\",\"modified_time\":\"2018-05-28T15:50:20-04:00\"}],\"organization\":\"Rockefeller Archive Center\",\"rights_statements\":[],\"language\":\"mul\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.011\",\"accession_date\":\"2018-05-26T15:01:17-04:00\",\"start_date\":\"2000-05-14T00:00:00-04:00\",\"end_date\":\"2002-06-22T00:00:00-04:00\",\"extent_files\":8,\"extent_size\":435255,\"description\":\"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\",\"access_restrictions\":\"aadf\",\"use_restrictions\":\"adsf\",\"resource\":\"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\",\"acquisition_type\":\"donation\",\"appraisal_note\":\"\",\"created\":\"2018-05-29T09:56:33.370717-04:00\",\"last_modified\":\"2018-05-26T15:01:16.619788-04:00\",\"process_status\":20}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "PUT",
+                "uri": "http://10.9.3.3:8000/api/accessions/33/",
+                "body": "{\"url\": \"http://10.9.3.3:8000/api/accessions/33/\", \"creators\": [], \"external_identifiers\": [], \"transfers\": [{\"url\": \"http://10.9.3.3:8000/api/transfers/691/\", \"identifier\": \"valid_bagorg152017-11-2214:47:28.701345\", \"created_time\": \"2018-05-28T15:22:31-04:00\", \"modified_time\": \"2018-05-28T15:50:20-04:00\"}], \"organization\": \"Rockefeller Archive Center\", \"rights_statements\": [], \"language\": \"mul\", \"title\": \"Rockefeller Archive Center,  grant records\", \"accession_number\": \"2018.011\", \"accession_date\": \"2018-05-26T15:01:17-04:00\", \"start_date\": \"2000-05-14T00:00:00-04:00\", \"end_date\": \"2002-06-22T00:00:00-04:00\", \"extent_files\": 8, \"extent_size\": 435255, \"description\": \"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\", \"access_restrictions\": \"aadf\", \"use_restrictions\": \"adsf\", \"resource\": \"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\", \"acquisition_type\": \"donation\", \"appraisal_note\": \"\", \"created\": \"2018-05-29T09:56:33.370717-04:00\", \"last_modified\": \"2018-05-26T15:01:16.619788-04:00\", \"process_status\": 30}",
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Content-Length": [
+                        "1159"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:54 GMT"
+                    ],
+                    "Content-Length": [
+                        "1107"
+                    ],
+                    "Allow": [
+                        "GET, PUT, PATCH, HEAD, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ]
+                },
+                "body": {
+                    "string": "{\"url\":\"http://10.9.3.3:8000/api/accessions/33/\",\"creators\":[],\"external_identifiers\":[],\"transfers\":[{\"url\":\"http://10.9.3.3:8000/api/transfers/691/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701345\",\"created_time\":\"2018-05-28T15:22:31-04:00\",\"modified_time\":\"2018-05-28T15:50:20-04:00\"}],\"organization\":\"Rockefeller Archive Center\",\"rights_statements\":[],\"language\":\"mul\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.011\",\"accession_date\":\"2018-05-26T15:01:17-04:00\",\"start_date\":\"2000-05-14T00:00:00-04:00\",\"end_date\":\"2002-06-22T00:00:00-04:00\",\"extent_files\":8,\"extent_size\":435255,\"description\":\"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\",\"access_restrictions\":\"aadf\",\"use_restrictions\":\"adsf\",\"resource\":\"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\",\"acquisition_type\":\"donation\",\"appraisal_note\":\"\",\"created\":\"2018-05-29T09:56:54.856105-04:00\",\"last_modified\":\"2018-05-26T15:01:16.619788-04:00\",\"process_status\":30}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "GET",
+                "uri": "http://10.9.3.3:8000/api/accessions/34/",
+                "body": null,
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:55 GMT"
+                    ],
+                    "Content-Length": [
+                        "1299"
+                    ],
+                    "Allow": [
+                        "GET, PUT, PATCH, HEAD, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ]
+                },
+                "body": {
+                    "string": "{\"url\":\"http://10.9.3.3:8000/api/accessions/34/\",\"creators\":[],\"external_identifiers\":[],\"transfers\":[{\"url\":\"http://10.9.3.3:8000/api/transfers/689/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701343\",\"created_time\":\"2018-05-18T15:48:52-04:00\",\"modified_time\":\"2018-05-28T15:50:21-04:00\"},{\"url\":\"http://10.9.3.3:8000/api/transfers/690/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701344\",\"created_time\":\"2018-05-28T15:21:16-04:00\",\"modified_time\":\"2018-05-28T15:50:19-04:00\"}],\"organization\":\"Rockefeller Archive Center\",\"rights_statements\":[],\"language\":\"mul\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.010\",\"accession_date\":\"2018-05-26T15:01:30-04:00\",\"start_date\":\"2000-05-14T00:00:00-04:00\",\"end_date\":\"2002-06-22T00:00:00-04:00\",\"extent_files\":8,\"extent_size\":435255,\"description\":\"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\",\"access_restrictions\":\"aadf\",\"use_restrictions\":\"adsf\",\"resource\":\"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\",\"acquisition_type\":\"donation\",\"appraisal_note\":\"\",\"created\":\"2018-05-29T09:56:27.247492-04:00\",\"last_modified\":\"2018-05-26T15:01:29.925753-04:00\",\"process_status\":20}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "PUT",
+                "uri": "http://10.9.3.3:8000/api/accessions/34/",
+                "body": "{\"url\": \"http://10.9.3.3:8000/api/accessions/34/\", \"creators\": [], \"external_identifiers\": [], \"transfers\": [{\"url\": \"http://10.9.3.3:8000/api/transfers/689/\", \"identifier\": \"valid_bagorg152017-11-2214:47:28.701343\", \"created_time\": \"2018-05-18T15:48:52-04:00\", \"modified_time\": \"2018-05-28T15:50:21-04:00\"}, {\"url\": \"http://10.9.3.3:8000/api/transfers/690/\", \"identifier\": \"valid_bagorg152017-11-2214:47:28.701344\", \"created_time\": \"2018-05-28T15:21:16-04:00\", \"modified_time\": \"2018-05-28T15:50:19-04:00\"}], \"organization\": \"Rockefeller Archive Center\", \"rights_statements\": [], \"language\": \"mul\", \"title\": \"Rockefeller Archive Center,  grant records\", \"accession_number\": \"2018.010\", \"accession_date\": \"2018-05-26T15:01:30-04:00\", \"start_date\": \"2000-05-14T00:00:00-04:00\", \"end_date\": \"2002-06-22T00:00:00-04:00\", \"extent_files\": 8, \"extent_size\": 435255, \"description\": \"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\", \"access_restrictions\": \"aadf\", \"use_restrictions\": \"adsf\", \"resource\": \"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\", \"acquisition_type\": \"donation\", \"appraisal_note\": \"\", \"created\": \"2018-05-29T09:56:27.247492-04:00\", \"last_modified\": \"2018-05-26T15:01:29.925753-04:00\", \"process_status\": 30}",
+                "headers": {
+                    "User-Agent": [
+                        "ElectronBond/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Content-Length": [
+                        "1359"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Tue, 29 May 2018 13:56:55 GMT"
+                    ],
+                    "Content-Length": [
+                        "1299"
+                    ],
+                    "Allow": [
+                        "GET, PUT, PATCH, HEAD, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Server": [
+                        "WSGIServer/0.1 Python/2.7.13"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ]
+                },
+                "body": {
+                    "string": "{\"url\":\"http://10.9.3.3:8000/api/accessions/34/\",\"creators\":[],\"external_identifiers\":[],\"transfers\":[{\"url\":\"http://10.9.3.3:8000/api/transfers/689/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701343\",\"created_time\":\"2018-05-18T15:48:52-04:00\",\"modified_time\":\"2018-05-28T15:50:21-04:00\"},{\"url\":\"http://10.9.3.3:8000/api/transfers/690/\",\"identifier\":\"valid_bagorg152017-11-2214:47:28.701344\",\"created_time\":\"2018-05-28T15:21:16-04:00\",\"modified_time\":\"2018-05-28T15:50:19-04:00\"}],\"organization\":\"Rockefeller Archive Center\",\"rights_statements\":[],\"language\":\"mul\",\"title\":\"Rockefeller Archive Center,  grant records\",\"accession_number\":\"2018.010\",\"accession_date\":\"2018-05-26T15:01:30-04:00\",\"start_date\":\"2000-05-14T00:00:00-04:00\",\"end_date\":\"2002-06-22T00:00:00-04:00\",\"extent_files\":8,\"extent_size\":435255,\"description\":\"Grant awarded to the Village Green Preservation Society for the purpose of \\\"preserving the old ways from being abused, protecting the new ways for me and for you\\\"\",\"access_restrictions\":\"aadf\",\"use_restrictions\":\"adsf\",\"resource\":\"http://dev.aspace.rac.marist.cloud:8089/repositories/2/resources/1\",\"acquisition_type\":\"donation\",\"appraisal_note\":\"\",\"created\":\"2018-05-29T09:56:55.131808-04:00\",\"last_modified\":\"2018-05-26T15:01:29.925753-04:00\",\"process_status\":30}"
+                }
+            }
+        }
+    ]
+}
