@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'sip_assembly',
     'django_cron',
     'rest_framework',
+    'drf_yasg',
     'health_check',
 ]
 
@@ -138,6 +139,7 @@ TEST_TRANSFER_SOURCE_DIR = CF.TEST_TRANSFER_SOURCE_DIR
 
 CRON_CLASSES = [
     "sip_assembly.cron.AssembleSIPs",
+    "sip_assembly.cron.RetrieveFailed",
 ]
 
 REST_FRAMEWORK = {
