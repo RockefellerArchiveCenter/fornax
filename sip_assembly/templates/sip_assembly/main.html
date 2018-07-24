@@ -10,11 +10,7 @@
   <p class="lead">A microservice to create Archivematica-compliant Submission Information Packages</p>
   <hr class="my-4">
   <div>
-    {% if user.is_authenticated %}
     <a class="btn btn-primary btn-lg mb-2 mr-2" href="{% url 'sip-list' %}">Create SIP</a>
-    {% else %}
-    <a class="btn btn-primary btn-lg mb-2 mr-2" href="{% url 'rest_framework:login' %}?next={% url 'home' %}">Login</a>
-    {% endif %}
   </div>
 </div>
 {% endblock %}

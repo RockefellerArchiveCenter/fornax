@@ -42,7 +42,6 @@ class SIPViewSet(viewsets.ModelViewSet):
     update:
     Edit data about an existing SIP.
     """
-    permission_classes = (IsAuthenticated,)
     model = SIP
     queryset = SIP.objects.all().order_by('-created')
 
