@@ -9,6 +9,6 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8002:8002"
+      - "8003:8003"
     depends_on:
       - fornax_db
