@@ -41,7 +41,6 @@ SIPs will be created when a POST request is sent to the `sips` endpoint.
 SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP until the next time the routine is run.
 
 SIP Assembly consists of the following steps (the `SIPAssembler` class):
-- Getting data from Aurora and checking to see if that data contains an ArchivesSpace identifier. If it does, that means that metadata about that transfer has been stored in ArchivesSpace.
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
