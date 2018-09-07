@@ -64,7 +64,7 @@ Fornax currently makes the following assumptions:
 - All bags will have a unique name, and that name will be reflected in the `machine_file_name` field of JSON responses available from Aurora's `transfers` endpoint.
 - SIPs will be created from a POST request to the `sips` endpoint.
 - All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). Fornax doesn't care how or when they get there, it will just handle them when they arrive.
-- For an example of the data Fornax expects from Aurora (both bags and JSON), see the `fixtures/` directory.
+- For an example of the data Fornax expects to receive (both bags and JSON), see the `fixtures/` directory.
 
 
 ### Routes
@@ -77,23 +77,9 @@ Fornax currently makes the following assumptions:
 |GET|/status||200|Return the status of the microservice|
 
 
-### Authentication
-
-This application uses [JSON Web Token Authentication](). In order to get a token, you must POST a valid username and password to the `/get-token/` endpoint:
-
-    curl http://localhost:8000/get-token/ -d username=user&password=pass123
-
-The response will contain a token
-
-    { 'token' : '9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b' }
-
-This token key should be included in the `Authorization` header of your requests, prefixed by the string "JWT" followed by whitespace.
-
-    Authorization: JWT 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b
-
 ### Creating SIPs
 
-SIPs will be created when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
+SIPs will be created and queued for assembly when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
 
 SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
