@@ -13,13 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.conf.urls import url
-from django.urls import include, re_path
-from sip_assembly.views import SIPViewSet, HomeView
-from sip_assembly.models import *
-from rest_framework import routers, serializers, viewsets
-from rest_framework.authtoken import views as authtoken_views
+from django.urls import include
+from sip_assembly.views import SIPViewSet
+from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -38,10 +35,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    re_path(r'^$', HomeView.as_view(), name='home'),
     url(r'^', include(router.urls)),
-    re_path(r'^sips', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^sips', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^status/', include('health_check.api.urls')),
-    re_path(r'^admin/', admin.site.urls),
     url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
 ]

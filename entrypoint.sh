@@ -12,7 +12,7 @@ if [ ! -f fornax/config.py ]; then
 fi
 
 echo "Apply database migrations"
-python manage.py migrate
+python manage.py makemigrations && python manage.py migrate
 
 #Start server
 echo "Starting server"

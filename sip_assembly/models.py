@@ -22,19 +22,16 @@ class RightsError(Exception): pass
 
 
 class SIP(models.Model):
-    aurora_uri = models.URLField()
     PROCESS_STATUS_CHOICES = (
-        (10, "New transfer created"),
+        (10, "New SIP created"),
         (20, "SIP files moved to processing"),
         (30, "SIP validated according to BagIt"),
         (30, "SIP restructured"),
-        (40, "PREMIS CSV rights added"),
-        (50, "Submission documentation added"),
-        (60, "bag-info.txt updated"),
-        (70, "Manifests updated"),
-        (80, "SIP validated"),
-        (90, "Delivered to Archivematica Transfer Source"),
-        (95, "Transfer status updated in Aurora")
+        (40, "PREMIS CSV rights added to SIP"),
+        (50, "Submission documentation added to SIP"),
+        (60, "SIP bag-info.txt updated"),
+        (70, "SIP Manifests updated"),
+        (90, "SIP Delivered to Archivematica Transfer Source"),
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
@@ -42,12 +39,6 @@ class SIP(models.Model):
     created = models.DateTimeField(auto_now=True)
     last_modified = models.DateTimeField(auto_now_add=True)
     data = JSONField(null=True, blank=True)
-
-    def archivesspace_identifier(self):
-        for identifier in self.data['external_identifiers']:
-            if identifier['source'] == 'archivesspace':
-                return identifier['identifier']
-        return False
 
     def open_files(self):
         path_list = []
@@ -89,7 +80,7 @@ class SIP(models.Model):
         bag = bagit.Bag(self.bag_path)
         return bag.validate()
 
-    def move_objects(self):
+    def move_objects_dir(self):
         src = join(self.bag_path, 'data')
         dest = join(self.bag_path, 'data', 'objects')
         try:
@@ -100,8 +91,8 @@ class SIP(models.Model):
                     rename(join(src, fname), join(dest, fname))
             return True
         except Exception as e:
-            logger.error("Error moving objects: {}".format(e), object=self)
-            raise SIPError("Error moving objects: {}".format(e))
+            logger.error("Error moving objects directory: {}".format(e), object=self)
+            raise SIPError("Error moving objects directory: {}".format(e))
 
     def create_structure(self):
         log_dir = join(self.bag_path, 'data', 'logs')
@@ -117,7 +108,7 @@ class SIP(models.Model):
             raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
-        for rights_statement in self.data['rights_statements']:
+        for rights_statement in self.data.get('rights_statements'):
             filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
             mode = 'w'
             firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
@@ -134,17 +125,18 @@ class SIP(models.Model):
                     csvwriter = csv.writer(csvfile)
                     if firstrow:
                         csvwriter.writerow(firstrow)
-                    for file in listdir(join(target, 'data')):
-                        csvwriter.writerow(
-                            [file, rights_statement.basis, rights_statement.status,
-                             rights_statement.determination_date, rights_statement.jurisdiction,
-                             rights_statement.start_date, rights_statement.end_date,
-                             rights_statement.terms, rights_statement.citation,
-                             rights_statement.note, rights_statement.grant_act,
-                             rights_statement.grant_restriction, rights_statement.grant_start_date,
-                             rights_statement.grant_end_date, rights_statement.grant_note,
-                             rights_statement.doc_id_type, rights_statement.doc_id_value,
-                             rights_statement.doc_id_role])
+                    for file in listdir(join(self.bag_path, 'data', 'objects')):
+                        for rights_granted in rights_statement.get('rights_granted'):
+                            csvwriter.writerow(
+                                [file, rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                                 rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
+                                 rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
+                                 rights_statement.get('terms', ''), rights_statement.get('citation', ''),
+                                 rights_statement.get('note', ''), rights_granted.get('act', ''),
+                                 rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
+                                 rights_granted.get('end_date', ''), rights_granted.get('note', ''),
+                                 rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
+                             rights_statement.get('doc_id_role', '')])
                     logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
                 logger.debug("rights.csv saved", object=filepath)
                 return True
@@ -197,7 +189,7 @@ class SIP(models.Model):
     def update_bag_info(self):
         try:
             bag = bagit.Bag(self.bag_path)
-            bag.info['Internal-Sender-Identifier'] = self.archivesspace_identifier()
+            bag.info['Internal-Sender-Identifier'] = self.data['identifier']
             bag.save()
             return True
         except Exception as e:

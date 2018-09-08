@@ -1,0 +1,40 @@
+{
+    "url": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+    "identifier": "CommsFord",
+    "external_identifiers": [],
+    "organization": "http://pprd.aurora.marist.cloud/api/orgs/3/",
+    "bag_it_name": "communications",
+    "process_status": 20,
+    "file_size": "47",
+    "file_type": "TAR",
+    "appraisal_note": null,
+    "additional_error_info": null,
+    "metadata": null,
+    "rights_statements": [],
+    "parents": [],
+    "collections": [],
+    "events": [
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/114/",
+            "type": "Accept",
+            "summary": "Transfer passed BagIt validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+            "result": {
+                "name": "Transfer staged for BagIt Profile validation"
+            },
+            "endTime": "2018-08-30 14:59:03.364030+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/113/",
+            "type": "Accept",
+            "summary": "Transfer saved",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+            "result": {
+                "name": "Transfer staged for BagIt validation"
+            },
+            "endTime": "2018-08-30 14:59:03.319084+00:00"
+        }
+    ],
+    "created_time": "2018-08-30T10:59:03.277487-04:00",
+    "modified_time": "2018-08-30T10:59:03.277505-04:00"
+}

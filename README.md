@@ -17,21 +17,15 @@ Run docker-compose from the root directory
     $ cd fornax
     $ docker-compose up
 
-Once the application starts successfully, you should be able to access the application in your browser at `http://localhost:8000`
+Once the application starts successfully, you should be able to access the application in your browser at `http://localhost:8003`
 
 When you're done, shut down docker-compose
 
     $ docker-compose down
 
+Or, if you want to remove all data
 
-### Data Persistence
-
-Right now, the Docker container does not persist any data, which means that when you shut down the services using `docker-compose down`, you'll lose any data you entered. In order to facilitate development, a few default objects will be created for you when you run `docker-compose up`.
-
-
-#### Users
-
-By default a new superuser is created. See `entrypoint.sh` for those users and associated credentials. THIS IS FOR TESTING PURPOSES ONLY, BE SURE TO CHANGE THIS IN PRODUCTION.
+    $ docker-compose down -v
 
 
 ## Usage
@@ -48,7 +42,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
   - Adding a `metadata` directory containing a `submissionDocumentation` subdirectory
 - Creating `rights.csv` and adding it to the `metadata` directory
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
-- Adding a URI to `bag-info.txt` using the `Internal-Sender-Identifier` field
+- Adding an identifier to `bag-info.txt` using the `Internal-Sender-Identifier` field
 - Updating bag manifests to account for restructuring and changes to files
 - Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving)
 

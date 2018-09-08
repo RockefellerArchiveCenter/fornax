@@ -1,0 +1,86 @@
+{
+    "url": "http://pprd.aurora.marist.cloud/api/transfers/7/",
+    "identifier": "GrantsFord",
+    "external_identifiers": [],
+    "organization": "http://pprd.aurora.marist.cloud/api/orgs/3/",
+    "bag_it_name": "GrantsFord",
+    "process_status": 40,
+    "file_size": "254",
+    "file_type": "ZIP",
+    "appraisal_note": null,
+    "additional_error_info": null,
+    "metadata": {
+        "source_organization": "Ford Foundation",
+        "external_identifier": "records-2017-12-11T20:09:01.446465",
+        "title": "Grant to the Village Green Preservation Society",
+        "record_creators": [
+            {
+                "name": "Custard Pie Appreciation Consortium",
+                "type": ""
+            },
+            {
+                "name": "Desperate Dan Appreciation Society",
+                "type": ""
+            }
+        ],
+        "internal_sender_description": "Grant awarded to the Village Green Preservation Society for the purpose of \"preserving the old ways from being abused, protecting the new ways for me and for you\"",
+        "date_start": "2000-05-14T00:00:00-04:00",
+        "date_end": "2002-06-22T00:00:00-04:00",
+        "record_type": "grant records",
+        "language": [
+            "eng"
+        ],
+        "bag_count": "",
+        "bag_group_identifier": "",
+        "payload_oxum": "249376.6",
+        "bagit_profile_identifier": "https://raw.githubusercontent.com/RockefellerArchiveCenter/project_electron/master/transfer/organizational-bag-profile.json",
+        "bagging_date": "2017-12-11T20:09:01.446465-05:00"
+    },
+    "rights_statements": [],
+    "parents": [],
+    "collections": [],
+    "events": [
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/29/",
+            "type": "Accept",
+            "summary": "Transfer passed all validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/7/",
+            "result": {
+                "name": "Transfer staged for appraisal"
+            },
+            "endTime": "2018-08-30 12:39:50.299200+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/28/",
+            "type": "Accept",
+            "summary": "Transfer passed BagIt Profile and datatype validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/7/",
+            "result": {
+                "name": "Transfer staged for appraisal"
+            },
+            "endTime": "2018-08-30 12:39:50.239932+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/27/",
+            "type": "Accept",
+            "summary": "Transfer passed BagIt validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/7/",
+            "result": {
+                "name": "Transfer staged for BagIt Profile validation"
+            },
+            "endTime": "2018-08-30 12:39:49.878087+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/26/",
+            "type": "Accept",
+            "summary": "Transfer saved",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/7/",
+            "result": {
+                "name": "Transfer staged for BagIt validation"
+            },
+            "endTime": "2018-08-30 12:39:49.830152+00:00"
+        }
+    ],
+    "created_time": "2018-08-30T08:39:49.795112-04:00",
+    "modified_time": "2018-08-30T08:39:55.514517-04:00"
+}
