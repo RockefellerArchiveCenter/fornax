@@ -142,6 +142,7 @@ class SIP(models.Model):
             except Exception as e:
                 logger.error("Error saving rights.csv: {}".format(e), object=self)
                 raise RightsError("Error saving rights.csv: {}".format(e))
+                return False
         return True
 
     def validate_rights_csv(self):
