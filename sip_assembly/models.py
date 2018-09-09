@@ -108,9 +108,9 @@ class SIP(models.Model):
             raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
+        filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
+        mode = 'w'
         for rights_statement in self.data.get('rights_statements'):
-            filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
-            mode = 'w'
             firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
                         'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
                         'grant_restriction', 'grant_start_date', 'grant_end_date',
@@ -136,13 +136,13 @@ class SIP(models.Model):
                                  rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
                                  rights_granted.get('end_date', ''), rights_granted.get('note', ''),
                                  rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
-                             rights_statement.get('doc_id_role', '')])
+                                 rights_statement.get('doc_id_role', '')])
                     logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
                 logger.debug("rights.csv saved", object=filepath)
-                return True
             except Exception as e:
                 logger.error("Error saving rights.csv: {}".format(e), object=self)
                 raise RightsError("Error saving rights.csv: {}".format(e))
+        return True
 
     def validate_rights_csv(self):
         field_names = (
@@ -158,7 +158,7 @@ class SIP(models.Model):
         validator.add_record_length_check('EX2', 'unexpected record length')
         validator.add_value_check('basis', enumeration('Copyright', 'Statute', 'License', 'Other'),
                                   'EX3', 'invalid basis')
-        validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown'),
+        validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown', ''),
                                   'EX4', 'invalid status')
         validator.add_value_check('grant_act', enumeration('publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete'),
                                   'EX5', 'invalid act')
