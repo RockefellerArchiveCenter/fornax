@@ -167,9 +167,18 @@ class SIP(models.Model):
         for field in ['file', 'note', 'grant_note']:
             validator.add_value_check(field, str,
                                       'EX7', 'field must exist')
-        for field in ['determination_date', 'start_date', 'end_date', 'grant_start_date', 'grant_end_date']:
-            validator.add_value_check(field, datetime_string('%Y-%m-%d'),
-                                      'EX8', 'invalid date format')
+
+        def check_dates(r):
+            for field in [r['determination_date'], r['start_date'], r['end_date'], r['grant_start_date'], r['grant_end_date']]:
+                format = True
+                try:
+                    datetime.datetime.strptime(field, '%Y-%m-%d')
+                except ValueError:
+                    format = False
+                valid = (format or field == 'OPEN')
+            if not valid:
+                raise RecordError('EX8', 'invalid date format')
+        validator.add_record_check(check_dates)
 
         with open(join(self.bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
             data = csv.reader(csvfile)

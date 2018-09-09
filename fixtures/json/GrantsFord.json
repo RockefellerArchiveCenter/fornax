@@ -36,7 +36,49 @@
         "bagit_profile_identifier": "https://raw.githubusercontent.com/RockefellerArchiveCenter/project_electron/master/transfer/organizational-bag-profile.json",
         "bagging_date": "2017-12-11T20:09:01.446465-05:00"
     },
-    "rights_statements": [],
+    "rights_statements": [
+        {
+          "status": "copyrighted",
+          "end_date": "2042-06-22",
+          "rights_basis": "Copyright",
+          "jurisdiction": "us",
+          "note": "Work for hire, under copyright until 40 years after creation.",
+          "rights_granted": [
+              {
+                  "act": "publish",
+                  "start_date": "2000-05-14",
+                  "end_date": "2042-06-22",
+                  "note": "Records under copyright may not be republished without permission from the copyright holder.",
+                  "restriction": "disallow"
+              }
+          ],
+          "determination_date": "2018-08-30",
+          "start_date": "2000-05-14"
+      },
+      {
+          "note": "Records embargoed for 10 years after date of creation.",
+          "other_rights_basis": "Donor",
+          "end_date": "OPEN",
+          "rights_granted": [
+              {
+                  "act": "disseminate",
+                  "start_date": "2012-06-22",
+                  "end_date": "OPEN",
+                  "note": "Records are open for research after expiration of embargo period.",
+                  "restriction": "allow"
+              },
+              {
+                  "act": "disseminate",
+                  "start_date": "2000-05-14",
+                  "end_date": "2012-06-22",
+                  "note": "Records closed until expiration of embargo period.",
+                  "restriction": "disallow"
+              }
+          ],
+          "rights_basis": "Other",
+          "start_date": "1974-01-01"
+      }
+    ],
     "parents": [],
     "collections": [],
     "events": [

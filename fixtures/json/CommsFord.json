@@ -1,40 +1,118 @@
 {
-    "url": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+    "url": "http://pprd.aurora.marist.cloud/api/transfers/10/",
     "identifier": "CommsFord",
     "external_identifiers": [],
     "organization": "http://pprd.aurora.marist.cloud/api/orgs/3/",
-    "bag_it_name": "communications",
-    "process_status": 20,
-    "file_size": "47",
-    "file_type": "TAR",
+    "bag_it_name": "CommsFord",
+    "process_status": 40,
+    "file_size": "254",
+    "file_type": "OTHER",
     "appraisal_note": null,
     "additional_error_info": null,
-    "metadata": null,
-    "rights_statements": [],
+    "metadata": {
+        "source_organization": "Ford Foundation",
+        "external_identifier": "records-2017-12-11T20:26:23.983048",
+        "title": "Photo shoots",
+        "record_creators": [
+            {
+                "name": "Communications staff",
+                "type": ""
+            }
+        ],
+        "internal_sender_description": "Communications and publications from the foundation's communications department",
+        "date_start": "1982-07-06T00:00:00-04:00",
+        "date_end": "2001-06-30T00:00:00-04:00",
+        "record_type": "communications and publications",
+        "language": [
+            "eng",
+            "spa"
+        ],
+        "bag_count": "",
+        "bag_group_identifier": "",
+        "payload_oxum": "249376.6",
+        "bagit_profile_identifier": "https://raw.githubusercontent.com/RockefellerArchiveCenter/project_electron/master/transfer/organizational-bag-profile.json",
+        "bagging_date": "2017-12-11T20:26:23.983048-05:00"
+    },
+    "rights_statements": [
+        {
+          "status": "copyrighted",
+          "end_date": "2041-06-30",
+          "rights_basis": "Copyright",
+          "jurisdiction": "us",
+          "note": "Work for hire, under copyright until 40 years after creation.",
+          "rights_granted": [
+              {
+                  "act": "publish",
+                  "start_date": "1982-07-06",
+                  "end_date": "2041-06-30",
+                  "note": "Records under copyright may not be republished without permission from the copyright holder.",
+                  "restriction": "disallow"
+              }
+          ],
+          "determination_date": "2018-08-30",
+          "start_date": "1982-07-06"
+      },
+      {
+          "note": "Records embargoed for 10 years after date of creation.",
+          "other_rights_basis": "Donor",
+          "end_date": "OPEN",
+          "rights_granted": [
+              {
+                  "act": "disseminate",
+                  "start_date": "2011-06-30",
+                  "end_date": "OPEN",
+                  "note": "Records are open for research after expiration of embargo period.",
+                  "restriction": "allow"
+              }
+          ],
+          "rights_basis": "Other",
+          "start_date": "1974-01-01"
+      }
+    ],
     "parents": [],
     "collections": [],
     "events": [
         {
-            "url": "http://pprd.aurora.marist.cloud/api/events/114/",
+            "url": "http://pprd.aurora.marist.cloud/api/events/41/",
+            "type": "Accept",
+            "summary": "Transfer passed all validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/10/",
+            "result": {
+                "name": "Transfer staged for appraisal"
+            },
+            "endTime": "2018-08-30 12:40:08.040432+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/40/",
+            "type": "Accept",
+            "summary": "Transfer passed BagIt Profile and datatype validation",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/10/",
+            "result": {
+                "name": "Transfer staged for appraisal"
+            },
+            "endTime": "2018-08-30 12:40:08.005747+00:00"
+        },
+        {
+            "url": "http://pprd.aurora.marist.cloud/api/events/39/",
             "type": "Accept",
             "summary": "Transfer passed BagIt validation",
-            "object": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/10/",
             "result": {
                 "name": "Transfer staged for BagIt Profile validation"
             },
-            "endTime": "2018-08-30 14:59:03.364030+00:00"
+            "endTime": "2018-08-30 12:40:07.616799+00:00"
         },
         {
-            "url": "http://pprd.aurora.marist.cloud/api/events/113/",
+            "url": "http://pprd.aurora.marist.cloud/api/events/38/",
             "type": "Accept",
             "summary": "Transfer saved",
-            "object": "http://pprd.aurora.marist.cloud/api/transfers/17/",
+            "object": "http://pprd.aurora.marist.cloud/api/transfers/10/",
             "result": {
                 "name": "Transfer staged for BagIt validation"
             },
-            "endTime": "2018-08-30 14:59:03.319084+00:00"
+            "endTime": "2018-08-30 12:40:07.579982+00:00"
         }
     ],
-    "created_time": "2018-08-30T10:59:03.277487-04:00",
-    "modified_time": "2018-08-30T10:59:03.277505-04:00"
+    "created_time": "2018-08-30T08:40:07.544774-04:00",
+    "modified_time": "2018-08-30T08:40:13.231952-04:00"
 }
