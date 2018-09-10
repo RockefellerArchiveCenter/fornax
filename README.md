@@ -43,6 +43,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Creating `rights.csv` and adding it to the `metadata` directory
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
 - Adding an identifier to `bag-info.txt` using the `Internal-Sender-Identifier` field
+- Adding a `processingMCP.xml` file which sets processing configurations for Archivematica
 - Updating bag manifests to account for restructuring and changes to files
 - Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving)
 
