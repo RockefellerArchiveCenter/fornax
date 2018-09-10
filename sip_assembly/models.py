@@ -9,6 +9,8 @@ import psutil
 import shutil
 from structlog import wrap_logger
 
+from fornax import settings
+
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
@@ -30,7 +32,8 @@ class SIP(models.Model):
         (40, "PREMIS CSV rights added to SIP"),
         (50, "Submission documentation added to SIP"),
         (60, "SIP bag-info.txt updated"),
-        (70, "SIP Manifests updated"),
+        (70, "Archivematica processing config added"),
+        (80, "SIP Manifests updated"),
         (90, "SIP Delivered to Archivematica Transfer Source"),
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
@@ -205,6 +208,15 @@ class SIP(models.Model):
         except Exception as e:
             logger.error("Error updating bag-info metadata: {}".format(e), object=self)
             raise SIPError("Error updating bag-info metadata: {}".format(e))
+
+    def add_processing_config(self):
+        try:
+            config = join(settings.PROCESSING_CONFIG_DIR, settings.PROCESSING_CONFIG)
+            shutil.copyfile(config, join(self.bag_path, 'processingMCP.xml'))
+            return True
+        except Exception as e:
+            logger.error("Error creating processing config: {}".format(e), object=self)
+            raise SIPError("Error creating processing config: {}".format(e))
 
     def update_manifests(self):
         try:

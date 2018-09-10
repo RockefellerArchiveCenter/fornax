@@ -83,12 +83,22 @@ class SIPAssembler(object):
                 self.log.debug("Bag-info.txt updated")
 
             if int(sip.process_status) < 70:
+                print("Adding Archivematica processing config")
+                self.log.bind(request_id=str(uuid4()))
+                if not sip.add_processing_config():
+                    self.log.error("Error adding Archivematica processing config")
+                    return False
+                sip.process_status = 70
+                sip.save()
+                self.log.debug("Archivematica processing config added")
+
+            if int(sip.process_status) < 80:
                 print("Updating manifests")
                 self.log.bind(request_id=str(uuid4()))
                 if not sip.update_manifests():
                     self.log.error("Error updating manifests")
                     return False
-                sip.process_status = 70
+                sip.process_status = 80
                 sip.save()
                 self.log.debug("Manifests updated")
 
