@@ -131,7 +131,7 @@ class SIP(models.Model):
                     for file in listdir(join(self.bag_path, 'data', 'objects')):
                         for rights_granted in rights_statement.get('rights_granted'):
                             csvwriter.writerow(
-                                [file, rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                                ["data/objects/{}".format(file), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
                                  rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
                                  rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
                                  rights_statement.get('terms', ''), rights_statement.get('citation', ''),
