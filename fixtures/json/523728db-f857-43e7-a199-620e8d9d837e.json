@@ -1,0 +1,30 @@
+{
+    "additional_error_info": null, 
+    "appraisal_note": null, 
+    "bag_it_name": "valid_bag2", 
+    "collections": [], 
+    "created_time": "2018-09-18T11:32:56.024181-04:00", 
+    "events": [
+        {
+            "endTime": "2018-09-18 15:32:56.468113+00:00", 
+            "object": "http://testserver/api/transfers/5/", 
+            "result": {
+                "name": "Transfer sent to archival storage"
+            }, 
+            "summary": "Transfer accessioned", 
+            "type": "Accept", 
+            "url": "http://testserver/api/events/9/"
+        }
+    ], 
+    "external_identifiers": [], 
+    "file_size": "447", 
+    "file_type": "OTHER", 
+    "identifier": "523728db-f857-43e7-a199-620e8d9d837e", 
+    "metadata": null, 
+    "modified_time": "2018-09-18T11:32:56.469478-04:00", 
+    "organization": "http://testserver/api/orgs/2/", 
+    "parents": [], 
+    "process_status": 75, 
+    "rights_statements": [], 
+    "url": "http://testserver/api/transfers/5/"
+}

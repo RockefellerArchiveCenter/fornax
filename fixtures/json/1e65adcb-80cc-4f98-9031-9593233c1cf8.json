@@ -1,0 +1,144 @@
+{
+    "additional_error_info": null, 
+    "appraisal_note": null, 
+    "bag_it_name": "admin_records", 
+    "collections": [], 
+    "created_time": "2018-09-19T10:18:51.691780-04:00", 
+    "events": [
+        {
+            "endTime": "2018-09-19 14:19:49.269628+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer sent to archival storage"
+            }, 
+            "summary": "Transfer accessioned", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/163/"
+        }, 
+        {
+            "endTime": "2018-09-19 14:19:13.841532+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer staged for accessioning"
+            }, 
+            "summary": "Transfer accepted by appraisal archivist", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/139/"
+        }, 
+        {
+            "endTime": "2018-09-19 14:18:51.843106+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer staged for appraisal"
+            }, 
+            "summary": "Transfer passed all validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/31/"
+        }, 
+        {
+            "endTime": "2018-09-19 14:18:51.839548+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer staged for appraisal"
+            }, 
+            "summary": "Transfer passed BagIt Profile and datatype validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/30/"
+        }, 
+        {
+            "endTime": "2018-09-19 14:18:51.740683+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer staged for BagIt Profile validation"
+            }, 
+            "summary": "Transfer passed BagIt validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/29/"
+        }, 
+        {
+            "endTime": "2018-09-19 14:18:51.696668+00:00", 
+            "object": "http://localhost:8000/api/transfers/9/", 
+            "result": {
+                "name": "Transfer staged for BagIt validation"
+            }, 
+            "summary": "Transfer saved", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/28/"
+        }
+    ], 
+    "external_identifiers": [], 
+    "file_size": "8600", 
+    "file_type": "OTHER", 
+    "identifier": "1e65adcb-80cc-4f98-9031-9593233c1cf8", 
+    "metadata": {
+        "bag_count": "1 of 2", 
+        "bag_group_identifier": "19820514", 
+        "bagging_date": "2017-12-11T20:15:32.652164-05:00", 
+        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/", 
+        "date_end": "1989-06-17T00:00:00-04:00", 
+        "date_start": "1982-05-14T00:00:00-04:00", 
+        "external_identifier": "records-2017-12-11T20:15:32.652164", 
+        "internal_sender_description": "Administrative records for the Office of Important Affairs", 
+        "language": [
+            "eng"
+        ], 
+        "payload_oxum": "8595832.2", 
+        "record_creators": [
+            {
+                "name": "Office of Important Affairs", 
+                "type": "organization"
+            }
+        ], 
+        "record_type": "administrative records", 
+        "source_organization": "Test Organization", 
+        "title": "OIA Administrative records"
+    }, 
+    "modified_time": "2018-09-19T10:19:49.271341-04:00", 
+    "organization": "http://localhost:8000/api/orgs/1/", 
+    "parents": [], 
+    "process_status": 75, 
+    "rights_statements": [
+        {
+            "determination_date": "2018-09-19", 
+            "end_date": "2029-06-17", 
+            "jurisdiction": "us", 
+            "note": "Work for hire, under copyright until 40 years after creation.", 
+            "rights_basis": "Copyright", 
+            "rights_granted": [
+                {
+                    "act": "publish", 
+                    "end_date": "2029-06-17", 
+                    "note": "Records under copyright may not be republished without permission from the copyright holder.", 
+                    "restriction": "disallow", 
+                    "start_date": "1982-05-14"
+                }
+            ], 
+            "start_date": "1982-05-14", 
+            "status": "copyrighted"
+        }, 
+        {
+            "end_date": "1999-06-17", 
+            "note": "Records embargoed for 10 years after date of creation.", 
+            "other_rights_basis": "Donor", 
+            "rights_basis": "Other", 
+            "rights_granted": [
+                {
+                    "act": "disseminate", 
+                    "end_date": "1989-06-17", 
+                    "note": "Records are open for research after expiration of embargo period.", 
+                    "restriction": "allow", 
+                    "start_date": "1992-05-14"
+                }, 
+                {
+                    "act": "disseminate", 
+                    "end_date": "1999-06-17", 
+                    "note": "Records are open for research after expiration of embargo period.", 
+                    "restriction": "disallow", 
+                    "start_date": "1982-05-14"
+                }
+            ], 
+            "start_date": "1982-05-14"
+        }
+    ], 
+    "url": "http://localhost:8000/api/transfers/9/"
+}

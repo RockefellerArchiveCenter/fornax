@@ -1,0 +1,145 @@
+{
+    "additional_error_info": null, 
+    "appraisal_note": null, 
+    "bag_it_name": "communications2", 
+    "collections": [], 
+    "created_time": "2018-09-18T11:10:51.895480-04:00", 
+    "events": [
+        {
+            "endTime": "2018-09-18 15:13:08.811925+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer sent to archival storage"
+            }, 
+            "summary": "Transfer accessioned", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/178/"
+        }, 
+        {
+            "endTime": "2018-09-18 15:11:11.792730+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer staged for accessioning"
+            }, 
+            "summary": "Transfer accepted by appraisal archivist", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/154/"
+        }, 
+        {
+            "endTime": "2018-09-18 15:10:52.004746+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer staged for appraisal"
+            }, 
+            "summary": "Transfer passed all validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/110/"
+        }, 
+        {
+            "endTime": "2018-09-18 15:10:52.000169+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer staged for appraisal"
+            }, 
+            "summary": "Transfer passed BagIt Profile and datatype validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/109/"
+        }, 
+        {
+            "endTime": "2018-09-18 15:10:51.912001+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer staged for BagIt Profile validation"
+            }, 
+            "summary": "Transfer passed BagIt validation", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/108/"
+        }, 
+        {
+            "endTime": "2018-09-18 15:10:51.900752+00:00", 
+            "object": "http://localhost:8000/api/transfers/30/", 
+            "result": {
+                "name": "Transfer staged for BagIt validation"
+            }, 
+            "summary": "Transfer saved", 
+            "type": "Accept", 
+            "url": "http://localhost:8000/api/events/107/"
+        }
+    ], 
+    "external_identifiers": [], 
+    "file_size": "254", 
+    "file_type": "TAR", 
+    "identifier": "2677047c-ad05-4201-8649-8fcabaf2ad47", 
+    "metadata": {
+        "bag_count": "", 
+        "bag_group_identifier": "", 
+        "bagging_date": "2017-12-11T20:26:23.983048-05:00", 
+        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/", 
+        "date_end": "2001-06-30T00:00:00-04:00", 
+        "date_start": "1982-07-06T00:00:00-04:00", 
+        "external_identifier": "records-2017-12-11T20:26:23.983048", 
+        "internal_sender_description": "Communications and publications from the foundation's communications department", 
+        "language": [
+            "eng", 
+            "spa"
+        ], 
+        "payload_oxum": "249376.6", 
+        "record_creators": [
+            {
+                "name": "Communications staff", 
+                "type": "organization"
+            }
+        ], 
+        "record_type": "communications and publications", 
+        "source_organization": "Test Organization", 
+        "title": "Photo shoots"
+    }, 
+    "modified_time": "2018-09-18T11:13:08.815014-04:00", 
+    "organization": "http://localhost:8000/api/orgs/1/", 
+    "parents": [], 
+    "process_status": 75, 
+    "rights_statements": [
+        {
+            "determination_date": "2018-09-18", 
+            "end_date": "2041-06-29", 
+            "jurisdiction": "us", 
+            "note": "Work for hire, under copyright until 40 years after creation.", 
+            "rights_basis": "Copyright", 
+            "rights_granted": [
+                {
+                    "act": "publish", 
+                    "end_date": "2041-06-29", 
+                    "note": "Records under copyright may not be republished without permission from the copyright holder.", 
+                    "restriction": "disallow", 
+                    "start_date": "1982-07-06"
+                }
+            ], 
+            "start_date": "1982-07-06", 
+            "status": "copyrighted"
+        }, 
+        {
+            "end_date": "2011-06-30", 
+            "note": "Records embargoed for 10 years after date of creation.", 
+            "other_rights_basis": "Donor", 
+            "rights_basis": "Other", 
+            "rights_granted": [
+                {
+                    "act": "disseminate", 
+                    "end_date": "2001-06-30", 
+                    "note": "Records are open for research after expiration of embargo period.", 
+                    "restriction": "allow", 
+                    "start_date": "1992-07-06"
+                }, 
+                {
+                    "act": "disseminate", 
+                    "end_date": "2011-06-30", 
+                    "note": "Records are open for research after expiration of embargo period.", 
+                    "restriction": "disallow", 
+                    "start_date": "1982-07-06"
+                }
+            ], 
+            "start_date": "1982-07-06"
+        }
+    ], 
+    "url": "http://localhost:8000/api/transfers/30/"
+}
