@@ -1,6 +1,6 @@
-from os import getenv
 from os.path import join
 import logging
+from shutil import rmtree
 from structlog import wrap_logger
 from uuid import uuid4
 
@@ -18,11 +18,13 @@ class SIPAssemblyError(Exception): pass
 class SIPAssembler(object):
     def __init__(self, dirs):
         if dirs:
+            self.upload_dir = dirs['upload']
             self.processing_dir = dirs['processing']
-            self.transfer_source = dirs['transfer_source']
+            self.delivery = dirs['delivery']
         else:
+            self.upload_dir = settings.UPLOAD_DIR
             self.processing_dir = settings.PROCESSING_DIR
-            self.transfer_source = settings.TRANSFER_SOURCE_DIR
+            self.delivery = settings.DELIVERY
 
     def run(self, sip):
         self.log = logger.new(object=sip)
@@ -30,7 +32,14 @@ class SIPAssembler(object):
             if int(sip.process_status) < 20:
                 print("Moving SIP to processing directory")
                 self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(join(settings.BASE_DIR, self.processing_dir, sip.bag_identifier)):
+                if not sip.move_to_directory(self.processing_dir):
+                    self.log.error("Error moving SIP to processing directory")
+                    return False
+                if not sip.extract_all(self.processing_dir):
+                    self.log.error("Error extracting SIP")
+                    return False
+                if not sip.validate():
+                    self.log.error("SIP is invalid")
                     return False
                 sip.process_status = 20
                 sip.save()
@@ -105,7 +114,12 @@ class SIPAssembler(object):
             if int(sip.process_status) < 90:
                 print("Sending SIP to Archivematica")
                 self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(join(settings.BASE_DIR, self.transfer_source, sip.bag_identifier)):
+                if not sip.create_package():
+                    self.log.error("Error creating .tar.gz file")
+                    return False
+                if not sip.deliver_via_rsync(self.delivery['user'],
+                                             self.delivery['host'],
+                                             self.delivery['dir']):
                     self.log.error("Error sending SIP to Archivematica")
                     return False
                 sip.process_status = 90

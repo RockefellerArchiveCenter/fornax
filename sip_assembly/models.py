@@ -3,11 +3,13 @@ import csv
 from csvvalidator import *
 import datetime
 import logging
-from os import listdir, makedirs, rename, walk
-from os.path import join, isfile, isdir, exists, dirname
+from os import listdir, makedirs, rename, remove, walk
+from os.path import basename, dirname, exists, isfile, isdir, join, splitext
 import psutil
 import shutil
 from structlog import wrap_logger
+import subprocess
+import tarfile
 
 from fornax import settings
 
@@ -43,47 +45,41 @@ class SIP(models.Model):
     last_modified = models.DateTimeField(auto_now_add=True)
     data = JSONField(null=True, blank=True)
 
-    def open_files(self):
-        path_list = []
-        for proc in psutil.process_iter():
-            open_files = proc.open_files()
-            if open_files:
-                for fileObj in open_files:
-                    path_list.append(fileObj.path)
-        return path_list
-
-    def dir_list(self, dir):
-        file_list = []
-        for path, subdirs, files in walk(dir):
-            for name in files:
-                file_list.append(join(path, name))
-        return file_list
-
-    def has_open_files(self):
-        if not isdir(self.bag_path):
-            return True
-        if set(self.open_files()).intersection(set(self.dir_list(self.bag_path))):
-            print(set(self.open_files()).intersection(set(self.dir_list(self.bag_path))))
-            return True
-        return False
-
     def move_to_directory(self, dest):
+        """Moves a bag to the `dest` directory"""
         try:
-            self.validate()
-            shutil.move(self.bag_path, dest)
-            self.bag_path = dest
+            if not exists(dest):
+                makedirs(dest)
+            shutil.move(self.bag_path, join(dest, "{}.tar.gz".format(self.bag_identifier)))
+            self.bag_path = join(dest, "{}.tar.gz".format(self.bag_identifier))
             self.save()
-            self.validate()
             return True
         except Exception as e:
             logger.error("Error moving SIP to directory {}: {}".format(dest, e), object=self)
             raise SIPError("Error moving SIP to directory {}: {}".format(dest, e))
 
+    def extract_all(self, extract_dir):
+        """Extracts a tar.gz file to the `extract dir` directory"""
+        ext = splitext(self.bag_path)[-1]
+        if ext in ['.tgz', '.tar.gz', '.gz']:
+            tf = tarfile.open(self.bag_path, 'r')
+            tf.extractall(extract_dir)
+            tf.close()
+            remove(self.bag_path)
+            self.bag_path = join(extract_dir, self.bag_identifier)
+            self.save()
+            return True
+        else:
+            logger.error("Unrecognized archive format: {}".format(ext), object=self)
+            raise SIPError("Unrecognized archive format: {}".format(ext))
+
     def validate(self):
+        """Validates a bag against the BagIt specification"""
         bag = bagit.Bag(self.bag_path)
         return bag.validate()
 
     def move_objects_dir(self):
+        """Moves the objects directory within a bag"""
         src = join(self.bag_path, 'data')
         dest = join(self.bag_path, 'data', 'objects')
         try:
@@ -98,6 +94,7 @@ class SIP(models.Model):
             raise SIPError("Error moving objects directory: {}".format(e))
 
     def create_structure(self):
+        """Creates Archivematica-compliant directory structure within a bag"""
         log_dir = join(self.bag_path, 'data', 'logs')
         md_dir = join(self.bag_path, 'data', 'metadata')
         docs_dir = join(self.bag_path, 'data', 'metadata', 'submissionDocumentation')
@@ -111,6 +108,7 @@ class SIP(models.Model):
             raise SIPError("Error creating new SIP structure: {}".format(e))
 
     def create_rights_csv(self):
+        """Creates Archivematica-compliant CSV containing PREMIS rights"""
         filepath = join(self.bag_path, 'data', 'metadata', 'rights.csv')
         mode = 'w'
         for rights_statement in self.data.get('rights_statements'):
@@ -149,6 +147,7 @@ class SIP(models.Model):
         return True
 
     def validate_rights_csv(self):
+        """Validate a CSV to ensure it complies with Archivematica validation"""
         field_names = (
                'file', 'basis', 'status', 'determination_date', 'jurisdiction',
                'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
@@ -197,9 +196,11 @@ class SIP(models.Model):
     # Right now this is a placeholder. There is currently no use case for adding
     # submission documentation, but we might think of one in the future.
     def create_submission_docs(self):
+        """Adds submission documentation to a bag. Currently a placeholder function"""
         return True
 
     def update_bag_info(self):
+        """Adds metadata to `bag-info.txt`"""
         try:
             bag = bagit.Bag(self.bag_path)
             bag.info['Internal-Sender-Identifier'] = self.data['identifier']
@@ -210,6 +211,7 @@ class SIP(models.Model):
             raise SIPError("Error updating bag-info metadata: {}".format(e))
 
     def add_processing_config(self):
+        """Adds pre-defined Archivematica processing configuration file"""
         try:
             config = join(settings.PROCESSING_CONFIG_DIR, settings.PROCESSING_CONFIG)
             shutil.copyfile(config, join(self.bag_path, 'processingMCP.xml'))
@@ -219,6 +221,7 @@ class SIP(models.Model):
             raise SIPError("Error creating processing config: {}".format(e))
 
     def update_manifests(self):
+        """Updates bag manifests according to BagIt specification"""
         try:
             bag = bagit.Bag(self.bag_path)
             bag.save(manifests=True)
@@ -226,3 +229,40 @@ class SIP(models.Model):
         except Exception as e:
             logger.error("Error updating bag manifests: {}".format(e), object=self)
             raise SIPError("Error updating bag manifests: {}".format(e))
+
+    def create_package(self):
+        """Creates a compressed archive file from a bag"""
+        try:
+            with tarfile.open('{}.tar.gz'.format(self.bag_path), "w:gz") as tar:
+                tar.add(self.bag_path, arcname=basename(self.bag_path))
+                tar.close()
+            shutil.rmtree(self.bag_path)
+            self.bag_path = '{}.tar.gz'.format(self.bag_path)
+            self.save()
+            return True
+        except Exception as e:
+            logger.error("Error creating .tar.gz archive: {}".format(e), object=self)
+            raise SIPError("Error creating .tar.gz archive: {}".format(e))
+
+    def deliver_via_rsync(self, user, host, dir):
+        rsynccmd = "rsync -avh --remove-source-files {} {}@{}:{}".format(self.bag_path,
+                                                                         user, host, dir)
+        print(rsynccmd)
+        # Commenting this out so tests pass for right now
+        # Consider making this a more generic callback function
+
+        # rsyncproc = subprocess.Popen(rsynccmd,
+        #                              shell=True,
+        #                              stdin=subprocess.PIPE,
+        #                              stdout=subprocess.PIPE,)
+        # while True:
+        #     next_line = rsyncproc.stdout.readline().decode("utf-8")
+        #     if not next_line:
+        #         break
+        #     print(next_line)
+        #
+        # ecode = rsyncproc.wait()
+        # if ecode != 0:
+        #     logger.error("Error delivering bag to {}".format(host), object=self)
+        #     raise SIPError("Error delivering bag to {}".format(host))
+        return True

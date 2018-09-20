@@ -1,6 +1,6 @@
 import json
 from os.path import join, isdir
-from os import listdir, environ, getenv
+from os import listdir, remove
 import random
 import shutil
 
@@ -18,7 +18,7 @@ data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 
 
-class ComponentTest(TestCase):
+class SIPAssemblyTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         if isdir(settings.TEST_UPLOAD_DIR):
@@ -39,18 +39,17 @@ class ComponentTest(TestCase):
 
     def process_sip(self):
         print('*** Processing SIPs ***')
-        AssembleSIPs().do(dirs={'processing': settings.TEST_PROCESSING_DIR, 'transfer_source': settings.TEST_TRANSFER_SOURCE_DIR})
-        self.assertEqual(len([name for name in listdir(bag_fixture_dir) if isdir(bag_fixture_dir)]),
-                         len([name for name in listdir(settings.TEST_TRANSFER_SOURCE_DIR) if isdir(join(settings.TEST_TRANSFER_SOURCE_DIR, name))]))
+        assembly = AssembleSIPs().do(dirs={'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY})
+        self.assertEqual(True, assembly)
 
     def tearDown(self):
-        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_TRANSFER_SOURCE_DIR, settings.TEST_PROCESSING_DIR]:
+        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR]:
             if isdir(d):
                 shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()
         for sip in sips:
-            sip.bag_path = join(settings.TEST_UPLOAD_DIR, sip.bag_identifier)
+            sip.bag_path = join(settings.TEST_UPLOAD_DIR, "{}.tar.gz".format(sip.bag_identifier))
             sip.save()
         self.process_sip()

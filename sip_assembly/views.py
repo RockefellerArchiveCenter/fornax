@@ -39,7 +39,7 @@ class SIPViewSet(viewsets.ModelViewSet):
         log = logger.new(transaction_id=str(uuid4()))
         sip = SIP(
             process_status=10,
-            bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, request.data['identifier']),
+            bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
             data=request.data
         )

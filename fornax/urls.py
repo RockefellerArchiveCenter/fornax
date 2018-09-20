@@ -36,7 +36,6 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^sips', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^status/', include('health_check.api.urls')),
     url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
 ]
