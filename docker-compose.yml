@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  fornax_db:
+  fornax-db:
     image: postgres:10.4
     volumes:
       - fornaxdb:/var/lib/postgresql/data/
-  fornax_web:
+  fornax-web:
     build: .
     entrypoint: /code/entrypoint.sh
     volumes:
@@ -13,7 +13,7 @@ services:
     ports:
       - "8003:8003"
     depends_on:
-      - fornax_db
+      - fornax-db
 
 volumes:
   fornaxdb:
