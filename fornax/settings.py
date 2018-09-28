@@ -27,7 +27,7 @@ SECRET_KEY = '&0-xb06z0kd7m%dic^wn9wdgft&yqdb_m)3uq54p+r%=5l!k$q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['fornax-web']
+ALLOWED_HOSTS = ['fornax-web', 'localhost']
 
 # Application definition
 
