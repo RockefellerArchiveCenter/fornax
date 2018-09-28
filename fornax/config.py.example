@@ -9,10 +9,14 @@ PROCESSING_CONFIG = 'processingMCP.xml'
 DELIVERY = {
     'user': 'user',
     'host': 'http://archivematica',
-    'dir': '/transfer_source/'
 }
 TEST_DELIVERY = {
     'user': 'user',
     'host': 'http://archivematica',
-    'dir': '/transfer_source/'
+}
+ARCHIVEMATICA = {
+  "baseurl": "http://archivematica-dashboard:8000/api/",
+  "username": "test",
+  "api_key": "test",
+  "location_uuid": "b45b5bcc-bfd6-4e00-b252-7e49c1c02f73",
 }
