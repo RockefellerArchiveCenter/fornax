@@ -34,7 +34,7 @@ class SIPAssemblyTest(TestCase):
                 response = SIPViewSet.as_view(actions={"post": "create"})(request)
                 self.assertEqual(response.status_code, 200, "Wrong HTTP code")
                 print('Created SIPs')
-        self.assertEqual(len(SIP.objects.all()), len(listdir(bag_fixture_dir)), "Incorrect number of SIPs created")
+        self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
         return SIP.objects.all()
 
     def process_sip(self):
@@ -42,10 +42,10 @@ class SIPAssemblyTest(TestCase):
         assembly = AssembleSIPs().do(dirs={'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY})
         self.assertEqual(True, assembly)
 
-    def tearDown(self):
-        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR]:
-            if isdir(d):
-                shutil.rmtree(d)
+    # def tearDown(self):
+    #     for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR]:
+    #         if isdir(d):
+    #             shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()
