@@ -118,9 +118,11 @@ class SIPAssembler(object):
                     self.log.error("Error creating .tar.gz file")
                     return False
                 if not sip.deliver_via_rsync(self.delivery['user'],
-                                             self.delivery['host'],
-                                             self.delivery['dir']):
+                                             self.delivery['host']):
                     self.log.error("Error sending SIP to Archivematica")
+                    return False
+                if not sip.start_transfer():
+                    self.log.error("Error starting transfer in Archivematica")
                     return False
                 sip.process_status = 90
                 sip.save()

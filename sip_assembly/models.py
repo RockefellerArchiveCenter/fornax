@@ -1,4 +1,5 @@
 import bagit
+import base64
 import csv
 from csvvalidator import *
 import datetime
@@ -6,6 +7,7 @@ import logging
 from os import listdir, makedirs, rename, remove, walk
 from os.path import basename, dirname, exists, isfile, isdir, join, splitext
 import psutil
+import requests
 import shutil
 from structlog import wrap_logger
 import subprocess
@@ -244,25 +246,36 @@ class SIP(models.Model):
             logger.error("Error creating .tar.gz archive: {}".format(e), object=self)
             raise SIPError("Error creating .tar.gz archive: {}".format(e))
 
-    def deliver_via_rsync(self, user, host, dir):
-        rsynccmd = "rsync -avh --remove-source-files {} {}@{}:{}".format(self.bag_path,
-                                                                         user, host, dir)
-        print(rsynccmd)
-        # Commenting this out so tests pass for right now
-        # Consider making this a more generic callback function
-
-        # rsyncproc = subprocess.Popen(rsynccmd,
-        #                              shell=True,
-        #                              stdin=subprocess.PIPE,
-        #                              stdout=subprocess.PIPE,)
+    def deliver_via_rsync(self, user, host):
+        rsynccmd = "rsync -avh --remove-source-files {} {}".format(self.bag_path, host)
+        rsyncproc = subprocess.Popen(rsynccmd, shell=True,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,)
         # while True:
         #     next_line = rsyncproc.stdout.readline().decode("utf-8")
         #     if not next_line:
         #         break
         #     print(next_line)
-        #
-        # ecode = rsyncproc.wait()
-        # if ecode != 0:
-        #     logger.error("Error delivering bag to {}".format(host), object=self)
-        #     raise SIPError("Error delivering bag to {}".format(host))
+
+        ecode = rsyncproc.wait()
+        if ecode != 0:
+            logger.error("Error delivering bag to {}".format(host), object=self)
+            raise SIPError("Error delivering bag to {}".format(host))
         return True
+
+    def start_transfer(self):
+        headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'], settings.ARCHIVEMATICA['api_key'])}
+        baseurl = settings.ARCHIVEMATICA['baseurl']
+        path = "/home/{}.tar.gz".format(self.bag_identifier)
+        full_url = join(baseurl, 'transfer/start_transfer/')
+        paths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], path)
+        params = {'name': self.bag_identifier, 'type': 'zipped bag', 'paths[]': base64.b64encode(paths.encode())}
+        start = requests.post(full_url, headers=headers, data=params)
+        if start:
+            return True
+            # This block sends a POST request to start transfers. However it may be better to use the Archivematica automation tools for this
+            # approve = requests.post(join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(self.bag_identifier)})
+            # if approve:
+            #     return True
+        else:
+            raise SIPError("Error starting transfer in Archivematica: {}".format(start['data']['message']))
