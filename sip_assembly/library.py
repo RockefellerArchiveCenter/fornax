@@ -4,7 +4,7 @@ import csv
 from csvvalidator import *
 import datetime
 import logging
-from os import listdir, makedirs, path, rename, remove, walk
+import os
 import requests
 import shutil
 from structlog import wrap_logger
@@ -19,10 +19,10 @@ logger = wrap_logger(logger=logging.getLogger(__name__))
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory"""
     try:
-        if not path.exists(dest):
-            makedirs(dest)
-        shutil.move(sip.bag_path, path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
-        sip.bag_path = path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        shutil.move(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+        sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
         sip.save()
         return True
     except Exception as e:
@@ -32,13 +32,13 @@ def move_to_directory(sip, dest):
 
 def extract_all(sip, extract_dir):
     """Extracts a tar.gz file to the `extract dir` directory"""
-    ext = path.splitext(sip.bag_path)[-1]
+    ext = os.path.splitext(sip.bag_path)[-1]
     if ext in ['.tgz', '.tar.gz', '.gz']:
         tf = tarfile.open(sip.bag_path, 'r')
         tf.extractall(extract_dir)
         tf.close()
-        remove(sip.bag_path)
-        sip.bag_path = path.join(extract_dir, sip.bag_identifier)
+        os.remove(sip.bag_path)
+        sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
         sip.save()
         return True
     else:
@@ -48,14 +48,14 @@ def extract_all(sip, extract_dir):
 
 def move_objects_dir(sip):
     """Moves the objects directory within a bag"""
-    src = path.join(sip.bag_path, 'data')
-    dest = path.join(sip.bag_path, 'data', 'objects')
+    src = os.path.join(sip.bag_path, 'data')
+    dest = os.path.join(sip.bag_path, 'data', 'objects')
     try:
-        if not path.exists(dest):
-            makedirs(dest)
-        for fname in listdir(src):
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        for fname in os.listdir(src):
             if fname != 'objects':
-                rename(path.join(src, fname), path.join(dest, fname))
+                os.rename(os.path.join(src, fname), os.path.join(dest, fname))
         return True
     except Exception as e:
         logger.error("Error moving objects directory: {}".format(e), object=sip)
@@ -70,13 +70,13 @@ def validate(sip):
 
 def create_structure(sip):
     """Creates Archivematica-compliant directory structure within a bag"""
-    log_dir = path.join(sip.bag_path, 'data', 'logs')
-    md_dir = path.join(sip.bag_path, 'data', 'metadata')
-    docs_dir = path.join(sip.bag_path, 'data', 'metadata', 'submissionDocumentation')
+    log_dir = os.path.join(sip.bag_path, 'data', 'logs')
+    md_dir = os.path.join(sip.bag_path, 'data', 'metadata')
+    docs_dir = os.path.join(sip.bag_path, 'data', 'metadata', 'submissionDocumentation')
     try:
         for dir in [log_dir, md_dir, docs_dir]:
-            if not path.exists(dir):
-                makedirs(dir)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
         return True
     except Exception as e:
         logger.error("Error creating new SIP structure: {}".format(e), object=sip)
@@ -85,24 +85,24 @@ def create_structure(sip):
 
 def create_rights_csv(sip):
     """Creates Archivematica-compliant CSV containing PREMIS rights"""
-    filepath = path.join(sip.bag_path, 'data', 'metadata', 'rights.csv')
+    filepath = os.path.join(sip.bag_path, 'data', 'metadata', 'rights.csv')
     mode = 'w'
     for rights_statement in sip.data.get('rights_statements'):
         firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
                     'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
                     'grant_restriction', 'grant_start_date', 'grant_end_date',
                     'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
-        if path.isfile(filepath):
+        if os.path.isfile(filepath):
             mode = 'a'
             firstrow = None
         try:
-            if not path.exists(path.dirname(filepath)):
-                makedirs(path.dirname(filepath))
+            if not os.path.exists(os.path.dirname(filepath)):
+                os.makedirs(os.path.dirname(filepath))
             with open(filepath, mode) as csvfile:
                 csvwriter = csv.writer(csvfile)
                 if firstrow:
                     csvwriter.writerow(firstrow)
-                for file in listdir(path.join(sip.bag_path, 'data', 'objects')):
+                for file in os.listdir(os.path.join(sip.bag_path, 'data', 'objects')):
                     for rights_granted in rights_statement.get('rights_granted'):
                         csvwriter.writerow(
                             ["data/objects/{}".format(file), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
@@ -159,7 +159,7 @@ def validate_rights_csv(sip):
             raise RecordError('EX8', 'invalid date format')
     validator.add_record_check(check_dates)
 
-    with open(path.join(sip.bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
+    with open(os.path.join(sip.bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
         data = csv.reader(csvfile)
         problems = validator.validate(data)
         if problems:
@@ -192,8 +192,8 @@ def update_bag_info(sip):
 def add_processing_config(sip):
     """Adds pre-defined Archivematica processing configuration file"""
     try:
-        config = path.join(settings.PROCESSING_CONFIG_DIR, settings.PROCESSING_CONFIG)
-        shutil.copyfile(config, path.join(sip.bag_path, 'processingMCP.xml'))
+        config = os.path.join(settings.PROCESSING_CONFIG_DIR, settings.PROCESSING_CONFIG)
+        shutil.copyfile(config, os.path.join(sip.bag_path, 'processingMCP.xml'))
         return True
     except Exception as e:
         logger.error("Error creating processing config: {}".format(e), object=sip)
@@ -215,7 +215,7 @@ def create_package(sip):
     """Creates a compressed archive file from a bag"""
     try:
         with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
-            tar.add(sip.bag_path, arcname=path.basename(sip.bag_path))
+            tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))
             tar.close()
         shutil.rmtree(sip.bag_path)
         sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
@@ -248,14 +248,14 @@ def start_transfer(sip):
     headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'], settings.ARCHIVEMATICA['api_key'])}
     baseurl = settings.ARCHIVEMATICA['baseurl']
     basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
-    full_url = path.join(baseurl, 'transfer/start_transfer/')
+    full_url = os.path.join(baseurl, 'transfer/start_transfer/')
     bagpaths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], basepath)
     params = {'name': sip.bag_identifier, 'type': 'zipped bag', 'paths[]': base64.b64encode(bagpaths.encode())}
     start = requests.post(full_url, headers=headers, data=params)
     if start:
         return True
         # This block sends a POST request to start transfers. However it may be better to use the Archivematica automation tools for this
-        # approve = requests.post(path.join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
+        # approve = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
         # if approve:
         #     return True
     else:
