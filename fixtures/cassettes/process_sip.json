@@ -1,0 +1,1008 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=6dfe74ae-5e80-4e42-90fb-aa4ecec752f2&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzZkZmU3NGFlLTVlODAtNGU0Mi05MGZiLWFhNGVjZWM3NTJmMi50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:06 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/6dfe74ae-5e80-4e42-90fb-aa4ecec752f2.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=5bfacfc7-3463-4e0d-a7ec-7da72ecdc588&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzViZmFjZmM3LTM0NjMtNGUwZC1hN2VjLTdkYTcyZWNkYzU4OC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:09 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/5bfacfc7-3463-4e0d-a7ec-7da72ecdc588.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=3b34198a-df0c-4c95-a374-b15dc6418cfa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNiMzQxOThhLWRmMGMtNGM5NS1hMzc0LWIxNWRjNjQxOGNmYS50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:14 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3b34198a-df0c-4c95-a374-b15dc6418cfa.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1d647537-8483-4155-9bfd-3906621d12ff&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFkNjQ3NTM3LTg0ODMtNDE1NS05YmZkLTM5MDY2MjFkMTJmZi50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:19 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1d647537-8483-4155-9bfd-3906621d12ff.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=2db47a0b-d469-4ab6-a9e2-606d5c620c3c&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzJkYjQ3YTBiLWQ0NjktNGFiNi1hOWUyLTYwNmQ1YzYyMGMzYy50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:25 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/2db47a0b-d469-4ab6-a9e2-606d5c620c3c.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=10fd15d0-6b65-43e6-a8ec-132d1d46f024&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzEwZmQxNWQwLTZiNjUtNDNlNi1hOGVjLTEzMmQxZDQ2ZjAyNC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:30 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/10fd15d0-6b65-43e6-a8ec-132d1d46f024.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1d81a875-0517-4329-9f9d-07f67d099d83&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFkODFhODc1LTA1MTctNDMyOS05ZjlkLTA3ZjY3ZDA5OWQ4My50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:35 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1d81a875-0517-4329-9f9d-07f67d099d83.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1f77ea3a-7911-491f-84a8-898622be74aa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFmNzdlYTNhLTc5MTEtNDkxZi04NGE4LTg5ODYyMmJlNzRhYS50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:41 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1f77ea3a-7911-491f-84a8-898622be74aa.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=3a9f9461-a554-42f7-8d0a-7708a29c1a1c&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNhOWY5NDYxLWE1NTQtNDJmNy04ZDBhLTc3MDhhMjljMWExYy50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:46 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3a9f9461-a554-42f7-8d0a-7708a29c1a1c.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=0edb4066-980c-491f-bd73-c80a6546ff6d&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzBlZGI0MDY2LTk4MGMtNDkxZi1iZDczLWM4MGE2NTQ2ZmY2ZC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:51 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/0edb4066-980c-491f-bd73-c80a6546ff6d.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=7c780ed1-9068-42ef-8d2f-7bf196700684&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzdjNzgwZWQxLTkwNjgtNDJlZi04ZDJmLTdiZjE5NjcwMDY4NC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:04:54 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/7c780ed1-9068-42ef-8d2f-7bf196700684.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=3d9958ac-1785-4aa2-9dbb-bd6217639bff&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNkOTk1OGFjLTE3ODUtNGFhMi05ZGJiLWJkNjIxNzYzOWJmZi50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:00 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3d9958ac-1785-4aa2-9dbb-bd6217639bff.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=9de98d3b-709f-418e-941f-b9bdb19dd48a&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzlkZTk4ZDNiLTcwOWYtNDE4ZS05NDFmLWI5YmRiMTlkZDQ4YS50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:05 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/9de98d3b-709f-418e-941f-b9bdb19dd48a.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1f4ba5d4-ea2d-4bc3-9dfc-a61f8e2224c4&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFmNGJhNWQ0LWVhMmQtNGJjMy05ZGZjLWE2MWY4ZTIyMjRjNC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:10 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1f4ba5d4-ea2d-4bc3-9dfc-a61f8e2224c4.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=3bcd43af-e6af-47fb-9adf-617545a2f9aa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNiY2Q0M2FmLWU2YWYtNDdmYi05YWRmLTYxNzU0NWEyZjlhYS50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:15 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3bcd43af-e6af-47fb-9adf-617545a2f9aa.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=7e941c05-dc2f-499d-af96-128440737d5d&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzdlOTQxYzA1LWRjMmYtNDk5ZC1hZjk2LTEyODQ0MDczN2Q1ZC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:20 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/7e941c05-dc2f-499d-af96-128440737d5d.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1e65adcb-80cc-4f98-9031-9593233c1cf8&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFlNjVhZGNiLTgwY2MtNGY5OC05MDMxLTk1OTMyMzNjMWNmOC50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Tue, 02 Oct 2018 13:05:24 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1e65adcb-80cc-4f98-9031-9593233c1cf8.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        }
+    ]
+}

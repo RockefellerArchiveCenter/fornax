@@ -3,6 +3,7 @@ from os.path import join, isdir
 from os import listdir, remove
 import random
 import shutil
+import vcr
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -16,6 +17,15 @@ from sip_assembly.views import SIPViewSet
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
+
+assembly_vcr = vcr.VCR(
+    serializer='json',
+    cassette_library_dir='fixtures/cassettes',
+    record_mode='once',
+    match_on=['path', 'method', 'query'],
+    filter_query_parameters=['username', 'password'],
+    filter_headers=['Authorization'],
+)
 
 
 class SIPAssemblyTest(TestCase):
@@ -38,14 +48,15 @@ class SIPAssemblyTest(TestCase):
         return SIP.objects.all()
 
     def process_sip(self):
-        print('*** Processing SIPs ***')
-        assembly = AssembleSIPs().do(dirs={'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY})
-        self.assertEqual(True, assembly)
+        with assembly_vcr.use_cassette('process_sip.json'):
+            print('*** Processing SIPs ***')
+            assembly = AssembleSIPs().do(dirs={'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY})
+            self.assertEqual(True, assembly)
 
-    # def tearDown(self):
-    #     for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR]:
-    #         if isdir(d):
-    #             shutil.rmtree(d)
+    def tearDown(self):
+        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR]:
+            if isdir(d):
+                shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()
