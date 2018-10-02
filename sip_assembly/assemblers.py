@@ -1,10 +1,9 @@
-from os.path import join
 import logging
-from shutil import rmtree
 from structlog import wrap_logger
 from uuid import uuid4
 
 from fornax import settings
+from sip_assembly import library
 from sip_assembly.models import SIP
 
 logger = logging.getLogger(__name__)
@@ -28,107 +27,84 @@ class SIPAssembler(object):
 
     def run(self, sip):
         self.log = logger.new(object=sip)
-        try:
-            if int(sip.process_status) < 20:
-                print("Moving SIP to processing directory")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.move_to_directory(self.processing_dir):
-                    self.log.error("Error moving SIP to processing directory")
-                    return False
-                if not sip.extract_all(self.processing_dir):
-                    self.log.error("Error extracting SIP")
-                    return False
-                if not sip.validate():
-                    self.log.error("SIP is invalid")
-                    return False
+        self.log.bind(request_id=str(uuid4()))
+        if int(sip.process_status) < 20:
+            try:
+                library.move_to_directory(sip, self.processing_dir)
+                library.extract_all(sip, self.processing_dir)
+                library.validate(sip)
                 sip.process_status = 20
                 sip.save()
                 self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
+            except Exception as e:
+                raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e))
 
-            if int(sip.process_status) < 30:
-                print("Restructuring SIP")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.move_objects_dir():
-                    return False
-                if not sip.create_structure():
-                    self.log.error("Error creating new directories")
-                    return False
+        if int(sip.process_status) < 30:
+            try:
+                library.move_objects_dir(sip)
+                library.create_structure(sip)
                 sip.process_status = 30
                 sip.save()
                 self.log.debug("SIP restructured")
+            except Exception as e:
+                raise SIPAssemblyError("Error restructuring SIP: {}".format(e))
 
-            if int(sip.process_status) < 40:
-                print("Creating rights statements")
-                self.log.bind(request_id=str(uuid4()))
-                if sip.data['rights_statements']:
-                    if not sip.create_rights_csv():
-                        self.log.error("Error creating rights statements")
-                        return False
-                    if not sip.validate_rights_csv():
-                        self.log.error("rights.csv is invalid")
-                        return False
-                sip.process_status = 40
-                sip.save()
-                self.log.debug("Rights statements added to SIP")
+        if int(sip.process_status) < 40:
+            if sip.data['rights_statements']:
+                try:
+                    library.create_rights_csv(sip)
+                    library.validate_rights_csv(sip)
+                except Exception as e:
+                    raise SIPAssemblyError("Error creating rights.csv: {}".format(e))
+            sip.process_status = 40
+            sip.save()
+            self.log.debug("Rights statements added to SIP")
 
-            if int(sip.process_status) < 50:
-                print("Creating submission docs")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.create_submission_docs():
-                    self.log.error("Error creating submission docs")
-                    return False
+        if int(sip.process_status) < 50:
+            try:
+                library.create_submission_docs(sip)
                 sip.process_status = 50
                 sip.save()
                 self.log.debug("Submission docs created")
+            except Exception as e:
+                raise SIPAssemblyError("Error creating submission docs: {}".format(e))
 
-            if int(sip.process_status) < 60:
-                print("Updating bag-info.txt")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.update_bag_info():
-                    self.log.error("Error updating bag-info.txt")
-                    return False
+        if int(sip.process_status) < 60:
+            try:
+                library.update_bag_info(sip)
                 sip.process_status = 60
                 sip.save()
                 self.log.debug("Bag-info.txt updated")
+            except Exception as e:
+                raise SIPAssemblyError("Error updating bag-info.txt: {}".format(e))
 
-            if int(sip.process_status) < 70:
-                print("Adding Archivematica processing config")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.add_processing_config():
-                    self.log.error("Error adding Archivematica processing config")
-                    return False
+        if int(sip.process_status) < 70:
+            try:
+                library.add_processing_config(sip)
                 sip.process_status = 70
                 sip.save()
                 self.log.debug("Archivematica processing config added")
+            except Exception as e:
+                raise SIPAssemblyError("Error adding processing config: {}".format(e))
 
-            if int(sip.process_status) < 80:
-                print("Updating manifests")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.update_manifests():
-                    self.log.error("Error updating manifests")
-                    return False
+        if int(sip.process_status) < 80:
+            try:
+                library.update_manifests(sip)
                 sip.process_status = 80
                 sip.save()
                 self.log.debug("Manifests updated")
+            except Exception as e:
+                raise SIPAssemblyError("Error updating manifests: {}".format(e))
 
-            if int(sip.process_status) < 90:
-                print("Sending SIP to Archivematica")
-                self.log.bind(request_id=str(uuid4()))
-                if not sip.create_package():
-                    self.log.error("Error creating .tar.gz file")
-                    return False
-                if not sip.deliver_via_rsync(self.delivery['user'],
-                                             self.delivery['host']):
-                    self.log.error("Error sending SIP to Archivematica")
-                    return False
-                if not sip.start_transfer():
-                    self.log.error("Error starting transfer in Archivematica")
-                    return False
+        if int(sip.process_status) < 90:
+            try:
+                library.create_package(sip)
+                library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
+                library.start_transfer(sip)
                 sip.process_status = 90
                 sip.save()
                 self.log.debug("SIP sent to Archivematica")
+            except Exception as e:
+                raise SIPAssemblyError("Error sending SIP to Archivematica: {}".format(e))
 
-            return True
-
-        except Exception as e:
-            raise SIPAssemblyError("Error assembling SIP: {}".format(e))
+        return True
