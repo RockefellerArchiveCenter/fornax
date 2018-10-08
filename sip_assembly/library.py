@@ -245,19 +245,22 @@ def deliver_via_rsync(sip, user, host):
 
 
 def start_transfer(sip):
-    headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'], settings.ARCHIVEMATICA['api_key'])}
+    """Starts and approves transfer in Archivematica. In high-throughput
+    environments, it may be better to use Archivematica's Automation Tools."""
+    headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'],
+               settings.ARCHIVEMATICA['api_key']), 'Accept': 'application/json',
+               'User-Agent': 'Fornax/0.1'}
     baseurl = settings.ARCHIVEMATICA['baseurl']
     basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
     full_url = os.path.join(baseurl, 'transfer/start_transfer/')
     bagpaths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], basepath)
     params = {'name': sip.bag_identifier, 'type': 'zipped bag', 'paths[]': base64.b64encode(bagpaths.encode())}
-    start = requests.post(full_url, headers=headers, data=params)
-    if start:
+    start_transfer = requests.post(full_url, headers=headers, data=params)
+    if start_transfer:
         return True
-        # This block sends a POST request to start transfers. However it may be better to use the Archivematica automation tools for this
-        # approve = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
-        # if approve:
-        #     return True
+        approve_transfer = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
+        if approve_transfer:
+            return True
     else:
         logger.error("Error starting transfer in Archivematica: {}".format(start['data']['message']))
         return False

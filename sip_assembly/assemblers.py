@@ -100,7 +100,7 @@ class SIPAssembler(object):
             try:
                 library.create_package(sip)
                 library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
-                library.start_transfer(sip)
+                # library.start_transfer(sip)
                 sip.process_status = 90
                 sip.save()
                 self.log.debug("SIP sent to Archivematica")
