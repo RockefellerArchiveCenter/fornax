@@ -8,11 +8,11 @@ PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
 DELIVERY = {
     'user': 'user',
-    'host': 'archivematica_transfer_source/',
+    'host': '/archivematica_transfer_source/',
 }
 TEST_DELIVERY = {
     'user': 'user',
-    'host': 'archivematica_transfer_source/',
+    'host': '/archivematica_transfer_source/',
 }
 ARCHIVEMATICA = {
   "baseurl": "http://archivematica-dashboard:8000/api/",
