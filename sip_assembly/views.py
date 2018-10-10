@@ -4,19 +4,19 @@ import os
 from structlog import wrap_logger
 from uuid import uuid4
 
-from django.shortcuts import render
-from django.views.generic import View
-from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from fornax import settings
 from sip_assembly.models import SIP
+from sip_assembly.assemblers import SIPAssembler
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
-class SIPViewSet(viewsets.ModelViewSet):
+class SIPViewSet(ModelViewSet):
     """
     retrieve:
     Return data about a SIP, identified by a primary key.
@@ -47,3 +47,15 @@ class SIPViewSet(viewsets.ModelViewSet):
         log.debug("SIP saved", object=sip, request_id=str(uuid4()))
         sip_serializer = SIPSerializer(sip, context={'request': request})
         return Response(sip_serializer.data)
+
+
+class SIPAssemblyView(APIView):
+    """Starts the SIPAssembler routine"""
+
+    def post(self, request, format=None):
+        log = logger.new(transaction_id=str(uuid4()))
+        try:
+            SIPAssembler().run()
+            return Response({"detail": "SIPAssembler routine complete."}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)

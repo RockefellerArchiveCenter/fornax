@@ -23,11 +23,9 @@ class AssembleSIPs(CronJobBase):
         self.log = logger.new(transaction_id=str(uuid4()))
         self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
 
-        for sip in SIP.objects.filter(process_status=10):
-            self.log.debug("Assembling SIP", object=sip.bag_identifier)
-            try:
-                SIPAssembler(dirs).run(sip)
-            except Exception as e:
-                self.log.error(e)
-                return False
-        return True
+        try:
+            SIPAssembler(dirs).run()
+            return True
+        except Exception as e:
+            self.log.error(e)
+            return False
