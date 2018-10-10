@@ -55,7 +55,7 @@ class SIPAssemblyTest(TestCase):
 
     def run_view(self):
         print('*** Test run view ***')
-        request = self.factory.post(reverse('run'))
+        request = self.factory.post(reverse('sipassembly'))
         response = SIPAssemblyView.as_view()(request)
         self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 

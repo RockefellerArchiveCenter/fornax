@@ -36,7 +36,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^run/', SIPAssemblyView.as_view(), name="run"),
+    url(r'^sipassembly/', SIPAssemblyView.as_view(), name="sipassembly"),
     url(r'^status/', include('health_check.api.urls')),
     url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
 ]
