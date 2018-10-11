@@ -12,7 +12,7 @@ DELIVERY = {
 }
 TEST_DELIVERY = {
     'user': 'user',
-    'host': '/archivematica_transfer_source/',
+    'host': '/test_archivematica_transfer_source/',
 }
 ARCHIVEMATICA = {
   "baseurl": "http://archivematica-dashboard:8000/api/",
