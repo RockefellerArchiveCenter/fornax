@@ -59,6 +59,16 @@ class SIPAssemblyTest(TestCase):
         response = SIPAssemblyView.as_view()(request)
         self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
+    def schema(self):
+        print('*** Getting schema view ***')
+        schema = self.client.get(reverse('schema-json', kwargs={"format": ".json"}))
+        self.assertEqual(schema.status_code, 200, "Wrong HTTP code")
+
+    def health_check(self):
+        print('*** Getting status view ***')
+        status = self.client.get(reverse('api_health_ping'))
+        self.assertEqual(status.status_code, 200, "Wrong HTTP code")
+
     def tearDown(self):
         for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR, settings.TEST_DELIVERY['host']]:
             if isdir(d):
@@ -71,3 +81,5 @@ class SIPAssemblyTest(TestCase):
             sip.save()
         self.process_sip()
         self.run_view()
+        self.schema()
+        self.health_check()
