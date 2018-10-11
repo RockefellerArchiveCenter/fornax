@@ -27,6 +27,7 @@ class SIPAssembler(object):
 
     def run(self):
         self.log = logger.new(request_id=str(uuid4()))
+        self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         for sip in SIP.objects.filter(process_status=10):
             self.log = logger.bind(object=sip)
             if int(sip.process_status) < 20:

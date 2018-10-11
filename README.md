@@ -69,14 +69,15 @@ Fornax currently makes the following assumptions:
 |GET|/sips| |200|Returns a list of SIPs|
 |GET|/sips/{id}| |200|Returns data about an individual SIP|
 |POST|/sips||200|Creates a SIP object from an transfer in Aurora.|
+|POST|/sipassembly||200|Runs the SIPAssembly routine.|
 |GET|/status||200|Return the status of the microservice|
 
 
 ### Creating SIPs
 
-SIPs will be created and queued for assembly when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
+SIPs will be created and queued for assembly when a POST request is sent to the `sips` endpoint. SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run or if a POST request is sent to the `/sipassembly` endpoint. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP.
 
-SIP Assembly consists of the following steps (the `SIPAssembler` class):
+SIP Assembly consists of the following steps (see the `SIPAssembler` class in `sip_assembly/assemblers.py`):
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
@@ -85,6 +86,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Creating `rights.csv` and adding it to the `metadata` directory
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
 - Adding a URI to `bag-info.txt` using the `Internal-Sender-Identifier` field
+- Adding an Archivematica processing configuration file
 - Updating bag manifests to account for restructuring and changes to files
 - Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving)
 

@@ -21,7 +21,6 @@ class AssembleSIPs(CronJobBase):
 
     def do(self, dirs=None):
         self.log = logger.new(transaction_id=str(uuid4()))
-        self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
 
         try:
             SIPAssembler(dirs).run()
