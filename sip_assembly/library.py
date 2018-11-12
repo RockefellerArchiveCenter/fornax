@@ -1,5 +1,4 @@
 import bagit
-import base64
 import csv
 from csvvalidator import *
 import datetime
