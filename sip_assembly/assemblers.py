@@ -34,23 +34,36 @@ class SIPAssembler(object):
                 library.move_to_directory(sip, self.processing_dir)
                 library.extract_all(sip, self.processing_dir)
                 library.validate(sip)
+            except Exception as e:
+                raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e))
+
+            try:
                 library.move_objects_dir(sip)
                 library.create_structure(sip)
-                if sip.data['rights_statements']:
-                    try:
-                        library.create_rights_csv(sip)
-                        library.validate_rights_csv(sip)
-                    except Exception as e:
-                        raise SIPAssemblyError("Error creating rights.csv: {}".format(e))
+            except Exception as e:
+                raise SIPAssemblyError("Error restructuring SIP: {}".format(e))
+
+            if sip.data['rights_statements']:
+                try:
+                    library.create_rights_csv(sip)
+                    library.validate_rights_csv(sip)
+                except Exception as e:
+                    raise SIPAssemblyError("Error creating rights.csv: {}".format(e))
+
+            try:
                 library.update_bag_info(sip)
                 library.add_processing_config(sip)
                 library.update_manifests(sip)
                 library.create_package(sip)
+            except Exception as e:
+                raise SIPAssemblyError("Error updating SIP contents: {}".format(e))
+
+            try:
                 library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
                 sip.process_status = 20
                 sip.save()
             except Exception as e:
-                raise SIPAssemblyError("Error assembling SIP: {}".format(e))
+                raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e))
 
         return True
 
