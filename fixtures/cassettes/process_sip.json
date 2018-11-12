@@ -3,9 +3,9 @@
     "interactions": [
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=6dfe74ae-5e80-4e42-90fb-aa4ecec752f2&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzZkZmU3NGFlLTVlODAtNGU0Mi05MGZiLWFhNGVjZWM3NTJmMi50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -18,12 +18,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -36,35 +30,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:06 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/6dfe74ae-5e80-4e42-90fb-aa4ecec752f2.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=5bfacfc7-3463-4e0d-a7ec-7da72ecdc588&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzViZmFjZmM3LTM0NjMtNGUwZC1hN2VjLTdkYTcyZWNkYzU4OC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -77,12 +71,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -95,35 +83,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:31 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:09 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/5bfacfc7-3463-4e0d-a7ec-7da72ecdc588.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=3b34198a-df0c-4c95-a374-b15dc6418cfa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNiMzQxOThhLWRmMGMtNGM5NS1hMzc0LWIxNWRjNjQxOGNmYS50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -136,12 +124,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -154,35 +136,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:32 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:14 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3b34198a-df0c-4c95-a374-b15dc6418cfa.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=1d647537-8483-4155-9bfd-3906621d12ff&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFkNjQ3NTM3LTg0ODMtNDE1NS05YmZkLTM5MDY2MjFkMTJmZi50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -195,12 +177,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -213,35 +189,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:33 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:19 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1d647537-8483-4155-9bfd-3906621d12ff.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=2db47a0b-d469-4ab6-a9e2-606d5c620c3c&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzJkYjQ3YTBiLWQ0NjktNGFiNi1hOWUyLTYwNmQ1YzYyMGMzYy50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -254,12 +230,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -272,35 +242,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:34 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:25 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/2db47a0b-d469-4ab6-a9e2-606d5c620c3c.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=10fd15d0-6b65-43e6-a8ec-132d1d46f024&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzEwZmQxNWQwLTZiNjUtNDNlNi1hOGVjLTEzMmQxZDQ2ZjAyNC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -313,12 +283,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -331,35 +295,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:36 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:30 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/10fd15d0-6b65-43e6-a8ec-132d1d46f024.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=1d81a875-0517-4329-9f9d-07f67d099d83&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFkODFhODc1LTA1MTctNDMyOS05ZjlkLTA3ZjY3ZDA5OWQ4My50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -372,12 +336,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -390,35 +348,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:36 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:35 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1d81a875-0517-4329-9f9d-07f67d099d83.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=1f77ea3a-7911-491f-84a8-898622be74aa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFmNzdlYTNhLTc5MTEtNDkxZi04NGE4LTg5ODYyMmJlNzRhYS50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -431,12 +389,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -449,35 +401,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:37 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:41 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1f77ea3a-7911-491f-84a8-898622be74aa.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=3a9f9461-a554-42f7-8d0a-7708a29c1a1c&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNhOWY5NDYxLWE1NTQtNDJmNy04ZDBhLTc3MDhhMjljMWExYy50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -490,12 +442,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -508,35 +454,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:38 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:46 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3a9f9461-a554-42f7-8d0a-7708a29c1a1c.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=0edb4066-980c-491f-bd73-c80a6546ff6d&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzBlZGI0MDY2LTk4MGMtNDkxZi1iZDczLWM4MGE2NTQ2ZmY2ZC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -549,12 +495,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -567,35 +507,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:39 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:51 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/0edb4066-980c-491f-bd73-c80a6546ff6d.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=7c780ed1-9068-42ef-8d2f-7bf196700684&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzdjNzgwZWQxLTkwNjgtNDJlZi04ZDJmLTdiZjE5NjcwMDY4NC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -608,12 +548,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -626,35 +560,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:40 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:04:54 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/7c780ed1-9068-42ef-8d2f-7bf196700684.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=3d9958ac-1785-4aa2-9dbb-bd6217639bff&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNkOTk1OGFjLTE3ODUtNGFhMi05ZGJiLWJkNjIxNzYzOWJmZi50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -667,12 +601,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -685,35 +613,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:42 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:00 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3d9958ac-1785-4aa2-9dbb-bd6217639bff.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=9de98d3b-709f-418e-941f-b9bdb19dd48a&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzlkZTk4ZDNiLTcwOWYtNDE4ZS05NDFmLWI5YmRiMTlkZDQ4YS50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -726,12 +654,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -744,35 +666,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:44 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:05 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/9de98d3b-709f-418e-941f-b9bdb19dd48a.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=1f4ba5d4-ea2d-4bc3-9dfc-a61f8e2224c4&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFmNGJhNWQ0LWVhMmQtNGJjMy05ZGZjLWE2MWY4ZTIyMjRjNC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -785,12 +707,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -803,35 +719,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:46 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:10 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1f4ba5d4-ea2d-4bc3-9dfc-a61f8e2224c4.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=3bcd43af-e6af-47fb-9adf-617545a2f9aa&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzNiY2Q0M2FmLWU2YWYtNDdmYi05YWRmLTYxNzU0NWEyZjlhYS50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -844,12 +760,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -862,35 +772,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:46 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:15 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/3bcd43af-e6af-47fb-9adf-617545a2f9aa.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=7e941c05-dc2f-499d-af96-128440737d5d&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzdlOTQxYzA1LWRjMmYtNDk5ZC1hZjk2LTEyODQ0MDczN2Q1ZC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -903,12 +813,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -921,35 +825,35 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:47 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:20 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/7e941c05-dc2f-499d-af96-128440737d5d.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         },
         {
             "request": {
-                "method": "POST",
-                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
-                "body": "name=1e65adcb-80cc-4f98-9031-9593233c1cf8&type=zipped+bag&paths%5B%5D=NTQyMTNjNTktNzQ2My00OGJmLWFkMjAtOTg5ZDdjOTdlMjVlOi9ob21lLzFlNjVhZGNiLTgwY2MtNGY5OC05MDMxLTk1OTMyMzNjMWNmOC50YXIuZ3o%3D",
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "body": null,
                 "headers": {
                     "User-Agent": [
                         "python-requests/2.19.1"
@@ -962,12 +866,6 @@
                     ],
                     "Connection": [
                         "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "188"
-                    ],
-                    "Content-Type": [
-                        "application/x-www-form-urlencoded"
                     ]
                 }
             },
@@ -980,27 +878,27 @@
                     "Vary": [
                         "Accept-Language, Cookie"
                     ],
-                    "Content-Type": [
-                        "application/json"
-                    ],
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Language": [
-                        "en"
+                    "Date": [
+                        "Mon, 12 Nov 2018 21:15:49 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
                     ],
-                    "Date": [
-                        "Tue, 02 Oct 2018 13:05:24 GMT"
+                    "Content-Type": [
+                        "text/xml"
+                    ],
+                    "Content-Language": [
+                        "en"
                     ],
                     "Server": [
                         "gunicorn/19.9.0"
+                    ],
+                    "Connection": [
+                        "keep-alive"
                     ]
                 },
                 "body": {
-                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1e65adcb-80cc-4f98-9031-9593233c1cf8.tar.gz\", \"message\": \"Copy successful.\"}"
+                    "string": "<processingMCP>\n  <preconfiguredChoices>\n    <!-- Store DIP -->\n    <preconfiguredChoice>\n      <appliesTo>5e58066d-e113-4383-b20b-f301ed4d751c</appliesTo>\n      <goToChain>8d29eb3d-a8a8-4347-806e-3d8227ed44a1</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression level -->\n    <preconfiguredChoice>\n      <appliesTo>01c651cb-c174-4ba4-b985-1d87a44d6754</appliesTo>\n      <goToChain>414da421-b83f-4648-895f-a34840e3c3f5</goToChain>\n    </preconfiguredChoice>\n    <!-- Examine contents -->\n    <preconfiguredChoice>\n      <appliesTo>accea2bf-ba74-4a3a-bb97-614775c74459</appliesTo>\n      <goToChain>e0a39199-c62a-4a2f-98de-e9d1116460a8</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Submission documentation & metadata) -->\n    <preconfiguredChoice>\n      <appliesTo>087d27be-c719-47d8-9bbb-9a7d8b609c44</appliesTo>\n      <goToChain>25a91595-37f0-4373-a89a-56a757353fb8</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 1 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>cb8e5706-e73f-472f-ad9b-d1236af8095f</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Normalize (match 2 for \"Normalize for preservation\") -->\n    <preconfiguredChoice>\n      <appliesTo>7509e7dc-1e1b-4dce-8d21-e130515fce73</appliesTo>\n      <goToChain>612e3609-ce9a-4df6-a9a3-63d634d2d934</goToChain>\n    </preconfiguredChoice>\n    <!-- Bind PIDs -->\n    <preconfiguredChoice>\n      <appliesTo>05357876-a095-4c11-86b5-a7fff01af668</appliesTo>\n      <goToChain>fcfea449-158c-452c-a8ad-4ae009c4eaba</goToChain>\n    </preconfiguredChoice>\n    <!-- Create SIP(s) -->\n    <preconfiguredChoice>\n      <appliesTo>bb194013-597c-4e4a-8493-b36d190f8717</appliesTo>\n      <goToChain>61cfa825-120e-4b17-83e6-51a42b67d969</goToChain>\n    </preconfiguredChoice>\n    <!-- Delete packages after extraction -->\n    <preconfiguredChoice>\n      <appliesTo>f19926dd-8fb5-4c79-8ade-c83f61f55b40</appliesTo>\n      <goToChain>85b1e45d-8f98-4cae-8336-72f40e12cbef</goToChain>\n    </preconfiguredChoice>\n    <!-- Transcribe files (OCR) -->\n    <preconfiguredChoice>\n      <appliesTo>7079be6d-3a25-41e6-a481-cee5f352fe6e</appliesTo>\n      <goToChain>1170e555-cd4e-4b2f-a3d6-bfb09e8fcc53</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Transfer) -->\n    <preconfiguredChoice>\n      <appliesTo>f09847c2-ee51-429a-9478-a860477f6b8d</appliesTo>\n      <goToChain>bed4eeb1-d654-4d97-b98d-40eb51d3d4bb</goToChain>\n    </preconfiguredChoice>\n    <!-- Store DIP location -->\n    <preconfiguredChoice>\n      <appliesTo>cd844b6e-ab3c-4bc6-b34f-7103f88715de</appliesTo>\n      <goToChain>/api/v2/location/default/DS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate transfer structure report -->\n    <preconfiguredChoice>\n      <appliesTo>56eebd45-5600-4768-a8c2-ec0114555a3d</appliesTo>\n      <goToChain>e9eaef1e-c2e0-4e3b-b942-bfb537162795</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on originals -->\n    <preconfiguredChoice>\n      <appliesTo>70fc7040-d4fb-4d19-a0e6-792387ca1006</appliesTo>\n      <goToChain>3e891cc4-39d2-4989-a001-5107a009a223</goToChain>\n    </preconfiguredChoice>\n    <!-- Reminder: add metadata if desired -->\n    <preconfiguredChoice>\n      <appliesTo>eeb23509-57e2-4529-8857-9d62525db048</appliesTo>\n      <goToChain>5727faac-88af-40e8-8c10-268644b0142d</goToChain>\n    </preconfiguredChoice>\n    <!-- Generate thumbnails -->\n    <preconfiguredChoice>\n      <appliesTo>498f7a6d-1b8c-431a-aa5d-83f14f3c5e65</appliesTo>\n      <goToChain>972fce6c-52c8-4c00-99b9-d6814e377974</goToChain>\n    </preconfiguredChoice>\n    <!-- Select compression algorithm -->\n    <preconfiguredChoice>\n      <appliesTo>01d64f58-8295-4b7b-9cab-8f1b153a504f</appliesTo>\n      <goToChain>9475447c-9889-430c-9477-6287a9574c5b</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP -->\n    <preconfiguredChoice>\n      <appliesTo>2d32235c-02d4-4686-88a6-96f4d6c7b1c3</appliesTo>\n      <goToChain>9efab23c-31dc-4cbd-a39d-bb1665460cbe</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on access derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>8ce07e94-6130-4987-96f0-2399ad45c5c2</appliesTo>\n      <goToChain>76befd52-14c3-44f9-838f-15a4e01624b0</goToChain>\n    </preconfiguredChoice>\n    <!-- Select file format identification command (Ingest) -->\n    <preconfiguredChoice>\n      <appliesTo>7a024896-c4f7-4808-a240-44c87c762bc5</appliesTo>\n      <goToChain>3c1faec7-7e1e-4cdd-b3bd-e2f05f4baa9b</goToChain>\n    </preconfiguredChoice>\n    <!-- Perform policy checks on preservation derivatives -->\n    <preconfiguredChoice>\n      <appliesTo>153c5f41-3cfb-47ba-9150-2dd44ebc27df</appliesTo>\n      <goToChain>b7ce05f0-9d94-4b3e-86cc-d4b2c6dba546</goToChain>\n    </preconfiguredChoice>\n    <!-- Assign UUIDs to directories -->\n    <preconfiguredChoice>\n      <appliesTo>bd899573-694e-4d33-8c9b-df0af802437d</appliesTo>\n      <goToChain>2dc3f487-e4b0-4e07-a4b3-6216ed24ca14</goToChain>\n    </preconfiguredChoice>\n    <!-- Store AIP location -->\n    <preconfiguredChoice>\n      <appliesTo>b320ce81-9982-408a-9502-097d0daa48fa</appliesTo>\n      <goToChain>/api/v2/location/default/AS/</goToChain>\n    </preconfiguredChoice>\n    <!-- Document empty directories -->\n    <preconfiguredChoice>\n      <appliesTo>d0dfa5fc-e3c2-4638-9eda-f96eea1070e0</appliesTo>\n      <goToChain>65273f18-5b4e-4944-af4f-09be175a88e8</goToChain>\n    </preconfiguredChoice>\n    <!-- Send transfer to quarantine -->\n    <preconfiguredChoice>\n      <appliesTo>755b4177-c587-41a7-8c52-015277568302</appliesTo>\n      <goToChain>d4404ab1-dc7f-4e9e-b1f8-aa861e766b8e</goToChain>\n    </preconfiguredChoice>\n    <!-- Extract packages -->\n    <preconfiguredChoice>\n      <appliesTo>dec97e3c-5598-4b99-b26e-f87a435a6b7f</appliesTo>\n      <goToChain>01d80b27-4ad1-4bd1-8f8d-f819f18bf685</goToChain>\n    </preconfiguredChoice>\n    <!-- Approve normalization -->\n    <preconfiguredChoice>\n      <appliesTo>de909a42-c5b5-46e1-9985-c031b50e9d30</appliesTo>\n      <goToChain>1e0df175-d56d-450d-8bee-7df1dc7ae815</goToChain>\n    </preconfiguredChoice>\n    <!-- Upload DIP -->\n    <preconfiguredChoice>\n      <appliesTo>92879a29-45bf-4f0b-ac43-e64474f0f2f9</appliesTo>\n      <goToChain>6eb8ebe7-fab3-4e4c-b9d7-14de17625baa</goToChain>\n    </preconfiguredChoice>\n  </preconfiguredChoices>\n</processingMCP>\n"
                 }
             }
         }

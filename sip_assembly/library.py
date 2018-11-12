@@ -5,13 +5,13 @@ from csvvalidator import *
 import datetime
 import logging
 import os
-import requests
 import shutil
 from structlog import wrap_logger
 import subprocess
 import tarfile
 
 from fornax import settings
+from .clients import ArchivematicaClient
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
@@ -192,9 +192,10 @@ def update_bag_info(sip):
 def add_processing_config(sip):
     """Adds pre-defined Archivematica processing configuration file"""
     try:
-        config = os.path.join(settings.PROCESSING_CONFIG_DIR, settings.PROCESSING_CONFIG)
-        shutil.copyfile(config, os.path.join(sip.bag_path, 'processingMCP.xml'))
-        return True
+        response = ArchivematicaClient().retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
+        with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
+            f.write(response.content)
+            return True
     except Exception as e:
         logger.error("Error creating processing config: {}".format(e), object=sip)
         return False
@@ -242,26 +243,3 @@ def deliver_via_rsync(sip, user, host):
         logger.error("Error delivering bag to {}".format(host), object=sip)
         return False
     return True
-
-
-class ArchivematicaException(Exception): pass
-
-
-def send_start_transfer_request(sip, baseurl, headers):
-    """Starts and approves transfer in Archivematica."""
-    basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
-    full_url = os.path.join(baseurl, 'transfer/start_transfer/')
-    bagpaths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], basepath)
-    params = {'name': sip.bag_identifier, 'type': 'zipped bag',
-              'paths[]': base64.b64encode(bagpaths.encode())}
-    start = requests.post(full_url, headers=headers, data=params)
-    if start.status_code != 200:
-        raise ArchivematicaException(start.json()['message'])
-
-
-def send_approve_transfer_request(sip, baseurl, headers):
-    approve_transfer = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'),
-                                     headers=headers,
-                                     data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
-    if approve_transfer.status_code != 200:
-        raise ArchivematicaException(approve_transfer.json()['message'])

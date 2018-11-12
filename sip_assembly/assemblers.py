@@ -4,7 +4,8 @@ from uuid import uuid4
 
 from fornax import settings
 from sip_assembly import library
-from sip_assembly.models import SIP
+from .clients import ArchivematicaClient
+from .models import SIP
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -70,16 +71,13 @@ class SIPAssembler(object):
 
 class SIPActions(object):
     def __init__(self):
-        self.headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'],
-                        settings.ARCHIVEMATICA['api_key']), 'Accept': 'application/json',
-                        'User-Agent': 'Fornax/0.1'}
-        self.baseurl = settings.ARCHIVEMATICA['baseurl']
+        self.client = ArchivematicaClient()
 
     def start_transfer(self):
         if len(SIP.objects.filter(process_status=20)):
             try:
                 sip = SIP.objects.filter(process_status=20)[0]
-                library.send_start_transfer_request(sip, self.baseurl, self.headers)
+                self.client.send_start_transfer_request(sip)
                 sip.process_status = 30
                 sip.save()
                 return sip.bag_identifier
@@ -92,7 +90,7 @@ class SIPActions(object):
         if len(SIP.objects.filter(process_status=30)):
             try:
                 sip = SIP.objects.filter(process_status=30)[0]
-                library.send_approve_transfer_request(sip, self.baseurl, self.headers)
+                self.client.send_approve_transfer_request(sip)
                 sip.process_status = 40
                 sip.save()
                 return sip.bag_identifier
