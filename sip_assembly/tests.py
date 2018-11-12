@@ -11,9 +11,9 @@ from django.urls import reverse
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from fornax import settings
-from sip_assembly.cron import AssembleSIPs
+from sip_assembly.assemblers import SIPAssembler
 from sip_assembly.models import SIP
-from sip_assembly.views import SIPViewSet, SIPAssemblyView
+from sip_assembly.views import SIPViewSet, SIPAssemblyView, StartTransferView, ApproveTransferView
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
@@ -21,7 +21,7 @@ bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 assembly_vcr = vcr.VCR(
     serializer='json',
     cassette_library_dir='fixtures/cassettes',
-    record_mode='once',
+    record_mode='new_episodes',
     match_on=['path', 'method', 'query'],
     filter_query_parameters=['username', 'password'],
     filter_headers=['Authorization'],
@@ -50,12 +50,25 @@ class SIPAssemblyTest(TestCase):
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Processing SIPs ***')
-            assembly = AssembleSIPs().do(dirs={'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY})
+            assembly = SIPAssembler(dirs={'upload': settings.TEST_UPLOAD_DIR,
+                                          'processing': settings.TEST_PROCESSING_DIR,
+                                          'delivery': settings.TEST_DELIVERY}).run()
             self.assertEqual(True, assembly)
+
+    def archivematica_views(self):
+        with assembly_vcr.use_cassette('archivematica.json'):
+            print('*** Starting transfer ***')
+            request = self.factory.post(reverse('start-transfer'))
+            response = StartTransferView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            print('*** Approving transfer ***')
+            request = self.factory.post(reverse('start-transfer'))
+            response = ApproveTransferView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
     def run_view(self):
         print('*** Test run view ***')
-        request = self.factory.post(reverse('sipassembly'), {"test": True})
+        request = self.factory.post(reverse('assemble-sip'), {"test": True})
         response = SIPAssemblyView.as_view()(request)
         self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
@@ -80,6 +93,7 @@ class SIPAssemblyTest(TestCase):
             sip.bag_path = join(settings.TEST_UPLOAD_DIR, "{}.tar.gz".format(sip.bag_identifier))
             sip.save()
         self.process_sip()
+        self.archivematica_views()
         self.run_view()
         self.schema()
         self.health_check()

@@ -30,83 +30,60 @@ class SIPAssembler(object):
         self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         for sip in SIP.objects.filter(process_status=10):
             self.log = logger.bind(object=sip)
-            if int(sip.process_status) < 20:
-                try:
-                    library.move_to_directory(sip, self.processing_dir)
-                    library.extract_all(sip, self.processing_dir)
-                    library.validate(sip)
-                    sip.process_status = 20
-                    sip.save()
-                    self.log.debug("SIP moved to processing directory", request_id=str(uuid4()))
-                except Exception as e:
-                    raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e))
-
-            if int(sip.process_status) < 30:
-                try:
-                    library.move_objects_dir(sip)
-                    library.create_structure(sip)
-                    sip.process_status = 30
-                    sip.save()
-                    self.log.debug("SIP restructured")
-                except Exception as e:
-                    raise SIPAssemblyError("Error restructuring SIP: {}".format(e))
-
-            if int(sip.process_status) < 40:
+            try:
+                library.move_to_directory(sip, self.processing_dir)
+                library.extract_all(sip, self.processing_dir)
+                library.validate(sip)
+                library.move_objects_dir(sip)
+                library.create_structure(sip)
                 if sip.data['rights_statements']:
                     try:
                         library.create_rights_csv(sip)
                         library.validate_rights_csv(sip)
                     except Exception as e:
                         raise SIPAssemblyError("Error creating rights.csv: {}".format(e))
-                sip.process_status = 40
+                library.update_bag_info(sip)
+                library.add_processing_config(sip)
+                library.update_manifests(sip)
+                library.create_package(sip)
+                library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
+                sip.process_status = 20
                 sip.save()
-                self.log.debug("Rights statements added to SIP")
-
-            if int(sip.process_status) < 50:
-                try:
-                    library.create_submission_docs(sip)
-                    sip.process_status = 50
-                    sip.save()
-                    self.log.debug("Submission docs created")
-                except Exception as e:
-                    raise SIPAssemblyError("Error creating submission docs: {}".format(e))
-
-            if int(sip.process_status) < 60:
-                try:
-                    library.update_bag_info(sip)
-                    sip.process_status = 60
-                    sip.save()
-                    self.log.debug("Bag-info.txt updated")
-                except Exception as e:
-                    raise SIPAssemblyError("Error updating bag-info.txt: {}".format(e))
-
-            if int(sip.process_status) < 70:
-                try:
-                    library.add_processing_config(sip)
-                    sip.process_status = 70
-                    sip.save()
-                    self.log.debug("Archivematica processing config added")
-                except Exception as e:
-                    raise SIPAssemblyError("Error adding processing config: {}".format(e))
-
-            if int(sip.process_status) < 80:
-                try:
-                    library.update_manifests(sip)
-                    sip.process_status = 80
-                    sip.save()
-                    self.log.debug("Manifests updated")
-                except Exception as e:
-                    raise SIPAssemblyError("Error updating manifests: {}".format(e))
-
-            if int(sip.process_status) < 90:
-                try:
-                    library.create_package(sip)
-                    library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
-                    # library.start_transfer(sip)
-                    sip.process_status = 90
-                    sip.save()
-                    self.log.debug("SIP sent to Archivematica")
-                except Exception as e:
-                    raise SIPAssemblyError("Error sending SIP to Archivematica: {}".format(e))
+            except Exception as e:
+                raise SIPAssemblyError("Error assembling SIP: {}".format(e))
 
         return True
+
+
+class SIPActions(object):
+    def __init__(self):
+        self.headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'],
+                        settings.ARCHIVEMATICA['api_key']), 'Accept': 'application/json',
+                        'User-Agent': 'Fornax/0.1'}
+        self.baseurl = settings.ARCHIVEMATICA['baseurl']
+
+    def start_transfer(self):
+        if len(SIP.objects.filter(process_status=20)):
+            try:
+                sip = SIP.objects.filter(process_status=20)[0]
+                library.send_start_transfer_request(sip, self.baseurl, self.headers)
+                sip.process_status = 30
+                sip.save()
+                return sip.bag_identifier
+            except Exception as e:
+                raise SIPAssemblyError("Error starting transfer in Archivematica: {}".format(e))
+        else:
+            return "No transfers to start."
+
+    def approve_transfer(self):
+        if len(SIP.objects.filter(process_status=30)):
+            try:
+                sip = SIP.objects.filter(process_status=30)[0]
+                library.send_approve_transfer_request(sip, self.baseurl, self.headers)
+                sip.process_status = 40
+                sip.save()
+                return sip.bag_identifier
+            except Exception as e:
+                raise SIPAssemblyError("Error approving transfer in Archivematica: {}".format(e))
+        else:
+            return "No transfers to approve."

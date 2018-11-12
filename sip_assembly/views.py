@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from fornax import settings
-from sip_assembly.assemblers import SIPAssembler
+from sip_assembly.assemblers import SIPActions, SIPAssembler
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
@@ -60,5 +60,29 @@ class SIPAssemblyView(APIView):
         try:
             SIPAssembler(dirs).run()
             return Response({"detail": "SIPAssembler routine complete."}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
+class StartTransferView(APIView):
+    """Starts transfers in Archivematica. Accepts POST requests only."""
+
+    def post(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
+        try:
+            transfer = SIPActions().start_transfer()
+            return Response({"detail": transfer}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
+class ApproveTransferView(APIView):
+    """Approves transfers in Archivematica. Accepts POST requests only."""
+
+    def post(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
+        try:
+            transfer = SIPActions().approve_transfer()
+            return Response({"detail": transfer}, status=200)
         except Exception as e:
             return Response({"detail": str(e)}, status=500)

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.urls import include
-from sip_assembly.views import SIPViewSet, SIPAssemblyView
+from sip_assembly.views import SIPViewSet, SIPAssemblyView, StartTransferView, ApproveTransferView
 from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -36,7 +36,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^sipassembly/', SIPAssemblyView.as_view(), name="sipassembly"),
+    url(r'^assemble/', SIPAssemblyView.as_view(), name="assemble-sip"),
+    url(r'^start/', StartTransferView.as_view(), name="start-transfer"),
+    url(r'^approve/', ApproveTransferView.as_view(), name="approve-transfer"),
     url(r'^status/', include('health_check.api.urls')),
     url(r'^schema(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
 ]

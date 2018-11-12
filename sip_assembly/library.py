@@ -244,23 +244,24 @@ def deliver_via_rsync(sip, user, host):
     return True
 
 
-def start_transfer(sip):
-    """Starts and approves transfer in Archivematica. In high-throughput
-    environments, it may be better to use Archivematica's Automation Tools."""
-    headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'],
-               settings.ARCHIVEMATICA['api_key']), 'Accept': 'application/json',
-               'User-Agent': 'Fornax/0.1'}
-    baseurl = settings.ARCHIVEMATICA['baseurl']
+class ArchivematicaException(Exception): pass
+
+
+def send_start_transfer_request(sip, baseurl, headers):
+    """Starts and approves transfer in Archivematica."""
     basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
     full_url = os.path.join(baseurl, 'transfer/start_transfer/')
     bagpaths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], basepath)
-    params = {'name': sip.bag_identifier, 'type': 'zipped bag', 'paths[]': base64.b64encode(bagpaths.encode())}
-    start_transfer = requests.post(full_url, headers=headers, data=params)
-    if start_transfer:
-        return True
-        approve_transfer = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'), headers=headers, data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
-        if approve_transfer:
-            return True
-    else:
-        logger.error("Error starting transfer in Archivematica: {}".format(start['data']['message']))
-        return False
+    params = {'name': sip.bag_identifier, 'type': 'zipped bag',
+              'paths[]': base64.b64encode(bagpaths.encode())}
+    start = requests.post(full_url, headers=headers, data=params)
+    if start.status_code != 200:
+        raise ArchivematicaException(start.json()['message'])
+
+
+def send_approve_transfer_request(sip, baseurl, headers):
+    approve_transfer = requests.post(os.path.join(baseurl, 'transfer/approve_transfer/'),
+                                     headers=headers,
+                                     data={'type': 'zipped bag', 'directory': '{}.tar.gz'.format(sip.bag_identifier)})
+    if approve_transfer.status_code != 200:
+        raise ArchivematicaException(approve_transfer.json()['message'])

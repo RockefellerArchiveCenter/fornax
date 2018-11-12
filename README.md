@@ -32,7 +32,7 @@ Or, if you want to remove all data
 
 SIPs will be created when a POST request is sent to the `sips` endpoint.
 
-SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run or when a POST request is sent to the `sipassembly` endpoint. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP until the next time the routine is run.
+SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run or when a POST request is sent to the `assemble` endpoint. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP until the next time the routine is run.
 
 SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
@@ -69,7 +69,9 @@ Fornax currently makes the following assumptions:
 |GET|/sips| |200|Returns a list of SIPs|
 |GET|/sips/{id}| |200|Returns data about an individual SIP|
 |POST|/sips||200|Creates a SIP object from an transfer in Aurora.|
-|POST|/sipassembly||200|Runs the SIPAssembly routine.|
+|POST|/assemble||200|Runs the SIPAssembly routine.|
+|POST|/start||200|Starts the next transfer in Archivematica.|
+|POST|/approve||200|Approves the next transfer in Archivematica.|
 |GET|/status||200|Return the status of the microservice|
 
 

@@ -1,0 +1,120 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
+                "body": "name=1d647537-8483-4155-9bfd-3906621d12ff&type=zipped+bag&paths%5B%5D=ZWQzN2U4MWQtMmFmMy00NWEzLWFhMzAtYTYwYTEyYzk1YmJlOi9ob21lLzFkNjQ3NTM3LTg0ODMtNDE1NS05YmZkLTM5MDY2MjFkMTJmZi50YXIuZ3o%3D",
+                "headers": {
+                    "User-Agent": [
+                        "Fornax/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Date": [
+                        "Mon, 12 Nov 2018 02:42:02 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                },
+                "body": {
+                    "string": "{\"path\": \"/var/archivematica/sharedDirectory/watchedDirectories/activeTransfers/baggitZippedDirectory/1d647537-8483-4155-9bfd-3906621d12ff.tar.gz\", \"message\": \"Copy successful.\"}"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/approve_transfer/",
+                "body": "type=zipped+bag&directory=1d647537-8483-4155-9bfd-3906621d12ff.tar.gz",
+                "headers": {
+                    "User-Agent": [
+                        "Fornax/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "69"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Date": [
+                        "Mon, 12 Nov 2018 02:44:09 GMT"
+                    ],
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ]
+                },
+                "body": {
+                    "string": "{\"message\": \"Approval successful.\", \"uuid\": \"4b66a79e-4ba2-4753-a603-04efb97a77d0\"}"
+                }
+            }
+        }
+    ]
+}
