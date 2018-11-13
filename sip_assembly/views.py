@@ -58,8 +58,8 @@ class SIPAssemblyView(APIView):
         if request.POST.get('test'):
             dirs = {'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY}
         try:
-            SIPAssembler(dirs).run()
-            return Response({"detail": "SIPAssembler routine complete."}, status=200)
+            assemble = SIPAssembler(dirs).run()
+            return Response({"detail": assemble}, status=200)
         except Exception as e:
             return Response({"detail": str(e)}, status=500)
 

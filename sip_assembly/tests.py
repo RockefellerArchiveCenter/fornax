@@ -53,7 +53,7 @@ class SIPAssemblyTest(TestCase):
             assembly = SIPAssembler(dirs={'upload': settings.TEST_UPLOAD_DIR,
                                           'processing': settings.TEST_PROCESSING_DIR,
                                           'delivery': settings.TEST_DELIVERY}).run()
-            self.assertEqual(True, assembly)
+            self.assertNotEqual(False, assembly)
 
     def archivematica_views(self):
         with assembly_vcr.use_cassette('archivematica.json'):

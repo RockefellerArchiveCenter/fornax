@@ -29,6 +29,7 @@ class SIPAssembler(object):
     def run(self):
         self.log = logger.new(request_id=str(uuid4()))
         self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
+        sip_count = 0
         for sip in SIP.objects.filter(process_status=10):
             self.log = logger.bind(object=sip)
             try:
@@ -66,7 +67,9 @@ class SIPAssembler(object):
             except Exception as e:
                 raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e))
 
-        return True
+            sip_count += 1
+
+        return "{} SIPs assembled.".format(sip_count)
 
 
 class SIPActions(object):
@@ -80,7 +83,7 @@ class SIPActions(object):
                 self.client.send_start_transfer_request(sip)
                 sip.process_status = 30
                 sip.save()
-                return sip.bag_identifier
+                return "{} started.".format(sip.bag_identifier)
             except Exception as e:
                 raise SIPAssemblyError("Error starting transfer in Archivematica: {}".format(e))
         else:
@@ -93,7 +96,7 @@ class SIPActions(object):
                 self.client.send_approve_transfer_request(sip)
                 sip.process_status = 40
                 sip.save()
-                return sip.bag_identifier
+                return "{} approved.".format(sip.bag_identifier)
             except Exception as e:
                 raise SIPAssemblyError("Error approving transfer in Archivematica: {}".format(e))
         else:
