@@ -38,7 +38,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
-  - Adding an empty 'logs' directory
+  - Adding an empty `logs` directory
   - Adding a `metadata` directory containing a `submissionDocumentation` subdirectory
 - Creating `rights.csv` and adding it to the `metadata` directory
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
@@ -56,10 +56,11 @@ fornax currently makes the following assumptions:
   - be structured as valid bags
   - be virus-free
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
-- All bags will have a unique identifier.
-- SIPs will be created from a POST request to the `sips` endpoint.
-- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive.
-- For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory.
+- All bags will have a unique identifier
+- SIPs will be created from a POST request to the `sips` endpoint
+- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive
+
+For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory
 
 
 ### Routes
