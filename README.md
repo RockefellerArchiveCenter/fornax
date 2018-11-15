@@ -51,15 +51,15 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 
 ### Assumptions
 
-Fornax currently makes the following assumptions:
+fornax currently makes the following assumptions:
 - The files for incoming SIPs will have passed through Aurora, and therefore will:
   - be structured as valid bags
   - be virus-free
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
 - All bags will have a unique identifier.
 - SIPs will be created from a POST request to the `sips` endpoint.
-- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). Fornax doesn't care how or when they get there, it will just handle them when they arrive.
-- For an example of the data Fornax expects to receive (both bags and JSON), see the `fixtures/` directory.
+- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive.
+- For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory.
 
 
 ### Routes
@@ -77,7 +77,7 @@ Fornax currently makes the following assumptions:
 
 ## Logging
 
-Fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
+fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
 
 
 ## License
