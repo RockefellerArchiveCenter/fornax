@@ -1,18 +1,18 @@
 # fornax
 
-A microservice to create Archivematica-compliant Submission Information Packages (SIPs)
+A microservice to create Archivematica-compliant Submission Information Packages (SIPs).
+
+fornax is part of [Project Electron](https://github.com/RockefellerArchiveCenter/project_electron), an initiative to build sustainable, open and user-centered infrastructure for the archival management of digital records at the [Rockefeller Archive Center](http://rockarch.org/).
 
 [![Build Status](https://travis-ci.org/RockefellerArchiveCenter/fornax.svg?branch=master)](https://travis-ci.org/RockefellerArchiveCenter/fornax)
 
 ## Setup
 
-Clone the repository
+Install [git](https://git-scm.com/) and clone the repository
 
     $ git clone git@github.com:RockefellerArchiveCenter/fornax.git
 
-Install [Docker](https://store.docker.com/search?type=edition&offering=community) (trust me, it makes things a lot easier)
-
-Run docker-compose from the root directory
+Install [Docker](https://store.docker.com/search?type=edition&offering=community) and run docker-compose from the root directory
 
     $ cd fornax
     $ docker-compose up
@@ -82,4 +82,4 @@ Fornax uses `structlog` to output structured JSON logs. Logging can be configure
 
 ## License
 
-MIT License, obvs. See [LICENSE](LICENSE) for details.
+This code is released under an [MIT License](LICENSE).
