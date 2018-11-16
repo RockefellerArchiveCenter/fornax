@@ -30,7 +30,7 @@ class SIPAssembler(object):
         self.log = logger.new(request_id=str(uuid4()))
         self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=10))))
         sip_count = 0
-        for sip in SIP.objects.filter(process_status=10):
+        for sip in SIP.objects.filter(process_status=SIP.CREATED):
             self.log = logger.bind(object=sip)
             try:
                 library.move_to_directory(sip, self.processing_dir)
@@ -62,7 +62,7 @@ class SIPAssembler(object):
 
             try:
                 library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
-                sip.process_status = 20
+                sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:
                 raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e))
@@ -80,11 +80,11 @@ class SIPActions(object):
                                           settings.ARCHIVEMATICA['location_uuid'])
 
     def start_transfer(self):
-        if len(SIP.objects.filter(process_status=20)):
+        if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             try:
-                sip = SIP.objects.filter(process_status=20)[0]
+                sip = SIP.objects.filter(process_status=SIP.ASSEMBLED)[0]
                 self.client.send_start_transfer_request(sip)
-                sip.process_status = 30
+                sip.process_status = SIP.STARTED
                 sip.save()
                 return "{} started.".format(sip.bag_identifier)
             except Exception as e:
@@ -93,11 +93,11 @@ class SIPActions(object):
             return "No transfers to start."
 
     def approve_transfer(self):
-        if len(SIP.objects.filter(process_status=30)):
+        if len(SIP.objects.filter(process_status=SIP.STARTED)):
             try:
-                sip = SIP.objects.filter(process_status=30)[0]
+                sip = SIP.objects.filter(process_status=SIP.STARTED)[0]
                 self.client.send_approve_transfer_request(sip)
-                sip.process_status = 40
+                sip.process_status = SIP.APPROVED
                 sip.save()
                 return "{} approved.".format(sip.bag_identifier)
             except Exception as e:
