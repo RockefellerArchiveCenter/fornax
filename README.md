@@ -1,18 +1,18 @@
 # fornax
 
-A microservice to create Archivematica-compliant Submission Information Packages (SIPs)
+A microservice to create Archivematica-compliant Submission Information Packages (SIPs).
+
+fornax is part of [Project Electron](https://github.com/RockefellerArchiveCenter/project_electron), an initiative to build sustainable, open and user-centered infrastructure for the archival management of digital records at the [Rockefeller Archive Center](http://rockarch.org/).
 
 [![Build Status](https://travis-ci.org/RockefellerArchiveCenter/fornax.svg?branch=master)](https://travis-ci.org/RockefellerArchiveCenter/fornax)
 
 ## Setup
 
-Clone the repository
+Install [git](https://git-scm.com/) and clone the repository
 
     $ git clone git@github.com:RockefellerArchiveCenter/fornax.git
 
-Install [Docker](https://store.docker.com/search?type=edition&offering=community) (trust me, it makes things a lot easier)
-
-Run docker-compose from the root directory
+Install [Docker](https://store.docker.com/search?type=edition&offering=community) and run docker-compose from the root directory
 
     $ cd fornax
     $ docker-compose up
@@ -38,7 +38,7 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 - Moving the SIP to the processing directory (SIPS are validated before and after moving)
 - Restructuring the SIP for Archivematica compliance by:
   - Moving objects in the `data` directory to `data/objects`
-  - Adding an empty 'logs' directory
+  - Adding an empty `logs` directory
   - Adding a `metadata` directory containing a `submissionDocumentation` subdirectory
 - Creating `rights.csv` and adding it to the `metadata` directory
 - Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
@@ -51,15 +51,16 @@ SIP Assembly consists of the following steps (the `SIPAssembler` class):
 
 ### Assumptions
 
-Fornax currently makes the following assumptions:
+fornax currently makes the following assumptions:
 - The files for incoming SIPs will have passed through Aurora, and therefore will:
   - be structured as valid bags
   - be virus-free
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
-- All bags will have a unique identifier.
-- SIPs will be created from a POST request to the `sips` endpoint.
-- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). Fornax doesn't care how or when they get there, it will just handle them when they arrive.
-- For an example of the data Fornax expects to receive (both bags and JSON), see the `fixtures/` directory.
+- All bags will have a unique identifier
+- SIPs will be created from a POST request to the `sips` endpoint
+- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive
+
+For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory
 
 
 ### Routes
@@ -77,9 +78,9 @@ Fornax currently makes the following assumptions:
 
 ## Logging
 
-Fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
+fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
 
 
 ## License
 
-MIT License, obvs. See [LICENSE](LICENSE) for details.
+This code is released under an [MIT License](LICENSE).
