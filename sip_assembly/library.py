@@ -191,7 +191,10 @@ def update_bag_info(sip):
 def add_processing_config(sip):
     """Adds pre-defined Archivematica processing configuration file"""
     try:
-        response = ArchivematicaClient().retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
+        response = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
+                                      settings.ARCHIVEMATICA['api_key'],
+                                      settings.ARCHIVEMATICA['baseurl'],
+                                      settings.ARCHIVEMATICA['location_uuid']).retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
         with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
             f.write(response.content)
             return True

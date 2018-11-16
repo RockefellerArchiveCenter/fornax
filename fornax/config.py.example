@@ -1,9 +1,9 @@
 # Local config file - rename to config.py
 
-UPLOAD_DIR = 'uploads'
-TEST_UPLOAD_DIR = 'test_uploads'
-PROCESSING_DIR = 'processing'
-TEST_PROCESSING_DIR = 'test_processing'
+UPLOAD_DIR = '/uploads'
+TEST_UPLOAD_DIR = '/test_uploads'
+PROCESSING_DIR = '/processing'
+TEST_PROCESSING_DIR = '/test_processing'
 PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
 DELIVERY = {

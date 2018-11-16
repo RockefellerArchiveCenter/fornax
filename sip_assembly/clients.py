@@ -3,16 +3,15 @@ import json
 from os.path import join
 import requests
 
-from fornax import settings
-
 
 class ArchivematicaClientException(Exception): pass
 
 
 class ArchivematicaClient(object):
-    def __init__(self):
-        self.headers = {"Authorization": "ApiKey {}:{}".format(settings.ARCHIVEMATICA['username'], settings.ARCHIVEMATICA['api_key'])}
-        self.baseurl = settings.ARCHIVEMATICA['baseurl']
+    def __init__(self, username, api_key, baseurl, location_uuid):
+        self.headers = {"Authorization": "ApiKey {}:{}".format(username, api_key)}
+        self.baseurl = baseurl
+        self.location_uuid = location_uuid
 
     def retrieve(self, uri, *args, **kwargs):
         full_url = "/".join([self.baseurl.rstrip("/"), uri.lstrip("/")])
@@ -26,7 +25,7 @@ class ArchivematicaClient(object):
         """Starts and approves transfer in Archivematica."""
         basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
         full_url = join(self.baseurl, 'transfer/start_transfer/')
-        bagpaths = "{}:{}".format(settings.ARCHIVEMATICA['location_uuid'], basepath)
+        bagpaths = "{}:{}".format(self.location_uuid, basepath)
         params = {'name': sip.bag_identifier, 'type': 'zipped bag',
                   'paths[]': base64.b64encode(bagpaths.encode())}
         start = requests.post(full_url, headers=self.headers, data=params)

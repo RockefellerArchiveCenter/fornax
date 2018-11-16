@@ -74,7 +74,10 @@ class SIPAssembler(object):
 
 class SIPActions(object):
     def __init__(self):
-        self.client = ArchivematicaClient()
+        self.client = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
+                                          settings.ARCHIVEMATICA['api_key'],
+                                          settings.ARCHIVEMATICA['baseurl'],
+                                          settings.ARCHIVEMATICA['location_uuid'])
 
     def start_transfer(self):
         if len(SIP.objects.filter(process_status=20)):
