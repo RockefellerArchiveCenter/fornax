@@ -39,7 +39,7 @@ class SIPViewSet(ModelViewSet):
         log = logger.new(transaction_id=str(uuid4()))
         sip = SIP(
             process_status=10,
-            bag_path=os.path.join(settings.BASE_DIR, settings.UPLOAD_DIR, "{}.tar.gz".format(request.data['identifier'])),
+            bag_path=os.path.join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
             data=request.data
         )
@@ -56,7 +56,7 @@ class SIPAssemblyView(APIView):
         log = logger.new(transaction_id=str(uuid4()))
         dirs = None
         if request.POST.get('test'):
-            dirs = {'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'storage': settings.TEST_STORAGE_DIR}
+            dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
         try:
             assemble = SIPAssembler(dirs).run()
             return Response({"detail": assemble}, status=200)

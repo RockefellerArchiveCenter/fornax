@@ -58,7 +58,7 @@ fornax currently makes the following assumptions:
   - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
 - All bags will have a unique identifier
 - SIPs will be created from a POST request to the `sips` endpoint
-- All bags will be moved to the `UPLOAD_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive
+- All bags will be moved to the `SRC_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive
 
 For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory
 

@@ -19,10 +19,10 @@ class SIPAssemblyError(Exception): pass
 class SIPAssembler(object):
     """Creates an Archivematica-compliant SIP."""
     def __init__(self, dirs=None):
-        self.upload_dir = dirs['upload'] if dirs else settings.UPLOAD_DIR
-        self.processing_dir = dirs['processing'] if dirs else settings.PROCESSING_DIR
-        self.storage_dir = dirs['storage'] if dirs else settings.STORAGE_DIR
-        for dir in [self.upload_dir, self.processing_dir, self.storage_dir]:
+        self.src_dir = dirs['src'] if dirs else settings.SRC_DIR
+        self.tmp_dir = dirs['tmp'] if dirs else settings.TMP_DIR
+        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory {} does not exist".format(dir))
 
@@ -33,8 +33,8 @@ class SIPAssembler(object):
         for sip in SIP.objects.filter(process_status=SIP.CREATED):
             self.log = logger.bind(object=sip)
             try:
-                library.move_to_directory(sip, self.processing_dir)
-                library.extract_all(sip, self.processing_dir)
+                library.move_to_directory(sip, self.tmp_dir)
+                library.extract_all(sip, self.tmp_dir)
                 library.validate(sip)
             except Exception as e:
                 raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e))
@@ -61,7 +61,7 @@ class SIPAssembler(object):
                 raise SIPAssemblyError("Error updating SIP contents: {}".format(e))
 
             try:
-                library.move_to_directory(sip, self.storage_dir)
+                library.move_to_directory(sip, self.dest_dir)
                 sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:

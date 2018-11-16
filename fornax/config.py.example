@@ -1,11 +1,11 @@
 # Local config file - rename to config.py
 
-UPLOAD_DIR = '/uploads'
-TEST_UPLOAD_DIR = '/test_uploads'
-PROCESSING_DIR = '/processing'
-TEST_PROCESSING_DIR = '/test_processing'
-STORAGE_DIR = '/archivematica_transfer_source'
-TEST_STORAGE_DIR = '/test_archivematica_transfer_source'
+SRC_DIR = '/uploads'
+TEST_SRC_DIR = '/test_uploads'
+TMP_DIR = '/processing'
+TEST_TMP_DIR = '/test_processing'
+DEST_DIR = '/archivematica_transfer_source'
+TEST_DEST_DIR = '/test_archivematica_transfer_source'
 
 PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'

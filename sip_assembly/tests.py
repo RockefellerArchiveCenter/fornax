@@ -31,13 +31,13 @@ assembly_vcr = vcr.VCR(
 class SIPAssemblyTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.upload_dir = settings.TEST_UPLOAD_DIR
-        self.processing_dir = settings.TEST_PROCESSING_DIR
-        self.storage_dir = settings.TEST_STORAGE_DIR
-        if isdir(self.upload_dir):
-            shutil.rmtree(self.upload_dir)
-        shutil.copytree(bag_fixture_dir, self.upload_dir)
-        for dir in [self.processing_dir, self.storage_dir]:
+        self.src_dir = settings.TEST_SRC_DIR
+        self.tmp_dir = settings.TEST_TMP_DIR
+        self.dest_dir = settings.TEST_DEST_DIR
+        if isdir(self.src_dir):
+            shutil.rmtree(self.src_dir)
+        shutil.copytree(bag_fixture_dir, self.src_dir)
+        for dir in [self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 makedirs(dir)
 
@@ -56,9 +56,9 @@ class SIPAssemblyTest(TestCase):
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Processing SIPs ***')
-            assembly = SIPAssembler(dirs={'upload': self.upload_dir,
-                                          'processing': self.processing_dir,
-                                          'storage': self.storage_dir}).run()
+            assembly = SIPAssembler(dirs={'src': self.src_dir,
+                                          'tmp': self.tmp_dir,
+                                          'dest': self.dest_dir}).run()
             self.assertNotEqual(False, assembly)
 
     def archivematica_views(self):
@@ -89,14 +89,14 @@ class SIPAssemblyTest(TestCase):
         self.assertEqual(status.status_code, 200, "Wrong HTTP code")
 
     def tearDown(self):
-        for d in [self.upload_dir, self.processing_dir, self.storage_dir]:
+        for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if isdir(d):
                 shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()
         for sip in sips:
-            sip.bag_path = join(settings.TEST_UPLOAD_DIR, "{}.tar.gz".format(sip.bag_identifier))
+            sip.bag_path = join(self.src_dir, "{}.tar.gz".format(sip.bag_identifier))
             sip.save()
         self.process_sip()
         self.archivematica_views()
