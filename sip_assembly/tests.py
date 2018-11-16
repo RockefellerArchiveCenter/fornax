@@ -1,6 +1,6 @@
 import json
 from os.path import join, isdir
-from os import listdir, remove
+from os import listdir, makedirs, remove
 import random
 import shutil
 import vcr
@@ -31,9 +31,15 @@ assembly_vcr = vcr.VCR(
 class SIPAssemblyTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        if isdir(settings.TEST_UPLOAD_DIR):
-            shutil.rmtree(settings.TEST_UPLOAD_DIR)
-        shutil.copytree(bag_fixture_dir, settings.TEST_UPLOAD_DIR)
+        self.upload_dir = settings.TEST_UPLOAD_DIR
+        self.processing_dir = settings.TEST_PROCESSING_DIR
+        self.storage_dir = settings.TEST_STORAGE_DIR
+        if isdir(self.upload_dir):
+            shutil.rmtree(self.upload_dir)
+        shutil.copytree(bag_fixture_dir, self.upload_dir)
+        for dir in [self.processing_dir, self.storage_dir]:
+            if not isdir(dir):
+                makedirs(dir)
 
     def create_sip(self):
         print('*** Creating new SIPs ***')
@@ -50,9 +56,9 @@ class SIPAssemblyTest(TestCase):
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Processing SIPs ***')
-            assembly = SIPAssembler(dirs={'upload': settings.TEST_UPLOAD_DIR,
-                                          'processing': settings.TEST_PROCESSING_DIR,
-                                          'delivery': settings.TEST_DELIVERY}).run()
+            assembly = SIPAssembler(dirs={'upload': self.upload_dir,
+                                          'processing': self.processing_dir,
+                                          'storage': self.storage_dir}).run()
             self.assertNotEqual(False, assembly)
 
     def archivematica_views(self):
@@ -83,7 +89,7 @@ class SIPAssemblyTest(TestCase):
         self.assertEqual(status.status_code, 200, "Wrong HTTP code")
 
     def tearDown(self):
-        for d in [settings.TEST_UPLOAD_DIR, settings.TEST_PROCESSING_DIR, settings.TEST_DELIVERY['host']]:
+        for d in [self.upload_dir, self.processing_dir, self.storage_dir]:
             if isdir(d):
                 shutil.rmtree(d)
 

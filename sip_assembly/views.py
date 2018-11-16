@@ -56,7 +56,7 @@ class SIPAssemblyView(APIView):
         log = logger.new(transaction_id=str(uuid4()))
         dirs = None
         if request.POST.get('test'):
-            dirs = {'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'delivery': settings.TEST_DELIVERY}
+            dirs = {'upload': settings.TEST_UPLOAD_DIR, 'processing': settings.TEST_PROCESSING_DIR, 'storage': settings.TEST_STORAGE_DIR}
         try:
             assemble = SIPAssembler(dirs).run()
             return Response({"detail": assemble}, status=200)

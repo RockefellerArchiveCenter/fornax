@@ -1,4 +1,5 @@
 import logging
+from os.path import isdir
 from structlog import wrap_logger
 from uuid import uuid4
 
@@ -16,15 +17,14 @@ class SIPAssemblyError(Exception): pass
 
 
 class SIPAssembler(object):
+    """Creates an Archivematica-compliant SIP."""
     def __init__(self, dirs=None):
-        if dirs:
-            self.upload_dir = dirs['upload']
-            self.processing_dir = dirs['processing']
-            self.delivery = dirs['delivery']
-        else:
-            self.upload_dir = settings.UPLOAD_DIR
-            self.processing_dir = settings.PROCESSING_DIR
-            self.delivery = settings.DELIVERY
+        self.upload_dir = dirs['upload'] if dirs else settings.UPLOAD_DIR
+        self.processing_dir = dirs['processing'] if dirs else settings.PROCESSING_DIR
+        self.storage_dir = dirs['storage'] if dirs else settings.STORAGE_DIR
+        for dir in [self.upload_dir, self.processing_dir, self.storage_dir]:
+            if not isdir(dir):
+                raise SIPAssemblyError("Directory {} does not exist".format(dir))
 
     def run(self):
         self.log = logger.new(request_id=str(uuid4()))
@@ -61,7 +61,7 @@ class SIPAssembler(object):
                 raise SIPAssemblyError("Error updating SIP contents: {}".format(e))
 
             try:
-                library.deliver_via_rsync(sip, self.delivery['user'], self.delivery['host'])
+                library.move_to_directory(sip, self.storage_dir)
                 sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:
@@ -78,8 +78,12 @@ class SIPActions(object):
                                           settings.ARCHIVEMATICA['api_key'],
                                           settings.ARCHIVEMATICA['baseurl'],
                                           settings.ARCHIVEMATICA['location_uuid'])
+        if not self.client:
+            raise SIPAssemblyError("Cannot connect to Archivematica")
 
     def start_transfer(self):
+        """Starts transfer in Archivematica by sending a POST request to the
+           /transfer/start_transfer/ endpoint."""
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             try:
                 sip = SIP.objects.filter(process_status=SIP.ASSEMBLED)[0]
@@ -93,6 +97,8 @@ class SIPActions(object):
             return "No transfers to start."
 
     def approve_transfer(self):
+        """Starts transfer in Archivematica by sending a POST request to the
+           /transfer/approve_transfer/ endpoint."""
         if len(SIP.objects.filter(process_status=SIP.STARTED)):
             try:
                 sip = SIP.objects.filter(process_status=SIP.STARTED)[0]

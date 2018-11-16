@@ -4,16 +4,12 @@ UPLOAD_DIR = '/uploads'
 TEST_UPLOAD_DIR = '/test_uploads'
 PROCESSING_DIR = '/processing'
 TEST_PROCESSING_DIR = '/test_processing'
+STORAGE_DIR = '/archivematica_transfer_source'
+TEST_STORAGE_DIR = '/test_archivematica_transfer_source'
+
 PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
-DELIVERY = {
-    'user': 'user',
-    'host': 'archivematica_transfer_source/',
-}
-TEST_DELIVERY = {
-    'user': 'user',
-    'host': 'test_archivematica_transfer_source/',
-}
+
 ARCHIVEMATICA = {
   "baseurl": "http://archivematica-dashboard:8000/api/",
   "username": "test",

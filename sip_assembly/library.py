@@ -227,21 +227,3 @@ def create_package(sip):
     except Exception as e:
         logger.error("Error creating .tar.gz archive: {}".format(e), object=sip)
         return False
-
-
-def deliver_via_rsync(sip, user, host):
-    rsynccmd = "rsync -avh --remove-source-files {} {}".format(sip.bag_path, host)
-    rsyncproc = subprocess.Popen(rsynccmd, shell=True,
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,)
-    # while True:
-    #     next_line = rsyncproc.stdout.readline().decode("utf-8")
-    #     if not next_line:
-    #         break
-    #     print(next_line)
-
-    ecode = rsyncproc.wait()
-    if ecode != 0:
-        logger.error("Error delivering bag to {}".format(host), object=sip)
-        return False
-    return True
