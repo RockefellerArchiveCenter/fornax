@@ -11,9 +11,9 @@ from django.urls import reverse
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from fornax import settings
-from sip_assembly.assemblers import SIPAssembler
+from sip_assembly.assemblers import SIPAssembler, CleanupRoutine, CleanupRequester
 from sip_assembly.models import SIP
-from sip_assembly.views import SIPViewSet, SIPAssemblyView, StartTransferView, ApproveTransferView
+from sip_assembly.views import SIPViewSet, SIPAssemblyView, StartTransferView, ApproveTransferView, CleanupRoutineView, CleanupRequestView
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
@@ -61,6 +61,12 @@ class SIPAssemblyTest(TestCase):
                                           'dest': self.dest_dir}).run()
             self.assertNotEqual(False, assembly)
 
+    def cleanup_sip(self):
+        print('*** Cleaning up ***')
+        for sip in SIP.objects.all():
+            cleanup = CleanupRoutine(sip.bag_identifier, dirs={"dest": self.dest_dir}).run()
+        self.assertEqual(0, len(listdir(self.dest_dir)))
+
     def archivematica_views(self):
         with assembly_vcr.use_cassette('archivematica.json'):
             print('*** Starting transfer ***')
@@ -72,11 +78,31 @@ class SIPAssemblyTest(TestCase):
             response = ApproveTransferView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
+    def request_cleanup(self):
+        print('*** Requesting cleanup ***')
+        with assembly_vcr.use_cassette('request_cleanup.json'):
+            cleanup = CleanupRequester('http://ursa-major-web:8005/cleanup/').run()
+            self.assertNotEqual(False, cleanup)
+
     def run_view(self):
         print('*** Test run view ***')
         request = self.factory.post(reverse('assemble-sip'), {"test": True})
         response = SIPAssemblyView.as_view()(request)
         self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+
+    def cleanup_view(self):
+        print('*** Test cleanup view ***')
+        for sip in SIP.objects.all():
+            request = self.factory.post(reverse('cleanup'), data={"identifier": sip.bag_identifier})
+            response = CleanupRoutineView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+
+    def request_cleanup_view(self):
+        print('*** Test cleanup view ***')
+        with assembly_vcr.use_cassette('request_cleanup.json'):
+            request = self.factory.post(reverse('request-cleanup'))
+            response = CleanupRequestView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
     def schema(self):
         print('*** Getting schema view ***')
@@ -99,7 +125,11 @@ class SIPAssemblyTest(TestCase):
             sip.bag_path = join(self.src_dir, "{}.tar.gz".format(sip.bag_identifier))
             sip.save()
         self.process_sip()
+        self.cleanup_sip()
         self.archivematica_views()
+        self.request_cleanup()
         self.run_view()
+        self.cleanup_view()
+        self.request_cleanup_view()
         self.schema()
         self.health_check()

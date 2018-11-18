@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from fornax import settings
-from sip_assembly.assemblers import SIPActions, SIPAssembler
+from sip_assembly.assemblers import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
@@ -84,5 +84,33 @@ class ApproveTransferView(APIView):
         try:
             transfer = SIPActions().approve_transfer()
             return Response({"detail": transfer}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
+class CleanupRequestView(APIView):
+    """Sends request to previous microservice to clean up source directory."""
+
+    def post(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
+        url = request.GET.get('post_service_url')
+        url = (urllib.parse.unquote(url) if url else '')
+        try:
+            cleanup = CleanupRequester(url).run()
+            return Response({"detail": cleanup}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
+class CleanupRoutineView(APIView):
+    """Removes a transfer from the destination directory. Accepts POST requests only."""
+
+    def post(self, request, format=None):
+        dirs = {"src": settings.TEST_SRC_DIR, "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
+        identifier = request.data.get('identifier')
+
+        try:
+            discover = CleanupRoutine(identifier, dirs).run()
+            return Response({"detail": discover}, status=200)
         except Exception as e:
             return Response({"detail": str(e)}, status=500)

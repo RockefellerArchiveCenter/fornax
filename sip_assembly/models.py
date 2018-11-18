@@ -7,11 +7,13 @@ class SIP(models.Model):
     ASSEMBLED = 20
     STARTED = 30
     APPROVED = 40
+    CLEANED_UP = 50
     PROCESS_STATUS_CHOICES = (
         (CREATED, "New SIP created"),
         (ASSEMBLED, "SIP assembled and delivered to Archivematica"),
         (STARTED, "SIP started in Archivematica"),
         (APPROVED, "SIP approved in Archivematica"),
+        (CLEANED_UP, "SIP removed from src directory")
     )
     process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)

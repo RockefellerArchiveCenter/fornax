@@ -15,6 +15,20 @@ from .clients import ArchivematicaClient
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
+def copy_to_directory(sip, dest):
+    """Moves a bag to the `dest` directory"""
+    try:
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+        sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+        sip.save()
+        return True
+    except Exception as e:
+        logger.error("Error copying SIP to directory {}: {}".format(dest, e), object=sip)
+        return False
+
+
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory"""
     try:
@@ -25,7 +39,7 @@ def move_to_directory(sip, dest):
         sip.save()
         return True
     except Exception as e:
-        logger.error("Error moving SIP to directory {}: {}".format(dest, e), object=sip)
+        logger.error("Error copying SIP to directory {}: {}".format(dest, e), object=sip)
         return False
 
 

@@ -1,0 +1,64 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://ursa-major-web:8005/cleanup/",
+                "body": "{\"identifier\": \"3b34198a-df0c-4c95-a374-b15dc6418cfa\"}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.19.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ],
+                    "Content-Length": [
+                        "54"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Server": [
+                        "WSGIServer/0.2 CPython/3.5.5"
+                    ],
+                    "Content-Length": [
+                        "73"
+                    ],
+                    "Vary": [
+                        "Accept, Cookie"
+                    ],
+                    "X-Frame-Options": [
+                        "SAMEORIGIN"
+                    ],
+                    "Date": [
+                        "Sun, 18 Nov 2018 23:20:56 GMT"
+                    ],
+                    "Allow": [
+                        "POST, OPTIONS"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                },
+                "body": {
+                    "string": "{\"detail\":\"Transfer 3b34198a-df0c-4c95-a374-b15dc6418cfa was not found.\"}"
+                }
+            }
+        }
+    ]
+}
