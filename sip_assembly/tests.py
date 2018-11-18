@@ -93,7 +93,7 @@ class SIPAssemblyTest(TestCase):
     def cleanup_view(self):
         print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
-            request = self.factory.post(reverse('cleanup'), data={"identifier": sip.bag_identifier})
+            request = self.factory.post(reverse('cleanup'), data={"test": True, "identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
