@@ -19,7 +19,7 @@ class ArchivematicaClient(object):
         if response:
             return response
         else:
-            raise ArchivematicaClientError("Could not return a valid response for {}".format(full_url))
+            raise ArchivematicaClientException("Could not return a valid response for {}".format(full_url))
 
     def send_start_transfer_request(self, sip):
         """Starts and approves transfer in Archivematica."""

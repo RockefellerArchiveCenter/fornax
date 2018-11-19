@@ -18,8 +18,6 @@ logger = wrap_logger(logger=logging.getLogger(__name__))
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory"""
     try:
-        if not os.path.exists(dest):
-            os.makedirs(dest)
         shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
         sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
         sip.save()

@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 import os
 from structlog import wrap_logger
+import urllib
 from uuid import uuid4
 
 from rest_framework.views import APIView
