@@ -1,5 +1,8 @@
+import json
 import logging
-from os.path import isdir
+from os import remove
+from os.path import isdir, isfile, join
+import requests
 from structlog import wrap_logger
 from uuid import uuid4
 
@@ -14,6 +17,9 @@ logger = wrap_logger(logger)
 
 
 class SIPAssemblyError(Exception): pass
+
+
+class CleanupError(Exception): pass
 
 
 class SIPAssembler(object):
@@ -33,7 +39,7 @@ class SIPAssembler(object):
         for sip in SIP.objects.filter(process_status=SIP.CREATED):
             self.log = logger.bind(object=sip)
             try:
-                library.move_to_directory(sip, self.tmp_dir)
+                library.copy_to_directory(sip, self.tmp_dir)
                 library.extract_all(sip, self.tmp_dir)
                 library.validate(sip)
             except Exception as e:
@@ -110,3 +116,39 @@ class SIPActions(object):
                 raise SIPAssemblyError("Error approving transfer in Archivematica: {}".format(e))
         else:
             return "No transfers to approve."
+
+
+class CleanupRequester:
+    def __init__(self, url):
+        self.url = url
+
+    def run(self):
+        sip_count = 0
+        for sip in SIP.objects.filter(process_status=SIP.APPROVED):
+            r = requests.post(
+                self.url,
+                data=json.dumps({"identifier": sip.bag_identifier}),
+                headers={"Content-Type": "application/json"},
+            )
+            if r.status_code != 200:
+                raise CleanupError(r.status_code, r.reason)
+            sip.process_status = SIP.CLEANED_UP
+            sip.save()
+            sip_count += 1
+        return "Requests sent to cleanup {} SIPs.".format(sip_count)
+
+
+class CleanupRoutine:
+    def __init__(self, identifier, dirs):
+        self.identifier = identifier
+        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+
+    def run(self):
+        try:
+            self.filepath = "{}.tar.gz".format(join(self.dest_dir, self.identifier))
+            if isfile(self.filepath):
+                remove(self.filepath)
+                return "Transfer {} removed.".format(self.identifier)
+            return "Transfer {} was not found.".format(self.identifier)
+        except Exception as e:
+            raise CleanupError(e)
