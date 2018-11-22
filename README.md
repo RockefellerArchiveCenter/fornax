@@ -31,37 +31,29 @@ Or, if you want to remove all data
 
 You will need to edit configuration values in `fornax/config.py` to point to your instance of Archivematica.
 
-## Usage
+## Services
 
-SIPs will be created when a POST request is sent to the `sips` endpoint.
+fornax has six services, all of which are exposed via HTTP endpoints (see [Routes](#routes) section below):
 
-SIPs are assembled on a regular basis when the `AssembleSIPs` cron job is run or when a POST request is sent to the `assemble` endpoint. If the files for a SIP do not exist (or are in the process of being transferred) assembly is skipped for that SIP until the next time the routine is run.
+* Store SIPs - Creates a SIP object.
+* SIP Assembly - This is the main service for this application, and consists of the following steps:
+  * Moving the SIP to the processing directory (SIPS are validated before and after moving).
+  * Restructuring the SIP for Archivematica compliance by:
+    * Moving objects in the `data` directory to `data/objects`.
+    * Adding an empty `logs` directory.
+    * Adding a `metadata` directory containing a `submissionDocumentation` subdirectory.
+  * Creating `rights.csv` and adding it to the `metadata` directory.
+  * Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory.
+  * Adding an identifier to `bag-info.txt` using the `Internal-Sender-Identifier` field.
+  * Adding a `processingMCP.xml` file which sets processing configurations for Archivematica.
+  * Updating bag manifests to account for restructuring and changes to files.
+  * Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving).
+* Start Transfer - starts a transfer in Archivematica.
+* Approve Transfer - approves a transfer in Archivematica.
+* Cleanup - removes files from the destination directory.
+* Request Cleanup - sends a POST request to another service requesting cleanup of the source directory. fornax only has read access for this directory.
 
-SIP Assembly consists of the following steps (the `SIPAssembler` class):
-- Moving the SIP to the processing directory (SIPS are validated before and after moving)
-- Restructuring the SIP for Archivematica compliance by:
-  - Moving objects in the `data` directory to `data/objects`
-  - Adding an empty `logs` directory
-  - Adding a `metadata` directory containing a `submissionDocumentation` subdirectory
-- Creating `rights.csv` and adding it to the `metadata` directory
-- Creating submission documentation and adding to the `metadata/submissionDocumentation` subdirectory
-- Adding an identifier to `bag-info.txt` using the `Internal-Sender-Identifier` field
-- Adding a `processingMCP.xml` file which sets processing configurations for Archivematica
-- Updating bag manifests to account for restructuring and changes to files
-- Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving)
-
-![SIP Assembly diagram](sip_assembly.png)
-
-### Assumptions
-
-fornax currently makes the following assumptions:
-- The files for incoming SIPs will have passed through Aurora, and therefore will:
-  - be structured as valid bags
-  - be virus-free
-  - contain at least the minimum metadata elements in `bag-info.txt` as defined in the source organization's BagIt Profile
-- All bags will have a unique identifier
-- SIPs will be created from a POST request to the `sips` endpoint
-- All bags will be moved to the `SRC_DIR` defined in `fornax/settings.py` by some means (FTP, rsync, HTTP). fornax doesn't care how or when they get there, it will just handle them when they arrive
+  ![SIP Assembly diagram](fornax-services.png)
 
 For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory
 
@@ -76,7 +68,10 @@ For an example of the data fornax expects to receive (both bags and JSON), see t
 |POST|/assemble||200|Runs the SIPAssembly routine.|
 |POST|/start||200|Starts the next transfer in Archivematica.|
 |POST|/approve||200|Approves the next transfer in Archivematica.|
+|POST|/cleanup||200|Removes files from destination directory.|
+|POST|/request-cleanup||200|Notifies another service that processing is complete.|
 |GET|/status||200|Return the status of the microservice|
+|GET|/schema.json||200|Returns the OpenAPI schema for this application|
 
 
 ## Logging
