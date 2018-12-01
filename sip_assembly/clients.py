@@ -30,7 +30,11 @@ class ArchivematicaClient(object):
                   'paths[]': base64.b64encode(bagpaths.encode())}
         start = requests.post(full_url, headers=self.headers, data=params)
         if start.status_code != 200:
-            raise ArchivematicaClientException(start.json()['message'])
+            try:
+                message = start.json()['message']
+            except Exception:
+                message = start.reason
+            raise ArchivematicaClientException(message)
 
     def send_approve_transfer_request(self, sip):
         approve_transfer = requests.post(join(self.baseurl, 'transfer/approve_transfer/'),
