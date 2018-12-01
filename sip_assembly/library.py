@@ -10,35 +10,22 @@ import subprocess
 import tarfile
 
 from fornax import settings
-from .clients import ArchivematicaClient
 
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory"""
-    try:
-        shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
-        sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-        sip.save()
-        return True
-    except Exception as e:
-        logger.error("Error copying SIP to directory {}: {}".format(dest, e), object=sip)
-        return False
+    shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    sip.save()
 
 
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory"""
-    try:
-        if not os.path.exists(dest):
-            os.makedirs(dest)
-        shutil.move(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
-        sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-        sip.save()
-        return True
-    except Exception as e:
-        logger.error("Error copying SIP to directory {}: {}".format(dest, e), object=sip)
-        return False
+    shutil.move(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    sip.save()
 
 
 def extract_all(sip, extract_dir):
@@ -51,26 +38,19 @@ def extract_all(sip, extract_dir):
         os.remove(sip.bag_path)
         sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
         sip.save()
-        return True
     else:
-        logger.error("Unrecognized archive format: {}".format(ext), object=sip)
-        return False
+        raise Exception("Unrecognized archive format")
 
 
 def move_objects_dir(sip):
     """Moves the objects directory within a bag"""
     src = os.path.join(sip.bag_path, 'data')
     dest = os.path.join(sip.bag_path, 'data', 'objects')
-    try:
-        if not os.path.exists(dest):
-            os.makedirs(dest)
-        for fname in os.listdir(src):
-            if fname != 'objects':
-                os.rename(os.path.join(src, fname), os.path.join(dest, fname))
-        return True
-    except Exception as e:
-        logger.error("Error moving objects directory: {}".format(e), object=sip)
-        return False
+    if not os.path.exists(dest):
+        os.makedirs(dest)
+    for fname in os.listdir(src):
+        if fname != 'objects':
+            os.rename(os.path.join(src, fname), os.path.join(dest, fname))
 
 
 def validate(sip):
@@ -84,14 +64,9 @@ def create_structure(sip):
     log_dir = os.path.join(sip.bag_path, 'data', 'logs')
     md_dir = os.path.join(sip.bag_path, 'data', 'metadata')
     docs_dir = os.path.join(sip.bag_path, 'data', 'metadata', 'submissionDocumentation')
-    try:
-        for dir in [log_dir, md_dir, docs_dir]:
-            if not os.path.exists(dir):
-                os.makedirs(dir)
-        return True
-    except Exception as e:
-        logger.error("Error creating new SIP structure: {}".format(e), object=sip)
-        return False
+    for dir in [log_dir, md_dir, docs_dir]:
+        if not os.path.exists(dir):
+            os.makedirs(dir)
 
 
 def create_rights_csv(sip):
@@ -106,31 +81,26 @@ def create_rights_csv(sip):
         if os.path.isfile(filepath):
             mode = 'a'
             firstrow = None
-        try:
-            if not os.path.exists(os.path.dirname(filepath)):
-                os.makedirs(os.path.dirname(filepath))
-            with open(filepath, mode) as csvfile:
-                csvwriter = csv.writer(csvfile)
-                if firstrow:
-                    csvwriter.writerow(firstrow)
-                for file in os.listdir(os.path.join(sip.bag_path, 'data', 'objects')):
-                    for rights_granted in rights_statement.get('rights_granted'):
-                        csvwriter.writerow(
-                            ["data/objects/{}".format(file), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
-                             rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
-                             rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
-                             rights_statement.get('terms', ''), rights_statement.get('citation', ''),
-                             rights_statement.get('note', ''), rights_granted.get('act', ''),
-                             rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
-                             rights_granted.get('end_date', ''), rights_granted.get('note', ''),
-                             rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
-                             rights_statement.get('doc_id_role', '')])
-                logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
-            logger.debug("rights.csv saved", object=filepath)
-        except Exception as e:
-            logger.error("Error saving rights.csv: {}".format(e), object=sip)
-            return False
-    return True
+        if not os.path.exists(os.path.dirname(filepath)):
+            os.makedirs(os.path.dirname(filepath))
+        with open(filepath, mode) as csvfile:
+            csvwriter = csv.writer(csvfile)
+            if firstrow:
+                csvwriter.writerow(firstrow)
+            for file in os.listdir(os.path.join(sip.bag_path, 'data', 'objects')):
+                for rights_granted in rights_statement.get('rights_granted'):
+                    csvwriter.writerow(
+                        ["data/objects/{}".format(file), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                         rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
+                         rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
+                         rights_statement.get('terms', ''), rights_statement.get('citation', ''),
+                         rights_statement.get('note', ''), rights_granted.get('act', ''),
+                         rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
+                         rights_granted.get('end_date', ''), rights_granted.get('note', ''),
+                         rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
+                         rights_statement.get('doc_id_role', '')])
+            logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
+        logger.debug("rights.csv saved", object=filepath)
 
 
 def validate_rights_csv(sip):
@@ -176,9 +146,7 @@ def validate_rights_csv(sip):
         if problems:
             for problem in problems:
                 logger.error(problem)
-            return False
-        else:
-            return True
+            raise Exception(problems)
 
 
 # Right now this is a placeholder. There is currently no use case for adding
@@ -190,52 +158,29 @@ def create_submission_docs(sip):
 
 def update_bag_info(sip):
     """Adds metadata to `bag-info.txt`"""
-    try:
-        bag = bagit.Bag(sip.bag_path)
-        bag.info['Internal-Sender-Identifier'] = sip.data['identifier']
-        bag.save()
-        return True
-    except Exception as e:
-        logger.error("Error updating bag-info metadata: {}".format(e), object=sip)
-        return False
+    bag = bagit.Bag(sip.bag_path)
+    bag.info['Internal-Sender-Identifier'] = sip.data['identifier']
+    bag.save()
 
 
-def add_processing_config(sip):
+def add_processing_config(sip, client):
     """Adds pre-defined Archivematica processing configuration file"""
-    try:
-        response = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
-                                      settings.ARCHIVEMATICA['api_key'],
-                                      settings.ARCHIVEMATICA['baseurl'],
-                                      settings.ARCHIVEMATICA['location_uuid']).retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
-        with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
-            f.write(response.content)
-            return True
-    except Exception as e:
-        logger.error("Error creating processing config: {}".format(e), object=sip)
-        return False
+    response = client.retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
+    with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
+        f.write(response.content)
 
 
 def update_manifests(sip):
     """Updates bag manifests according to BagIt specification"""
-    try:
-        bag = bagit.Bag(sip.bag_path)
-        bag.save(manifests=True)
-        return True
-    except Exception as e:
-        logger.error("Error updating bag manifests: {}".format(e), object=sip)
-        return False
+    bag = bagit.Bag(sip.bag_path)
+    bag.save(manifests=True)
 
 
 def create_package(sip):
     """Creates a compressed archive file from a bag"""
-    try:
-        with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
-            tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))
-            tar.close()
-        shutil.rmtree(sip.bag_path)
-        sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
-        sip.save()
-        return True
-    except Exception as e:
-        logger.error("Error creating .tar.gz archive: {}".format(e), object=sip)
-        return False
+    with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
+        tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))
+        tar.close()
+    shutil.rmtree(sip.bag_path)
+    sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
+    sip.save()

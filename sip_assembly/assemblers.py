@@ -17,8 +17,7 @@ logger = wrap_logger(logger)
 
 
 class SIPAssemblyError(Exception): pass
-
-
+class SIPActionError(Exception): pass
 class CleanupError(Exception): pass
 
 
@@ -31,6 +30,12 @@ class SIPAssembler(object):
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory {} does not exist".format(dir))
+        self.client = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
+                                          settings.ARCHIVEMATICA['api_key'],
+                                          settings.ARCHIVEMATICA['baseurl'],
+                                          settings.ARCHIVEMATICA['location_uuid'])
+        if not self.client:
+            raise SIPAssemblyError("Cannot connect to Archivematica")
 
     def run(self):
         self.log = logger.new(request_id=str(uuid4()))
@@ -60,7 +65,7 @@ class SIPAssembler(object):
 
             try:
                 library.update_bag_info(sip)
-                library.add_processing_config(sip)
+                library.add_processing_config(sip, self.client)
                 library.update_manifests(sip)
                 library.create_package(sip)
             except Exception as e:
@@ -98,7 +103,7 @@ class SIPActions(object):
                 sip.save()
                 return "{} started.".format(sip.bag_identifier)
             except Exception as e:
-                raise SIPAssemblyError("Error starting transfer in Archivematica: {}".format(e))
+                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e))
         else:
             return "No transfers to start."
 
@@ -113,7 +118,7 @@ class SIPActions(object):
                 sip.save()
                 return "{} approved.".format(sip.bag_identifier)
             except Exception as e:
-                raise SIPAssemblyError("Error approving transfer in Archivematica: {}".format(e))
+                raise SIPActionError("Error approving transfer in Archivematica: {}".format(e))
         else:
             return "No transfers to approve."
 
