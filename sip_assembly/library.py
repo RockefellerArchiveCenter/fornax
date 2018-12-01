@@ -9,8 +9,6 @@ from structlog import wrap_logger
 import subprocess
 import tarfile
 
-from fornax import settings
-
 logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
@@ -163,9 +161,8 @@ def update_bag_info(sip):
     bag.save()
 
 
-def add_processing_config(sip, client):
+def add_processing_config(sip, response):
     """Adds pre-defined Archivematica processing configuration file"""
-    response = client.retrieve('processing-configuration/{}/'.format(settings.ARCHIVEMATICA['processing_config']))
     with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
         f.write(response.content)
 

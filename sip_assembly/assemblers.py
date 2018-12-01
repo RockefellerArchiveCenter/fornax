@@ -30,12 +30,16 @@ class SIPAssembler(object):
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory {} does not exist".format(dir))
-        self.client = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
-                                          settings.ARCHIVEMATICA['api_key'],
-                                          settings.ARCHIVEMATICA['baseurl'],
-                                          settings.ARCHIVEMATICA['location_uuid'])
-        if not self.client:
-            raise SIPAssemblyError("Cannot connect to Archivematica")
+        try:
+            self.processing_config = ArchivematicaClient(
+                settings.ARCHIVEMATICA['username'],
+                settings.ARCHIVEMATICA['api_key'],
+                settings.ARCHIVEMATICA['baseurl'],
+                settings.ARCHIVEMATICA['location_uuid']).retrieve(
+                    'processing-configuration/{}/'.format(
+                        settings.ARCHIVEMATICA['processing_config']))
+        except requests.exceptions.ConnectionError as e:
+            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e))
 
     def run(self):
         self.log = logger.new(request_id=str(uuid4()))
@@ -65,7 +69,7 @@ class SIPAssembler(object):
 
             try:
                 library.update_bag_info(sip)
-                library.add_processing_config(sip, self.client)
+                library.add_processing_config(sip, self.processing_config)
                 library.update_manifests(sip)
                 library.create_package(sip)
             except Exception as e:
