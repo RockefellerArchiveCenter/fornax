@@ -13,7 +13,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from fornax import settings
 from sip_assembly.assemblers import SIPAssembler, CleanupRoutine, CleanupRequester
 from sip_assembly.models import SIP
-from sip_assembly.views import SIPViewSet, SIPAssemblyView, StartTransferView, ApproveTransferView, CleanupRoutineView, CleanupRequestView
+from sip_assembly.views import *
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
@@ -76,6 +76,15 @@ class SIPAssemblyTest(TestCase):
             print('*** Approving transfer ***')
             request = self.factory.post(reverse('start-transfer'))
             response = ApproveTransferView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+        with assembly_vcr.use_cassette('archivematica_cleanup.json'):
+            print('*** Cleaning up transfers ***')
+            request = self.factory.post(reverse('remove-transfers'))
+            response = RemoveCompletedTransfersView.as_view()(request)
+            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            print('*** Cleaning up ingests ***')
+            request = self.factory.post(reverse('remove-ingests'))
+            response = RemoveCompletedIngestsView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Wrong HTTP code")
 
     def request_cleanup(self):

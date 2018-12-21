@@ -126,6 +126,22 @@ class SIPActions(object):
         else:
             return "No transfers to approve."
 
+    def remove_completed_transfers(self):
+        """Removes completed transfers from Archivematica dashboard."""
+        try:
+            total = self.client.send_transfer_cleanup_request()
+            return "{} transfers removed from dashboard".format(total)
+        except Exception as e:
+            raise SIPActionError("Error removing transfers from Archivematica dashboard: {}".format(e))
+
+    def remove_completed_ingests(self):
+        """Removes completed transfers from Archivematica dashboard."""
+        try:
+            total = self.client.send_ingest_cleanup_request()
+            return "{} ingests removed from dashboard".format(total)
+        except Exception as e:
+            raise SIPActionError("Error removing ingests from Archivematica dashboard: {}".format(e))
+
 
 class CleanupRequester:
     def __init__(self, url):
