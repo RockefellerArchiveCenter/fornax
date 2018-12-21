@@ -89,6 +89,30 @@ class ApproveTransferView(APIView):
             return Response({"detail": str(e)}, status=500)
 
 
+class RemoveCompletedTransfersView(APIView):
+    """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
+
+    def post(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
+        try:
+            message = SIPActions().remove_completed_transfers()
+            return Response({"detail": message}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
+class RemoveCompletedIngestsView(APIView):
+    """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
+
+    def post(self, request):
+        log = logger.new(transaction_id=str(uuid4()))
+        try:
+            message = SIPActions().remove_completed_ingests()
+            return Response({"detail": message}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=500)
+
+
 class CleanupRequestView(APIView):
     """Sends request to previous microservice to clean up source directory."""
 
