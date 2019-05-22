@@ -23,7 +23,7 @@ class ArchivematicaClient(object):
 
     def send_start_transfer_request(self, sip):
         """Starts a transfer in Archivematica."""
-        basepath = "/home/{}.tar.gz".format(sip.bag_identifier)
+        basepath = "{}.tar.gz".format(sip.bag_identifier)
         full_url = join(self.baseurl, 'transfer/start_transfer/')
         bagpaths = "{}:{}".format(self.location_uuid, basepath)
         params = {'name': sip.bag_identifier, 'type': 'zipped bag',
