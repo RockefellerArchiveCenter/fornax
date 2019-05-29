@@ -167,6 +167,8 @@ class CleanupRoutine:
     def __init__(self, identifier, dirs):
         self.identifier = identifier
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        if not self.identifier:
+            raise CleanupException("No identifier submitted, unable to perform CleanupRoutine.")
 
     def run(self):
         try:
