@@ -27,7 +27,7 @@ SECRET_KEY = '&0-xb06z0kd7m%dic^wn9wdgft&yqdb_m)3uq54p+r%=5l!k$q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['fornax-web', 'localhost']
+ALLOWED_HOSTS = CF.ALLOWED_HOSTS
 
 # Application definition
 
@@ -75,20 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fornax.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'fornax-db',
-        'PORT': 5432,
-    }
-}
-
+DATABASES = CF.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -127,6 +114,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = CF.STATIC_ROOT
 
 SRC_DIR = CF.SRC_DIR
 TEST_SRC_DIR = CF.TEST_SRC_DIR

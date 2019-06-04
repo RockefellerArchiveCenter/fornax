@@ -1,11 +1,23 @@
-# Local config file - rename to config.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'fornax-db',
+        'PORT': 5432,
+    }
+}
 
-SRC_DIR = '/src'
-TEST_SRC_DIR = '/src_test'
-TMP_DIR = '/tmp'
-TEST_TMP_DIR = '/tmp_test'
-DEST_DIR = '/dest'
-TEST_DEST_DIR = '/dest_test'
+ALLOWED_HOSTS = ['fornax-web', 'localhost']
+
+BASE_DIR = ''
+
+SRC_DIR = '{}/src'.format(BASE_DIR)
+TEST_SRC_DIR = '{}/src_test'.format(BASE_DIR)
+TMP_DIR = '{}/tmp'.format(BASE_DIR)
+TEST_TMP_DIR = '{}/tmp_test'.format(BASE_DIR)
+DEST_DIR = '{}/dest'.format(BASE_DIR)
+TEST_DEST_DIR = '{}/dest_test'.format(BASE_DIR)
 
 PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
@@ -17,3 +29,5 @@ ARCHIVEMATICA = {
   "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
   "processing_config": "automated"
 }
+
+STATIC_ROOT = '/static'
