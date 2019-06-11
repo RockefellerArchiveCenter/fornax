@@ -86,18 +86,19 @@ def create_rights_csv(sip):
             if firstrow:
                 csvwriter.writerow(firstrow)
             for (dirpath, dirnames, filenames) in os.walk(os.path.join(sip.bag_path, 'data', 'objects')):
-                for file in filenames:
-                    for rights_granted in rights_statement.get('rights_granted'):
-                        csvwriter.writerow(
-                            ["data/objects/{}".format(os.path.join(dirpath, file)), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
-                             rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
-                             rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
-                             rights_statement.get('terms', ''), rights_statement.get('citation', ''),
-                             rights_statement.get('note', ''), rights_granted.get('act', ''),
-                             rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
-                             rights_granted.get('end_date', ''), rights_granted.get('note', ''),
-                             rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
-                             rights_statement.get('doc_id_role', '')])
+                for dir in dirnames:
+                    for file in filenames:
+                        for rights_granted in rights_statement.get('rights_granted'):
+                            csvwriter.writerow(
+                                ["data/objects/{}".format(os.path.join(dir, file)), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                                 rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
+                                 rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
+                                 rights_statement.get('terms', ''), rights_statement.get('citation', ''),
+                                 rights_statement.get('note', ''), rights_granted.get('act', ''),
+                                 rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
+                                 rights_granted.get('end_date', ''), rights_granted.get('note', ''),
+                                 rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
+                                 rights_statement.get('doc_id_role', '')])
                 logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
         logger.debug("rights.csv saved", object=filepath)
 
