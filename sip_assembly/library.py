@@ -89,7 +89,7 @@ def create_rights_csv(sip):
                 for file in filenames:
                     for rights_granted in rights_statement.get('rights_granted'):
                         csvwriter.writerow(
-                            [os.path.join(dirpath.split(sip.bag_path)[1], file), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                            [os.path.join(dirpath.split(sip.bag_path)[1], file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
                              rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
                              rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
                              rights_statement.get('terms', ''), rights_statement.get('citation', ''),
