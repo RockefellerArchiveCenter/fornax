@@ -24,7 +24,6 @@ rfc3987==1.3.8
 six==1.12.0
 smmap2==2.0.4
 strict-rfc3339==0.7
-structlog==19.1.0
 uritemplate==3.0.0
 urllib3==1.25.3
 vcrpy==2.0.1

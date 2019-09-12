@@ -74,11 +74,6 @@ For an example of the data fornax expects to receive (both bags and JSON), see t
 |GET|/schema.json||200|Returns the OpenAPI schema for this application|
 
 
-## Logging
-
-fornax uses `structlog` to output structured JSON logs. Logging can be configured in `fornax/settings.py`.
-
-
 ## License
 
 This code is released under an [MIT License](LICENSE).

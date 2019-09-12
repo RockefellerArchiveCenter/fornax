@@ -2,14 +2,10 @@ import bagit
 import csv
 from csvvalidator import *
 import datetime
-import logging
 import os
 import shutil
-from structlog import wrap_logger
 import subprocess
 import tarfile
-
-logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 def copy_to_directory(sip, dest):
@@ -98,8 +94,6 @@ def create_rights_csv(sip):
                              rights_granted.get('end_date', ''), rights_granted.get('note', ''),
                              rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
                              rights_statement.get('doc_id_role', '')])
-                logger.debug("Row for Rights Statement created in rights.csv", object=rights_statement)
-        logger.debug("rights.csv saved", object=filepath)
 
 
 def validate_rights_csv(sip):
@@ -143,8 +137,6 @@ def validate_rights_csv(sip):
         data = csv.reader(csvfile)
         problems = validator.validate(data)
         if problems:
-            for problem in problems:
-                logger.error(problem)
             raise Exception(problems)
 
 
