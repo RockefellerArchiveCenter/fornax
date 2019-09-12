@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sip_assembly',
-    'django_cron',
     'rest_framework',
-    'drf_yasg',
     'health_check',
 ]
 
@@ -126,11 +124,6 @@ TEST_DEST_DIR = CF.TEST_DEST_DIR
 PROCESSING_CONFIG_DIR = CF.PROCESSING_CONFIG_DIR
 PROCESSING_CONFIG = CF.PROCESSING_CONFIG
 ARCHIVEMATICA = CF.ARCHIVEMATICA
-
-CRON_CLASSES = [
-    "sip_assembly.cron.AssembleSIPs",
-    "sip_assembly.cron.RetrieveFailed",
-]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
