@@ -1,19 +1,12 @@
 import json
-import logging
 from os import remove
 from os.path import isdir, isfile, join
 import requests
-from structlog import wrap_logger
-from uuid import uuid4
 
 from fornax import settings
 from sip_assembly import library
 from .clients import ArchivematicaClient
 from .models import SIP
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger = wrap_logger(logger)
 
 
 class SIPAssemblyError(Exception): pass
@@ -42,11 +35,8 @@ class SIPAssembler(object):
             raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e))
 
     def run(self):
-        self.log = logger.new(request_id=str(uuid4()))
-        self.log.debug("Found {} SIPs to process".format(len(SIP.objects.filter(process_status=SIP.CREATED))))
         sip_count = 0
         for sip in SIP.objects.filter(process_status=SIP.CREATED):
-            self.log = logger.bind(object=sip)
             try:
                 library.copy_to_directory(sip, self.tmp_dir)
                 library.extract_all(sip, self.tmp_dir)
