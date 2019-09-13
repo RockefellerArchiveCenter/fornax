@@ -1,5 +1,4 @@
-from datetime import datetime
-import os
+from os.path import join
 import urllib
 
 from rest_framework.views import APIView
@@ -35,7 +34,7 @@ class SIPViewSet(ModelViewSet):
     def create(self, request):
         sip = SIP(
             process_status=10,
-            bag_path=os.path.join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
+            bag_path=join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
             data=request.data
         )
@@ -57,48 +56,39 @@ class SIPAssemblyView(APIView):
             return Response(tuple_to_dict(e.args), status=500)
 
 
-class StartTransferView(APIView):
+class ArchivematicaAPIView(APIView):
+    """Base class for Archivematica views."""
+
+    def post(self, request):
+        try:
+            response = (getattr(SIPActions(), self.method)(self.type)
+                        if hasattr(self, 'type')
+                        else getattr(SIPActions(), self.method)())
+            return Response(tuple_to_dict(response), status=200)
+        except Exception as e:
+            return Response(tuple_to_dict(e.args), status=500)
+
+
+class StartTransferView(ArchivematicaAPIView):
     """Starts transfers in Archivematica. Accepts POST requests only."""
-
-    def post(self, request):
-        try:
-            response = SIPActions().start_transfer()
-            return Response(tuple_to_dict(response), status=200)
-        except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+    method = 'start_transfer'
 
 
-class ApproveTransferView(APIView):
+class ApproveTransferView(ArchivematicaAPIView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-
-    def post(self, request):
-        try:
-            response = SIPActions().approve_transfer()
-            return Response(tuple_to_dict(response), status=200)
-        except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+    method = 'approve_transfer'
 
 
-class RemoveCompletedTransfersView(APIView):
+class RemoveCompletedTransfersView(ArchivematicaAPIView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
-
-    def post(self, request):
-        try:
-            response = SIPActions().remove_completed('transfer')
-            return Response(tuple_to_dict(response), status=200)
-        except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+    method = 'remove_completed'
+    type = 'transfer'
 
 
-class RemoveCompletedIngestsView(APIView):
+class RemoveCompletedIngestsView(ArchivematicaAPIView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
-
-    def post(self, request):
-        try:
-            response = SIPActions().remove_completed('ingest')
-            return Response(tuple_to_dict(response), status=200)
-        except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+    method = 'remove_completed'
+    type = 'ingest'
 
 
 class CleanupRequestView(APIView):
