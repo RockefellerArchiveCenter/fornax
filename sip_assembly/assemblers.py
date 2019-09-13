@@ -22,7 +22,7 @@ class SIPAssembler(object):
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
-                raise SIPAssemblyError("Directory {} does not exist".format(dir))
+                raise SIPAssemblyError("Directory does not exist", dir)
         try:
             self.processing_config = ArchivematicaClient(
                 settings.ARCHIVEMATICA['username'],
@@ -32,30 +32,30 @@ class SIPAssembler(object):
                     'processing-configuration/{}/'.format(
                         settings.ARCHIVEMATICA['processing_config']))
         except requests.exceptions.ConnectionError as e:
-            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e))
+            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e), None)
 
     def run(self):
-        sip_count = 0
+        sip_ids = []
         for sip in SIP.objects.filter(process_status=SIP.CREATED):
             try:
                 library.copy_to_directory(sip, self.tmp_dir)
                 library.extract_all(sip, self.tmp_dir)
                 library.validate(sip)
             except Exception as e:
-                raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e))
+                raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e), sip.bag_identifier)
 
             try:
                 library.move_objects_dir(sip)
                 library.create_structure(sip)
             except Exception as e:
-                raise SIPAssemblyError("Error restructuring SIP: {}".format(e))
+                raise SIPAssemblyError("Error restructuring SIP: {}".format(e), sip.bag_identifier)
 
             if sip.data['rights_statements']:
                 try:
                     library.create_rights_csv(sip)
                     library.validate_rights_csv(sip)
                 except Exception as e:
-                    raise SIPAssemblyError("Error creating rights.csv: {}".format(e))
+                    raise SIPAssemblyError("Error creating rights.csv: {}".format(e), sip.bag_identifier)
 
             try:
                 library.update_bag_info(sip)
@@ -63,18 +63,16 @@ class SIPAssembler(object):
                 library.update_manifests(sip)
                 library.create_package(sip)
             except Exception as e:
-                raise SIPAssemblyError("Error updating SIP contents: {}".format(e))
+                raise SIPAssemblyError("Error updating SIP contents: {}".format(e), sip.bag_identifier)
 
             try:
                 library.move_to_directory(sip, self.dest_dir)
                 sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:
-                raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e))
+                raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e), sip.bag_identifier)
 
-            sip_count += 1
-
-        return "{} SIPs assembled.".format(sip_count)
+        return ("All SIPs assembled.", sip_ids)
 
 
 class SIPActions(object):
@@ -84,7 +82,7 @@ class SIPActions(object):
                                           settings.ARCHIVEMATICA['baseurl'],
                                           settings.ARCHIVEMATICA['location_uuid'])
         if not self.client:
-            raise SIPAssemblyError("Cannot connect to Archivematica")
+            raise SIPAssemblyError("Cannot connect to Archivematica", None)
 
     def start_transfer(self):
         """Starts transfer in Archivematica by sending a POST request to the
@@ -95,11 +93,11 @@ class SIPActions(object):
                 self.client.send_start_transfer_request(sip)
                 sip.process_status = SIP.STARTED
                 sip.save()
-                return "{} started.".format(sip.bag_identifier)
+                return ("SIP started.", [sip.bag_identifier])
             except Exception as e:
-                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e))
+                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
         else:
-            return "No transfers to start."
+            return ("No transfers to start.", None)
 
     def approve_transfer(self):
         """Starts transfer in Archivematica by sending a POST request to the
@@ -110,27 +108,27 @@ class SIPActions(object):
                 self.client.send_approve_transfer_request(sip)
                 sip.process_status = SIP.APPROVED
                 sip.save()
-                return "{} approved.".format(sip.bag_identifier)
+                return ("SIP approved.", [sip.bag_identifier])
             except Exception as e:
-                raise SIPActionError("Error approving transfer in Archivematica: {}".format(e))
+                raise SIPActionError("Error approving transfer in Archivematica: {}".format(e), sip.bag_identifier)
         else:
-            return "No transfers to approve."
+            return ("No transfers to approve.", None)
 
     def remove_completed_transfers(self):
         """Removes completed transfers from Archivematica dashboard."""
         try:
-            total = self.client.send_transfer_cleanup_request()
-            return "{} transfers removed from dashboard".format(total)
+            completed = self.client.cleanup('transfer')
+            return ("All completed transfers removed from dashboard", completed)
         except Exception as e:
-            raise SIPActionError("Error removing transfers from Archivematica dashboard: {}".format(e))
+            raise SIPActionError("Error removing transfer from Archivematica dashboard", e)
 
     def remove_completed_ingests(self):
         """Removes completed transfers from Archivematica dashboard."""
         try:
-            total = self.client.send_ingest_cleanup_request()
-            return "{} ingests removed from dashboard".format(total)
+            completed = self.client.cleanup('ingest')
+            return ("All completed ingests removed from dashboard", completed)
         except Exception as e:
-            raise SIPActionError("Error removing ingests from Archivematica dashboard: {}".format(e))
+            raise SIPActionError("Error removing ingests from Archivematica dashboard", e)
 
 
 class CleanupRequester:
@@ -138,7 +136,7 @@ class CleanupRequester:
         self.url = url
 
     def run(self):
-        sip_count = 0
+        sip_ids = []
         for sip in SIP.objects.filter(process_status=SIP.APPROVED):
             r = requests.post(
                 self.url,
@@ -146,11 +144,10 @@ class CleanupRequester:
                 headers={"Content-Type": "application/json"},
             )
             if r.status_code != 200:
-                raise CleanupError(r.status_code, r.reason)
+                raise CleanupError(r.reason, sip.bag_identifier)
             sip.process_status = SIP.CLEANED_UP
             sip.save()
-            sip_count += 1
-        return "Requests sent to cleanup {} SIPs.".format(sip_count)
+        return ("Requests sent to cleanup SIPs.", sip_ids)
 
 
 class CleanupRoutine:
@@ -158,14 +155,14 @@ class CleanupRoutine:
         self.identifier = identifier
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
         if not self.identifier:
-            raise CleanupError("No identifier submitted, unable to perform CleanupRoutine.")
+            raise CleanupError("No identifier submitted, unable to perform CleanupRoutine.", None)
 
     def run(self):
         try:
             self.filepath = "{}.tar.gz".format(join(self.dest_dir, self.identifier))
             if isfile(self.filepath):
                 remove(self.filepath)
-                return "Transfer {} removed.".format(self.identifier)
-            return "Transfer {} was not found.".format(self.identifier)
+                return ("Transfer removed.", self.identifier)
+            return ("Transfer was not found.", self.identifier)
         except Exception as e:
-            raise CleanupError(e)
+            raise CleanupError(e, self.identifier)

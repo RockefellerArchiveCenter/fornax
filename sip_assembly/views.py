@@ -39,8 +39,7 @@ class SIPViewSet(ModelViewSet):
             data=request.data
         )
         sip.save()
-        sip_serializer = SIPSerializer(sip, context={'request': request})
-        return Response(sip_serializer.data)
+        return Response({"detail": "SIP created", "objects": [sip.bag_identifier]})
 
 
 class SIPAssemblyView(APIView):
@@ -51,10 +50,10 @@ class SIPAssemblyView(APIView):
         if request.POST.get('test'):
             dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
         try:
-            assemble = SIPAssembler(dirs).run()
-            return Response({"detail": assemble}, status=200)
+            msg, objs = SIPAssembler(dirs).run()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class StartTransferView(APIView):
@@ -62,10 +61,10 @@ class StartTransferView(APIView):
 
     def post(self, request):
         try:
-            transfer = SIPActions().start_transfer()
-            return Response({"detail": transfer}, status=200)
+            msg, objs = SIPActions().start_transfer()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class ApproveTransferView(APIView):
@@ -73,10 +72,10 @@ class ApproveTransferView(APIView):
 
     def post(self, request):
         try:
-            transfer = SIPActions().approve_transfer()
-            return Response({"detail": transfer}, status=200)
+            msg, objs = SIPActions().approve_transfer()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class RemoveCompletedTransfersView(APIView):
@@ -84,10 +83,10 @@ class RemoveCompletedTransfersView(APIView):
 
     def post(self, request):
         try:
-            message = SIPActions().remove_completed_transfers()
-            return Response({"detail": message}, status=200)
+            msg, objs = SIPActions().remove_completed_transfers()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class RemoveCompletedIngestsView(APIView):
@@ -95,10 +94,10 @@ class RemoveCompletedIngestsView(APIView):
 
     def post(self, request):
         try:
-            message = SIPActions().remove_completed_ingests()
-            return Response({"detail": message}, status=200)
+            msg, objs = SIPActions().remove_completed_ingests()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class CleanupRequestView(APIView):
@@ -108,10 +107,10 @@ class CleanupRequestView(APIView):
         url = request.GET.get('post_service_url')
         url = (urllib.parse.unquote(url) if url else '')
         try:
-            cleanup = CleanupRequester(url).run()
-            return Response({"detail": cleanup}, status=200)
+            msg, objs = CleanupRequester(url).run()
+            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
 
 
 class CleanupRoutineView(APIView):
@@ -125,4 +124,4 @@ class CleanupRoutineView(APIView):
             discover = CleanupRoutine(identifier, dirs).run()
             return Response({"detail": discover}, status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)

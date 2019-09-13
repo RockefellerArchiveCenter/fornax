@@ -41,22 +41,14 @@ class ArchivematicaClient(object):
         if approve_transfer.status_code != 200:
             raise ArchivematicaClientException(approve_transfer.json()['message'])
 
-    def send_ingest_cleanup_request(self):
-        """Removes completed ingests."""
-        completed = self.retrieve('ingest/completed').json()
+    def cleanup(self, type):
+        """Removes completed ingests and transfers."""
+        if type not in ["ingest", "transfer"]:
+            raise ArchivematicaClientException("Unknown type {}".format(type))
+        completed = self.retrieve('{}/completed'.format(type)).json()
         for uuid in completed['results']:
-            full_url = join(self.baseurl, 'ingest/{}/delete/'.format(uuid))
+            full_url = join(self.baseurl, '{}/{}/delete/'.format(type, uuid))
             resp = requests.delete(full_url, headers=self.headers).json()
             if not resp['removed']:
-                raise ArchivematicaClientException("Error removing ingest {}".format(uuid))
-        return len(completed['results'])
-
-    def send_transfer_cleanup_request(self):
-        """Removes completed transfers."""
-        completed = self.retrieve('transfer/completed').json()
-        for uuid in completed['results']:
-            full_url = join(self.baseurl, 'transfer/{}/delete/'.format(uuid))
-            resp = requests.delete(full_url, headers=self.headers).json()
-            if not resp['removed']:
-                raise ArchivematicaClientException("Error removing transfer {}".format(uuid))
-        return len(completed['results'])
+                raise ArchivematicaClientException(uuid)
+        return completed['results']
