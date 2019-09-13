@@ -88,24 +88,30 @@ class SIPActions(object):
         """Starts transfer in Archivematica by sending a POST request to the
            /transfer/start_transfer/ endpoint."""
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
-            try:
-                sip = SIP.objects.filter(process_status=SIP.ASSEMBLED)[0]
-                self.client.send_start_transfer_request(sip)
-                sip.process_status = SIP.STARTED
-                sip.save()
-                return ("SIP started.", [sip.bag_identifier])
-            except Exception as e:
-                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
-        else:
-            return ("No transfers to start.", None)
+            started = self.client.retrieve('/transfer/unapproved_transfers/').get('results')
+            if len(started) < 1:
+                try:
+                    sip = SIP.objects.filter(process_status=SIP.ASSEMBLED)[0]
+                    self.client.start_transfer(sip)
+                    sip.process_status = SIP.STARTED
+                    sip.save()
+                    return ("SIP started.", [sip.bag_identifier])
+                except Exception as e:
+                    raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
+            return ("Another transfer is already waiting to be approved, waiting until it has been approved.", None)
+        return ("No transfers to start.", None)
 
     def approve_transfer(self):
         """Starts transfer in Archivematica by sending a POST request to the
            /transfer/approve_transfer/ endpoint."""
         if len(SIP.objects.filter(process_status=SIP.STARTED)):
+            approved = SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')
+            if len(approved) and self.ingest_processing(approved[0]):
+                return ("Last SIP approved is still processing, waiting for it to complete before starting another.",
+                        last_approved.bag_identifier)
             try:
                 sip = SIP.objects.filter(process_status=SIP.STARTED)[0]
-                self.client.send_approve_transfer_request(sip)
+                self.client.approve_transfer(sip)
                 sip.process_status = SIP.APPROVED
                 sip.save()
                 return ("SIP approved.", [sip.bag_identifier])
@@ -114,21 +120,22 @@ class SIPActions(object):
         else:
             return ("No transfers to approve.", None)
 
-    def remove_completed_transfers(self):
-        """Removes completed transfers from Archivematica dashboard."""
+    def remove_completed(self, type):
+        """Removes completed transfers and ingests from Archivematica dashboard."""
         try:
-            completed = self.client.cleanup('transfer')
-            return ("All completed transfers removed from dashboard", completed)
+            completed = self.client.cleanup(type)
+            return ("All completed {}s removed from dashboard".format(type), completed)
         except Exception as e:
-            raise SIPActionError("Error removing transfer from Archivematica dashboard", e)
+            raise SIPActionError("Error removing {} from Archivematica dashboard".format(type), e)
 
-    def remove_completed_ingests(self):
-        """Removes completed transfers from Archivematica dashboard."""
+    def ingest_processing(self, ingest):
         try:
-            completed = self.client.cleanup('ingest')
-            return ("All completed ingests removed from dashboard", completed)
+            last_approved = self.client.retrieve('/ingest/status/{}'.format(approved[0].bag_identifier))
+            if last_approved['status'] == 'PROCESSING':
+                return True
+            return False
         except Exception as e:
-            raise SIPActionError("Error removing ingests from Archivematica dashboard", e)
+            return True
 
 
 class CleanupRequester:
@@ -147,7 +154,8 @@ class CleanupRequester:
                 raise CleanupError(r.reason, sip.bag_identifier)
             sip.process_status = SIP.CLEANED_UP
             sip.save()
-        return ("Requests sent to cleanup SIPs.", sip_ids)
+        message = "Requests sent to clean up SIPs." if len(sip_ids) else "No SIPS to clean up."
+        return (message, sip_ids)
 
 
 class CleanupRoutine:

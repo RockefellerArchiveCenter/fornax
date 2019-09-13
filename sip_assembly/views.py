@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from fornax import settings
 from sip_assembly.assemblers import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
+from sip_assembly.library import tuple_to_dict
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
@@ -39,7 +40,7 @@ class SIPViewSet(ModelViewSet):
             data=request.data
         )
         sip.save()
-        return Response({"detail": "SIP created", "objects": [sip.bag_identifier]})
+        return Response(tuple_to_dict(("SIP created", sip.bag_identifier)), status=200)
 
 
 class SIPAssemblyView(APIView):
@@ -50,10 +51,10 @@ class SIPAssemblyView(APIView):
         if request.POST.get('test'):
             dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
         try:
-            msg, objs = SIPAssembler(dirs).run()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = SIPAssembler(dirs).run()
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class StartTransferView(APIView):
@@ -61,10 +62,10 @@ class StartTransferView(APIView):
 
     def post(self, request):
         try:
-            msg, objs = SIPActions().start_transfer()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = SIPActions().start_transfer()
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class ApproveTransferView(APIView):
@@ -72,10 +73,10 @@ class ApproveTransferView(APIView):
 
     def post(self, request):
         try:
-            msg, objs = SIPActions().approve_transfer()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = SIPActions().approve_transfer()
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class RemoveCompletedTransfersView(APIView):
@@ -83,10 +84,10 @@ class RemoveCompletedTransfersView(APIView):
 
     def post(self, request):
         try:
-            msg, objs = SIPActions().remove_completed_transfers()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = SIPActions().remove_completed('transfer')
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class RemoveCompletedIngestsView(APIView):
@@ -94,10 +95,10 @@ class RemoveCompletedIngestsView(APIView):
 
     def post(self, request):
         try:
-            msg, objs = SIPActions().remove_completed_ingests()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = SIPActions().remove_completed('ingest')
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class CleanupRequestView(APIView):
@@ -107,10 +108,10 @@ class CleanupRequestView(APIView):
         url = request.GET.get('post_service_url')
         url = (urllib.parse.unquote(url) if url else '')
         try:
-            msg, objs = CleanupRequester(url).run()
-            return Response({"detail": msg, "objects": objs, "count": len(objs)}, status=200)
+            response = CleanupRequester(url).run()
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)
 
 
 class CleanupRoutineView(APIView):
@@ -121,7 +122,7 @@ class CleanupRoutineView(APIView):
         identifier = request.data.get('identifier')
 
         try:
-            discover = CleanupRoutine(identifier, dirs).run()
-            return Response({"detail": discover}, status=200)
+            response = CleanupRoutine(identifier, dirs).run()
+            return Response(tuple_to_dict(response), status=200)
         except Exception as e:
-            return Response({"detail": e.args[0], "object": e.args[1]}, status=500)
+            return Response(tuple_to_dict(e.args), status=500)

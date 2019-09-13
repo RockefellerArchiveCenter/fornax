@@ -3,6 +3,62 @@
     "interactions": [
         {
             "request": {
+                "method": "GET",
+                "uri": "http://archivematica-dashboard:8000/api/transfer/unapproved_transfers/",
+                "body": null,
+                "headers": {
+                    "User-Agent": [
+                        "Fornax/0.1"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "application/json"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "188"
+                    ],
+                    "Content-Type": [
+                        "application/x-www-form-urlencoded"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "headers": {
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Date": [
+                        "Mon, 12 Nov 2018 02:42:02 GMT"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                },
+                "body": {
+                    "string": "{\"message\": \"Fetched unapproved transfers successfully.\",\"results\": []}"
+                }
+            }
+        },
+        {
+            "request": {
                 "method": "POST",
                 "uri": "http://archivematica-dashboard:8000/api/transfer/start_transfer/",
                 "body": "name=1d647537-8483-4155-9bfd-3906621d12ff&type=zipped+bag&paths%5B%5D=ZWQzN2U4MWQtMmFmMy00NWEzLWFhMzAtYTYwYTEyYzk1YmJlOi9ob21lLzFkNjQ3NTM3LTg0ODMtNDE1NS05YmZkLTM5MDY2MjFkMTJmZi50YXIuZ3o%3D",
