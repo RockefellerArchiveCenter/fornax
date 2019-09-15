@@ -1,5 +1,4 @@
 import base64
-import json
 from os.path import join
 import requests
 
