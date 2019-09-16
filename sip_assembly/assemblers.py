@@ -32,7 +32,7 @@ class SIPAssembler(object):
                     'processing-configuration/{}/'.format(
                         settings.ARCHIVEMATICA['processing_config']))
         except requests.exceptions.ConnectionError as e:
-            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e), None)
+            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e),)
 
     def run(self):
         sip_ids = []
