@@ -84,7 +84,7 @@ class SIPActions(object):
                                           settings.ARCHIVEMATICA['baseurl'],
                                           settings.ARCHIVEMATICA['location_uuid'])
         if not self.client:
-            raise SIPAssemblyError("Cannot connect to Archivematica", None)
+            raise SIPAssemblyError("Cannot connect to Archivematica",)
 
     def start_transfer(self):
         """Starts transfer in Archivematica by sending a POST request to the
@@ -100,8 +100,8 @@ class SIPActions(object):
                     return ("SIP started.", [sip.bag_identifier])
                 except Exception as e:
                     raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
-            return ("Another transfer is already waiting to be approved, waiting until it has been approved.", None)
-        return ("No transfers to start.", None)
+            return ("Another transfer is already waiting to be approved, waiting until it has been approved.",)
+        return ("No transfers to start.",)
 
     def approve_transfer(self):
         """Starts transfer in Archivematica by sending a POST request to the
@@ -116,11 +116,11 @@ class SIPActions(object):
                 self.client.approve_transfer(sip)
                 sip.process_status = SIP.APPROVED
                 sip.save()
-                return ("SIP approved.", [sip.bag_identifier])
+                return ("SIP approved.", sip.bag_identifier)
             except Exception as e:
                 raise SIPActionError("Error approving transfer in Archivematica: {}".format(e), sip.bag_identifier)
         else:
-            return ("No transfers to approve.", None)
+            return ("No transfers to approve.",)
 
     def remove_completed(self, type):
         """Removes completed transfers and ingests from Archivematica dashboard."""
@@ -128,7 +128,7 @@ class SIPActions(object):
             completed = self.client.cleanup(type)
             return ("All completed {}s removed from dashboard".format(type), completed)
         except Exception as e:
-            raise SIPActionError("Error removing {} from Archivematica dashboard".format(type), e)
+            raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, e))
 
     def ingest_processing(self, ingest):
         try:
@@ -165,7 +165,7 @@ class CleanupRoutine:
         self.identifier = identifier
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
         if not self.identifier:
-            raise CleanupError("No identifier submitted, unable to perform CleanupRoutine.", None)
+            raise CleanupError("No identifier submitted, unable to perform CleanupRoutine.",)
 
     def run(self):
         try:
