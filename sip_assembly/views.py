@@ -1,13 +1,13 @@
 from os.path import join
 import urllib
 
+from asterism.views import prepare_response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from fornax import settings
 from sip_assembly.assemblers import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
-from sip_assembly.library import tuple_to_dict
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
@@ -39,7 +39,7 @@ class SIPViewSet(ModelViewSet):
             data=request.data
         )
         sip.save()
-        return Response(tuple_to_dict(("SIP created", sip.bag_identifier)), status=200)
+        return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
 
 
 class SIPAssemblyView(APIView):
@@ -51,9 +51,9 @@ class SIPAssemblyView(APIView):
             dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
         try:
             response = SIPAssembler(dirs).run()
-            return Response(tuple_to_dict(response), status=200)
+            return Response(prepare_response(response), status=200)
         except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+            return Response(prepare_response(e), status=500)
 
 
 class ArchivematicaAPIView(APIView):
@@ -64,9 +64,9 @@ class ArchivematicaAPIView(APIView):
             response = (getattr(SIPActions(), self.method)(self.type)
                         if hasattr(self, 'type')
                         else getattr(SIPActions(), self.method)())
-            return Response(tuple_to_dict(response), status=200)
+            return Response(prepare_response(response), status=200)
         except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+            return Response(prepare_response(e), status=500)
 
 
 class StartTransferView(ArchivematicaAPIView):
@@ -99,9 +99,9 @@ class CleanupRequestView(APIView):
         url = (urllib.parse.unquote(url) if url else '')
         try:
             response = CleanupRequester(url).run()
-            return Response(tuple_to_dict(response), status=200)
+            return Response(prepare_response(response), status=200)
         except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+            return Response(prepare_response(e), status=500)
 
 
 class CleanupRoutineView(APIView):
@@ -113,6 +113,6 @@ class CleanupRoutineView(APIView):
 
         try:
             response = CleanupRoutine(identifier, dirs).run()
-            return Response(tuple_to_dict(response), status=200)
+            return Response(prepare_response(response), status=200)
         except Exception as e:
-            return Response(tuple_to_dict(e.args), status=500)
+            return Response(prepare_response(e), status=500)

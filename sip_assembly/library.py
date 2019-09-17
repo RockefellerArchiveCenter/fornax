@@ -173,12 +173,3 @@ def create_package(sip):
     shutil.rmtree(sip.bag_path)
     sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
     sip.save()
-
-
-def tuple_to_dict(data):
-    detail = str(data[0])
-    objects = data[1] if len(data) > 1 else []
-    if objects and not isinstance(objects, list):
-        objects = [objects]
-    count = len(objects) if objects else 0
-    return {"detail": detail, "objects": objects, "count": count}
