@@ -7,6 +7,7 @@ class ArchivematicaClientException(Exception): pass
 
 
 class ArchivematicaClient(object):
+    """Client for interacting with Archivematica."""
     def __init__(self, username, api_key, baseurl, location_uuid):
         self.headers = {"Authorization": "ApiKey {}:{}".format(username, api_key)}
         self.baseurl = baseurl
@@ -44,7 +45,7 @@ class ArchivematicaClient(object):
             raise ArchivematicaClientException(approve_transfer.json()['message'])
 
     def cleanup(self, type):
-        """Removes completed ingests and transfers."""
+        """Removes completed ingests and transfers in Archivematica."""
         if type not in ["ingest", "transfer"]:
             raise ArchivematicaClientException("Unknown type {}".format(type))
         completed = self.retrieve('{}/completed'.format(type))

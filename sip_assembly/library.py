@@ -8,14 +8,14 @@ import tarfile
 
 
 def copy_to_directory(sip, dest):
-    """Moves a bag to the `dest` directory"""
+    """Moves a bag to the `dest` directory and updates the object's bag_path."""
     shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
     sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
     sip.save()
 
 
 def move_to_directory(sip, dest):
-    """Moves a bag to the `dest` directory"""
+    """Moves a bag to the `dest` directory and updates the object's bag_path"""
     shutil.move(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
     sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
     sip.save()
@@ -35,10 +35,10 @@ def extract_all(sip, extract_dir):
         raise Exception("Unrecognized archive format")
 
 
-def move_objects_dir(sip):
+def move_objects_dir(bag_path):
     """Moves the objects directory within a bag"""
-    src = os.path.join(sip.bag_path, 'data')
-    dest = os.path.join(sip.bag_path, 'data', 'objects')
+    src = os.path.join(bag_path, 'data')
+    dest = os.path.join(bag_path, 'data', 'objects')
     if not os.path.exists(dest):
         os.makedirs(dest)
     for fname in os.listdir(src):
@@ -46,27 +46,27 @@ def move_objects_dir(sip):
             os.rename(os.path.join(src, fname), os.path.join(dest, fname))
 
 
-def validate(sip):
+def validate(bag_path):
     """Validates a bag against the BagIt specification"""
-    bag = bagit.Bag(sip.bag_path)
+    bag = bagit.Bag(bag_path)
     return bag.validate()
 
 
-def create_structure(sip):
+def create_structure(bag_path):
     """Creates Archivematica-compliant directory structure within a bag"""
-    log_dir = os.path.join(sip.bag_path, 'data', 'logs')
-    md_dir = os.path.join(sip.bag_path, 'data', 'metadata')
-    docs_dir = os.path.join(sip.bag_path, 'data', 'metadata', 'submissionDocumentation')
+    log_dir = os.path.join(bag_path, 'data', 'logs')
+    md_dir = os.path.join(bag_path, 'data', 'metadata')
+    docs_dir = os.path.join(bag_path, 'data', 'metadata', 'submissionDocumentation')
     for dir in [log_dir, md_dir, docs_dir]:
         if not os.path.exists(dir):
             os.makedirs(dir)
 
 
-def create_rights_csv(sip):
+def create_rights_csv(bag_path, rights_statements):
     """Creates Archivematica-compliant CSV containing PREMIS rights"""
-    filepath = os.path.join(sip.bag_path, 'data', 'metadata', 'rights.csv')
+    filepath = os.path.join(bag_path, 'data', 'metadata', 'rights.csv')
     mode = 'w'
-    for rights_statement in sip.data.get('rights_statements'):
+    for rights_statement in rights_statements:
         firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
                     'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
                     'grant_restriction', 'grant_start_date', 'grant_end_date',
@@ -80,11 +80,11 @@ def create_rights_csv(sip):
             csvwriter = csv.writer(csvfile)
             if firstrow:
                 csvwriter.writerow(firstrow)
-            for (dirpath, dirnames, filenames) in os.walk(os.path.join(sip.bag_path, 'data', 'objects')):
+            for (dirpath, dirnames, filenames) in os.walk(os.path.join(bag_path, 'data', 'objects')):
                 for file in filenames:
                     for rights_granted in rights_statement.get('rights_granted'):
                         csvwriter.writerow(
-                            [os.path.join(dirpath.split(sip.bag_path)[1], file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                            [os.path.join(dirpath.split(bag_path)[1], file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
                              rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
                              rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
                              rights_statement.get('terms', ''), rights_statement.get('citation', ''),
@@ -95,7 +95,7 @@ def create_rights_csv(sip):
                              rights_statement.get('doc_id_role', '')])
 
 
-def validate_rights_csv(sip):
+def validate_rights_csv(bag_path):
     """Validate a CSV to ensure it complies with Archivematica validation"""
     field_names = (
            'file', 'basis', 'status', 'determination_date', 'jurisdiction',
@@ -132,7 +132,7 @@ def validate_rights_csv(sip):
             raise RecordError('EX8', 'invalid date format')
     validator.add_record_check(check_dates)
 
-    with open(os.path.join(sip.bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
+    with open(os.path.join(bag_path, 'data', 'metadata', 'rights.csv'), 'r') as csvfile:
         data = csv.reader(csvfile)
         problems = validator.validate(data)
         if problems:
@@ -146,26 +146,27 @@ def create_submission_docs(sip):
     return True
 
 
-def update_bag_info(sip):
+def update_bag_info(bag_path, data):
     """Adds metadata to `bag-info.txt`"""
-    bag = bagit.Bag(sip.bag_path)
-    bag.info['Internal-Sender-Identifier'] = sip.data['identifier']
+    bag = bagit.Bag(bag_path)
+    for k,v in data.items():
+        bag.info[k] = v
     bag.save()
 
 
-def add_processing_config(sip, response):
+def add_processing_config(bag_path, response):
     """Adds pre-defined Archivematica processing configuration file"""
-    with open(os.path.join(sip.bag_path, 'processingMCP.xml'), 'wb') as f:
+    with open(os.path.join(bag_path, 'processingMCP.xml'), 'wb') as f:
         f.write(response.content)
 
 
-def update_manifests(sip):
+def update_manifests(bag_path):
     """Updates bag manifests according to BagIt specification"""
-    bag = bagit.Bag(sip.bag_path)
+    bag = bagit.Bag(bag_path)
     bag.save(manifests=True)
 
 
-def create_package(sip):
+def create_targz_package(sip):
     """Creates a compressed archive file from a bag"""
     with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
         tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))

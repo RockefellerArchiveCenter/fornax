@@ -40,28 +40,28 @@ class SIPAssembler(object):
             try:
                 library.copy_to_directory(sip, self.tmp_dir)
                 library.extract_all(sip, self.tmp_dir)
-                library.validate(sip)
+                library.validate(sip.bag_path)
             except Exception as e:
                 raise SIPAssemblyError("Error moving SIP to processing directory: {}".format(e), sip.bag_identifier)
 
             try:
-                library.move_objects_dir(sip)
-                library.create_structure(sip)
+                library.move_objects_dir(sip.bag_path)
+                library.create_structure(sip.bag_path)
             except Exception as e:
                 raise SIPAssemblyError("Error restructuring SIP: {}".format(e), sip.bag_identifier)
 
             if sip.data['rights_statements']:
                 try:
-                    library.create_rights_csv(sip)
-                    library.validate_rights_csv(sip)
+                    library.create_rights_csv(sip.bag_path, sip.data.get('rights_statements'))
+                    library.validate_rights_csv(sip.bag_path)
                 except Exception as e:
                     raise SIPAssemblyError("Error creating rights.csv: {}".format(e), sip.bag_identifier)
 
             try:
-                library.update_bag_info(sip)
-                library.add_processing_config(sip, self.processing_config)
-                library.update_manifests(sip)
-                library.create_package(sip)
+                library.update_bag_info(sip.bag_path, {'Internal-Sender-Identifier': sip.data['identifier']})
+                library.add_processing_config(sip.bag_path, self.processing_config)
+                library.update_manifests(sip.bag_path)
+                library.create_targz_package(sip)
             except Exception as e:
                 raise SIPAssemblyError("Error updating SIP contents: {}".format(e), sip.bag_identifier)
 
@@ -78,6 +78,7 @@ class SIPAssembler(object):
 
 
 class SIPActions(object):
+    """Performs various actions against the Archivematica API."""
     def __init__(self):
         self.client = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
                                           settings.ARCHIVEMATICA['api_key'],
@@ -86,18 +87,39 @@ class SIPActions(object):
         if not self.client:
             raise SIPAssemblyError("Cannot connect to Archivematica",)
 
+    def handle_request(self, start_status, method, end_status):
+        sip = SIP.objects.filter(process_status=start_status)
+        getattr(self.client, method)(sip)
+        sip.process_status(end_status)
+        sip.save()
+        return [sip.bag_identifier]
+
+    def ingest_processing(self, ingest):
+        """
+        Tests to see if an ingest is still processing by making a request to
+        the `ingest` endpoint. If this ingest cannot be found (meaning it is
+        still in the transfer stage) or has a status of `PROCESSING` this
+        function will return True, indicating that the ingest is still processing.
+        """
+        try:
+            last_approved = self.client.retrieve('/ingest/status/{}'.format(ingest.bag_identifier))
+            if last_approved['status'] == 'PROCESSING':
+                return True
+            return False
+        except Exception as e:
+            return True
+
     def start_transfer(self):
-        """Starts transfer in Archivematica by sending a POST request to the
-           /transfer/start_transfer/ endpoint."""
+        """
+        Starts transfer in Archivematica by sending a POST request to the
+        /transfer/start_transfer/ endpoint.
+        """
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             started = self.client.retrieve('/transfer/unapproved_transfers/').get('results')
             if len(started) < 1:
                 try:
-                    sip = SIP.objects.filter(process_status=SIP.ASSEMBLED)[0]
-                    self.client.start_transfer(sip)
-                    sip.process_status = SIP.STARTED
-                    sip.save()
-                    return ("SIP started.", [sip.bag_identifier])
+                    started = self.handle_request(SIP.ASSEMBLED, 'start_transfer', SIP.STARTED)
+                    return ("SIP started.", started)
                 except Exception as e:
                     raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
             return ("Another transfer is already waiting to be approved, waiting until it has been approved.",)
@@ -112,11 +134,8 @@ class SIPActions(object):
                 return ("Last SIP approved is still processing, waiting for it to complete before starting another.",
                         last_approved.bag_identifier)
             try:
-                sip = SIP.objects.filter(process_status=SIP.STARTED)[0]
-                self.client.approve_transfer(sip)
-                sip.process_status = SIP.APPROVED
-                sip.save()
-                return ("SIP approved.", sip.bag_identifier)
+                approved = self.handle_request(SIP.STARTED, 'approve_transfer', SIP.APPROVED)
+                return ("SIP approved.", approved)
             except Exception as e:
                 raise SIPActionError("Error approving transfer in Archivematica: {}".format(e), sip.bag_identifier)
         else:
@@ -130,17 +149,12 @@ class SIPActions(object):
         except Exception as e:
             raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, e))
 
-    def ingest_processing(self, ingest):
-        try:
-            last_approved = self.client.retrieve('/ingest/status/{}'.format(approved[0].bag_identifier))
-            if last_approved['status'] == 'PROCESSING':
-                return True
-            return False
-        except Exception as e:
-            return True
-
 
 class CleanupRequester:
+    """
+    Requests that cleanup of SIP files in the source directory be performed by
+    another service.
+    """
     def __init__(self, url):
         self.url = url
 
@@ -161,6 +175,7 @@ class CleanupRequester:
 
 
 class CleanupRoutine:
+    """Removes files in destination directory."""
     def __init__(self, identifier, dirs):
         self.identifier = identifier
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
