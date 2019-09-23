@@ -88,9 +88,9 @@ class SIPActions(object):
             raise SIPAssemblyError("Cannot connect to Archivematica",)
 
     def handle_request(self, start_status, method, end_status):
-        sip = SIP.objects.filter(process_status=start_status)
+        sip = SIP.objects.filter(process_status=start_status)[0]
         getattr(self.client, method)(sip)
-        sip.process_status(end_status)
+        sip.process_status = end_status
         sip.save()
         return [sip.bag_identifier]
 
@@ -121,7 +121,7 @@ class SIPActions(object):
                     started = self.handle_request(SIP.ASSEMBLED, 'start_transfer', SIP.STARTED)
                     return ("SIP started.", started)
                 except Exception as e:
-                    raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), sip.bag_identifier)
+                    raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), started)
             return ("Another transfer is already waiting to be approved, waiting until it has been approved.",)
         return ("No transfers to start.",)
 
