@@ -70,7 +70,7 @@ class SIPAssembler(object):
                 sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:
-                raise SIPAssemblyError("Error delivering SIP to Archivematica: {}".format(e), sip.bag_identifier)
+                raise SIPAssemblyError("Error delivering SIP to Archivematica transfer source: {}".format(e), sip.bag_identifier)
 
             sip_ids.append(sip.bag_identifier)
 
