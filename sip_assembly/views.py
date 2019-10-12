@@ -42,20 +42,6 @@ class SIPViewSet(ModelViewSet):
         return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
 
 
-class SIPAssemblyView(APIView):
-    """Runs the AssembleSIPs cron job. Accepts POST requests only."""
-
-    def post(self, request, format=None):
-        dirs = None
-        if request.POST.get('test'):
-            dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
-        try:
-            response = SIPAssembler(dirs).run()
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
-
-
 class ArchivematicaAPIView(APIView):
     """Base class for Archivematica views."""
 
@@ -91,28 +77,43 @@ class RemoveCompletedIngestsView(ArchivematicaAPIView):
     type = 'ingest'
 
 
-class CleanupRequestView(APIView):
-    """Sends request to previous microservice to clean up source directory."""
-
-    def post(self, request):
-        url = request.GET.get('post_service_url')
-        url = (urllib.parse.unquote(url) if url else '')
-        try:
-            response = CleanupRequester(url).run()
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
-
-
-class CleanupRoutineView(APIView):
-    """Removes a transfer from the destination directory. Accepts POST requests only."""
+class BaseRoutineView(APIView):
+    """Base view for routines."""
 
     def post(self, request, format=None):
-        dirs = {"src": settings.TEST_SRC_DIR, "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
-        identifier = request.data.get('identifier')
-
+        args = self.get_args(request)
         try:
-            response = CleanupRoutine(identifier, dirs).run()
+            response = self.routine(*args).run()
             return Response(prepare_response(response), status=200)
         except Exception as e:
             return Response(prepare_response(e), status=500)
+
+
+class SIPAssemblyView(BaseRoutineView):
+    """Runs the AssembleSIPs cron job. Accepts POST requests only."""
+    routine = SIPAssembler
+
+    def get_args(self, request):
+        dirs = ({'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
+                if request.POST.get('test') else None)
+        return (dirs,)
+
+
+class CleanupRequestView(BaseRoutineView):
+    """Sends request to previous microservice to clean up source directory."""
+    routine = CleanupRequester
+
+    def get_args(self, request):
+        url = request.GET.get('post_service_url')
+        data = (urllib.parse.unquote(url) if url else '')
+        return (data,)
+
+
+class CleanupRoutineView(BaseRoutineView):
+    """Removes a transfer from the destination directory. Accepts POST requests only."""
+    routine = CleanupRoutine
+
+    def get_args(self, request):
+        dirs = {"src": settings.TEST_SRC_DIR, "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
+        identifier = request.data.get('identifier')
+        return (identifier, dirs)
