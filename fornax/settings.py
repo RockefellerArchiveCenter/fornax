@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import structlog
 from fornax import config as CF
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '&0-xb06z0kd7m%dic^wn9wdgft&yqdb_m)3uq54p+r%=5l!k$q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = CF.DEBUG
 
 ALLOWED_HOSTS = CF.ALLOWED_HOSTS
 
@@ -39,9 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sip_assembly',
-    'django_cron',
     'rest_framework',
-    'drf_yasg',
     'health_check',
 ]
 
@@ -127,25 +124,7 @@ PROCESSING_CONFIG_DIR = CF.PROCESSING_CONFIG_DIR
 PROCESSING_CONFIG = CF.PROCESSING_CONFIG
 ARCHIVEMATICA = CF.ARCHIVEMATICA
 
-CRON_CLASSES = [
-    "sip_assembly.cron.AssembleSIPs",
-    "sip_assembly.cron.RetrieveFailed",
-]
-
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
 }
-
-structlog.configure(
-    processors=[
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
-        structlog.stdlib.PositionalArgumentsFormatter(),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.UnicodeDecoder(),
-        structlog.processors.TimeStamper(fmt='iso', utc=True),
-        structlog.processors.JSONRenderer()
-    ],
-)

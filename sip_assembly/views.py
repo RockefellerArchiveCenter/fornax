@@ -1,10 +1,7 @@
-from datetime import datetime
-import logging
-import os
-from structlog import wrap_logger
+from os.path import join
 import urllib
-from uuid import uuid4
 
+from asterism.views import prepare_response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -13,8 +10,6 @@ from fornax import settings
 from sip_assembly.assemblers import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
-
-logger = wrap_logger(logger=logging.getLogger(__name__))
 
 
 class SIPViewSet(ModelViewSet):
@@ -37,105 +32,88 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
         sip = SIP(
             process_status=10,
-            bag_path=os.path.join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
+            bag_path=join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
             data=request.data
         )
         sip.save()
-        log.debug("SIP saved", object=sip, request_id=str(uuid4()))
-        sip_serializer = SIPSerializer(sip, context={'request': request})
-        return Response(sip_serializer.data)
+        return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
 
 
-class SIPAssemblyView(APIView):
-    """Runs the AssembleSIPs cron job. Accepts POST requests only."""
+class ArchivematicaAPIView(APIView):
+    """Base class for Archivematica views."""
 
-    def post(self, request, format=None):
-        log = logger.new(transaction_id=str(uuid4()))
-        dirs = None
-        if request.POST.get('test'):
-            dirs = {'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
+    def post(self, request):
         try:
-            assemble = SIPAssembler(dirs).run()
-            return Response({"detail": assemble}, status=200)
+            response = (getattr(SIPActions(), self.method)(self.type)
+                        if hasattr(self, 'type')
+                        else getattr(SIPActions(), self.method)())
+            return Response(prepare_response(response), status=200)
         except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+            return Response(prepare_response(e), status=500)
 
 
-class StartTransferView(APIView):
+class StartTransferView(ArchivematicaAPIView):
     """Starts transfers in Archivematica. Accepts POST requests only."""
-
-    def post(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
-        try:
-            transfer = SIPActions().start_transfer()
-            return Response({"detail": transfer}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+    method = 'start_transfer'
 
 
-class ApproveTransferView(APIView):
+class ApproveTransferView(ArchivematicaAPIView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-
-    def post(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
-        try:
-            transfer = SIPActions().approve_transfer()
-            return Response({"detail": transfer}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+    method = 'approve_transfer'
 
 
-class RemoveCompletedTransfersView(APIView):
+class RemoveCompletedTransfersView(ArchivematicaAPIView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
-
-    def post(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
-        try:
-            message = SIPActions().remove_completed_transfers()
-            return Response({"detail": message}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+    method = 'remove_completed'
+    type = 'transfer'
 
 
-class RemoveCompletedIngestsView(APIView):
+class RemoveCompletedIngestsView(ArchivematicaAPIView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
-
-    def post(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
-        try:
-            message = SIPActions().remove_completed_ingests()
-            return Response({"detail": message}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+    method = 'remove_completed'
+    type = 'ingest'
 
 
-class CleanupRequestView(APIView):
-    """Sends request to previous microservice to clean up source directory."""
-
-    def post(self, request):
-        log = logger.new(transaction_id=str(uuid4()))
-        url = request.GET.get('post_service_url')
-        url = (urllib.parse.unquote(url) if url else '')
-        try:
-            cleanup = CleanupRequester(url).run()
-            return Response({"detail": cleanup}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
-
-
-class CleanupRoutineView(APIView):
-    """Removes a transfer from the destination directory. Accepts POST requests only."""
+class BaseRoutineView(APIView):
+    """Base view for routines."""
 
     def post(self, request, format=None):
+        args = self.get_args(request)
+        try:
+            response = self.routine(*args).run()
+            return Response(prepare_response(response), status=200)
+        except Exception as e:
+            return Response(prepare_response(e), status=500)
+
+
+class SIPAssemblyView(BaseRoutineView):
+    """Runs the AssembleSIPs cron job. Accepts POST requests only."""
+    routine = SIPAssembler
+
+    def get_args(self, request):
+        dirs = ({'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
+                if request.POST.get('test') else None)
+        return (dirs,)
+
+
+class CleanupRequestView(BaseRoutineView):
+    """Sends request to previous microservice to clean up source directory."""
+    routine = CleanupRequester
+
+    def get_args(self, request):
+        url = request.GET.get('post_service_url')
+        data = (urllib.parse.unquote(url) if url else '')
+        return (data,)
+
+
+class CleanupRoutineView(BaseRoutineView):
+    """Removes a transfer from the destination directory. Accepts POST requests only."""
+    routine = CleanupRoutine
+
+    def get_args(self, request):
         dirs = {"src": settings.TEST_SRC_DIR, "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
         identifier = request.data.get('identifier')
-
-        try:
-            discover = CleanupRoutine(identifier, dirs).run()
-            return Response({"detail": discover}, status=200)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=500)
+        return (identifier, dirs)
