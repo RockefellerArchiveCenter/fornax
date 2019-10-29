@@ -5,6 +5,7 @@ A microservice to create Archivematica-compliant Submission Information Packages
 fornax is part of [Project Electron](https://github.com/RockefellerArchiveCenter/project_electron), an initiative to build sustainable, open and user-centered infrastructure for the archival management of digital records at the [Rockefeller Archive Center](http://rockarch.org/).
 
 [![Build Status](https://travis-ci.org/RockefellerArchiveCenter/fornax.svg?branch=master)](https://travis-ci.org/RockefellerArchiveCenter/fornax)
+![GitHub (pre-)release](https://img.shields.io/github/release/RockefellerArchiveCenter/fornax/all.svg)
 
 ## Setup
 
