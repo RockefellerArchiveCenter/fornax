@@ -171,6 +171,62 @@
                     "string": "{\"message\": \"Approval successful.\", \"uuid\": \"4b66a79e-4ba2-4753-a603-04efb97a77d0\"}"
                 }
             }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "uri": "http://archivematica-dashboard:8000/api/v2beta/package/",
+                "body": "{\"name\": \"10fd15d0-6b65-43e6-a8ec-132d1d46f024\", \"path\": \"NDBjOGJlYzQtY2I2MS00NDUwLTllOTMtZDg5MGNkMTE5Y2IxOjEwZmQxNWQwLTZiNjUtNDNlNi1hOGVjLTEzMmQxZDQ2ZjAyNC50YXIuZ3o=\", \"type\": \"zipped bag\", \"processing_config\": \"automated\"}",
+                "headers": {
+                    "User-Agent": [
+                        "python-requests/2.22.0"
+                    ],
+                    "Accept-Encoding": [
+                        "gzip, deflate"
+                    ],
+                    "Accept": [
+                        "*/*"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "224"
+                    ]
+                }
+            },
+            "response": {
+                "status": {
+                    "code": 202,
+                    "message": "ACCEPTED"
+                },
+                "headers": {
+                    "Transfer-Encoding": [
+                        "chunked"
+                    ],
+                    "Date": [
+                        "Thu, 02 Jan 2020 21:27:15 GMT"
+                    ],
+                    "Content-Language": [
+                        "en"
+                    ],
+                    "Vary": [
+                        "Accept-Language, Cookie"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Server": [
+                        "gunicorn/19.9.0"
+                    ],
+                    "Content-Type": [
+                        "application/json"
+                    ]
+                },
+                "body": {
+                    "string": "{\"id\": \"88a7a619-249f-4fde-b21a-376dbc7ae242\"}"
+                }
+            }
         }
     ]
 }

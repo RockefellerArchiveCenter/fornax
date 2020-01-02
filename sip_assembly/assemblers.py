@@ -1,11 +1,12 @@
 import json
 from os import remove
 from os.path import isdir, isfile, join
+
+from amclient import AMClient
 import requests
 
 from fornax import settings
 from sip_assembly import library
-from .clients import ArchivematicaClient
 from .models import SIP
 
 
@@ -14,25 +15,33 @@ class SIPActionError(Exception): pass
 class CleanupError(Exception): pass
 
 
-class SIPAssembler(object):
+class ArchivematicaRoutine:
+
+    """Base class which instantiates an Archivematica client"""
+    def __init__(self):
+        self.client = AMClient(
+            am_api_key=settings.ARCHIVEMATICA['api_key'],
+            am_user_name=settings.ARCHIVEMATICA['username'],
+            am_url=settings.ARCHIVEMATICA['baseurl'],
+            transfer_source=settings.ARCHIVEMATICA['location_uuid'],
+            processing_config=settings.ARCHIVEMATICA['processing_config']
+        )
+        # TODO: test connection
+        # if not self.client:
+        #     raise SIPAssemblyError("Cannot connect to Archivematica",)
+
+
+class SIPAssembler(ArchivematicaRoutine):
     """Creates an Archivematica-compliant SIP."""
     def __init__(self, dirs=None):
+        super(SIPAssembler, self).__init__()
         self.src_dir = dirs['src'] if dirs else settings.SRC_DIR
         self.tmp_dir = dirs['tmp'] if dirs else settings.TMP_DIR
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        self.processing_config = self.client.get_processing_config()
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory does not exist", dir)
-        try:
-            self.processing_config = ArchivematicaClient(
-                settings.ARCHIVEMATICA['username'],
-                settings.ARCHIVEMATICA['api_key'],
-                settings.ARCHIVEMATICA['baseurl'],
-                settings.ARCHIVEMATICA['location_uuid']).retrieve(
-                    'processing-configuration/{}/'.format(
-                        settings.ARCHIVEMATICA['processing_config']))
-        except requests.exceptions.ConnectionError as e:
-            raise SIPAssemblyError("Cannot connect to Archivematica: {}".format(e),)
 
     def run(self):
         sip_ids = []
@@ -74,78 +83,37 @@ class SIPAssembler(object):
 
             sip_ids.append(sip.bag_identifier)
 
-        return ("All SIPs assembled.", sip_ids)
+        return "All SIPs assembled.", sip_ids
 
 
-class SIPActions(object):
+class SIPActions(ArchivematicaRoutine):
     """Performs various actions against the Archivematica API."""
-    def __init__(self):
-        self.client = ArchivematicaClient(settings.ARCHIVEMATICA['username'],
-                                          settings.ARCHIVEMATICA['api_key'],
-                                          settings.ARCHIVEMATICA['baseurl'],
-                                          settings.ARCHIVEMATICA['location_uuid'])
-        if not self.client:
-            raise SIPAssemblyError("Cannot connect to Archivematica",)
 
-    def handle_request(self, start_status, method, end_status):
-        sip = SIP.objects.filter(process_status=start_status)[0]
-        getattr(self.client, method)(sip)
-        sip.process_status = end_status
-        sip.save()
-        return [sip.bag_identifier]
-
-    def ingest_processing(self, ingest):
-        """
-        Tests to see if an ingest is still processing by making a request to
-        the `ingest` endpoint. If this ingest cannot be found (meaning it is
-        still in the transfer stage) or has a status of `PROCESSING` this
-        function will return True, indicating that the ingest is still processing.
-        """
-        try:
-            last_approved = self.client.retrieve('/ingest/status/{}'.format(ingest.bag_identifier))
-            if last_approved['status'] == 'PROCESSING':
-                return True
-            return False
-        except Exception as e:
-            return True
-
-    def start_transfer(self):
-        """
-        Starts transfer in Archivematica by sending a POST request to the
-        /transfer/start_transfer/ endpoint.
-        """
+    def create_package(self):
+        """Starts and approves a transfer in Archivematica."""
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
-            started = self.client.retrieve('/transfer/unapproved_transfers/').get('results')
-            if len(started) < 1:
-                try:
-                    started = self.handle_request(SIP.ASSEMBLED, 'start_transfer', SIP.STARTED)
-                    return ("SIP started.", started)
-                except Exception as e:
-                    raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), started)
-            return ("Another transfer is already waiting to be approved, waiting until it has been approved.",)
-        return ("No transfers to start.",)
-
-    def approve_transfer(self):
-        """Starts transfer in Archivematica by sending a POST request to the
-           /transfer/approve_transfer/ endpoint."""
-        if len(SIP.objects.filter(process_status=SIP.STARTED)):
-            approved = SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')
-            if len(approved) and self.ingest_processing(approved[0]):
-                return ("Last SIP approved is still processing, waiting for it to complete before starting another.",
-                        last_approved.bag_identifier)
+            next_queued = SIP.objects.filter(process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
+            last_started = next(iter(SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')), None)
+            if last_started:
+                if self.client.get_unit_status(last_started.bag_identifier) == 'PROCESSING':
+                    return "Another transfer is processing, waiting until it finishes.",
             try:
-                approved = self.handle_request(SIP.STARTED, 'approve_transfer', SIP.APPROVED)
-                return ("SIP approved.", approved)
+                self.client.transfer_directory = "{}.tar.gz".format(next_queued.bag_identifier)
+                self.client.transfer_name = next_queued.bag_identifier
+                self.client.transfer_type = 'zipped bag'
+                started = self.client.create_package()
+                next_queued.process_status = SIP.APPROVED
+                next_queued.save()
+                return "Transfer started", [started.get('id')]
             except Exception as e:
-                raise SIPActionError("Error approving transfer in Archivematica: {}".format(e), sip.bag_identifier)
-        else:
-            return ("No transfers to approve.",)
+                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), next_queued.bag_identifier)
+        return "No transfers to start.",
 
     def remove_completed(self, type):
         """Removes completed transfers and ingests from Archivematica dashboard."""
         try:
-            completed = self.client.cleanup(type)
-            return ("All completed {}s removed from dashboard".format(type), completed)
+            completed = getattr(self.client, 'close_completed_{}'.format((type)))
+            return "All completed {} removed from dashboard".format(type), completed
         except Exception as e:
             raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, e))
 
@@ -171,7 +139,7 @@ class CleanupRequester:
             sip.process_status = SIP.CLEANED_UP
             sip.save()
         message = "Requests sent to clean up SIPs." if len(sip_ids) else "No SIPS to clean up."
-        return (message, sip_ids)
+        return message, sip_ids
 
 
 class CleanupRoutine:
@@ -187,7 +155,7 @@ class CleanupRoutine:
             self.filepath = "{}.tar.gz".format(join(self.dest_dir, self.identifier))
             if isfile(self.filepath):
                 remove(self.filepath)
-                return ("Transfer removed.", self.identifier)
-            return ("Transfer was not found.", self.identifier)
+                return "Transfer removed.", self.identifier
+            return "Transfer was not found.", self.identifier
         except Exception as e:
             raise CleanupError(e, self.identifier)

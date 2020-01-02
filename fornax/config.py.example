@@ -25,7 +25,7 @@ PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
 
 ARCHIVEMATICA = {
-  "baseurl": "http://archivematica-dashboard:8000/api/",
+  "baseurl": "http://archivematica-dashboard:8000",
   "username": "test",
   "api_key": "test",
   "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
