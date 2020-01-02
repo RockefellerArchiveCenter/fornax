@@ -2,7 +2,7 @@ import json
 from os import remove
 from os.path import isdir, isfile, join
 
-from amclient import AMClient
+from amclient import AMClient, errors
 import requests
 
 from fornax import settings
@@ -26,9 +26,9 @@ class ArchivematicaRoutine:
             transfer_source=settings.ARCHIVEMATICA['location_uuid'],
             processing_config=settings.ARCHIVEMATICA['processing_config']
         )
-        # TODO: test connection
-        # if not self.client:
-        #     raise SIPAssemblyError("Cannot connect to Archivematica",)
+        self.processing_config = self.client.get_processing_config()
+        if type(self.processing_config) == int:
+            raise SIPAssemblyError(errors.error_lookup(self.processing_config),)
 
 
 class SIPAssembler(ArchivematicaRoutine):
@@ -38,7 +38,6 @@ class SIPAssembler(ArchivematicaRoutine):
         self.src_dir = dirs['src'] if dirs else settings.SRC_DIR
         self.tmp_dir = dirs['tmp'] if dirs else settings.TMP_DIR
         self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
-        self.processing_config = self.client.get_processing_config()
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory does not exist", dir)
@@ -94,9 +93,8 @@ class SIPActions(ArchivematicaRoutine):
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             next_queued = SIP.objects.filter(process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
             last_started = next(iter(SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')), None)
-            if last_started:
-                if self.client.get_unit_status(last_started.bag_identifier) == 'PROCESSING':
-                    return "Another transfer is processing, waiting until it finishes.",
+            if last_started and self.client.get_unit_status(last_started.bag_identifier) == 'PROCESSING':
+                return "Another transfer is processing, waiting until it finishes.",
             try:
                 self.client.transfer_directory = "{}.tar.gz".format(next_queued.bag_identifier)
                 self.client.transfer_name = next_queued.bag_identifier
