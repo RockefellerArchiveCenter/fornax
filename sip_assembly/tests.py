@@ -72,6 +72,7 @@ class SIPAssemblyTest(TestCase):
             print('*** Starting transfer ***')
             request = self.factory.post(reverse('create-transfer'))
             response = CreatePackageView.as_view()(request)
+            print(response.data)
             self.assertEqual(response.status_code, 200, "Wrong HTTP code")
         with assembly_vcr.use_cassette('archivematica_cleanup.json'):
             print('*** Cleaning up transfers ***')
