@@ -154,10 +154,10 @@ def update_bag_info(bag_path, data):
     bag.save()
 
 
-def add_processing_config(bag_path, response):
+def add_processing_config(bag_path, data):
     """Adds pre-defined Archivematica processing configuration file"""
-    with open(os.path.join(bag_path, 'processingMCP.xml'), 'wb') as f:
-        f.write(response.content)
+    with open(os.path.join(bag_path, 'processingMCP.xml'), 'w') as f:
+        f.write(data)
 
 
 def update_manifests(bag_path):

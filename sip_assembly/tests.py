@@ -21,7 +21,7 @@ bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 assembly_vcr = vcr.VCR(
     serializer='json',
     cassette_library_dir='fixtures/cassettes',
-    record_mode='once',
+    record_mode='new_episodes',
     match_on=['path', 'method', 'query'],
     filter_query_parameters=['username', 'password'],
     filter_headers=['Authorization'],
@@ -70,12 +70,8 @@ class SIPAssemblyTest(TestCase):
     def archivematica_views(self):
         with assembly_vcr.use_cassette('archivematica.json'):
             print('*** Starting transfer ***')
-            request = self.factory.post(reverse('start-transfer'))
-            response = StartTransferView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
-            print('*** Approving transfer ***')
-            request = self.factory.post(reverse('start-transfer'))
-            response = ApproveTransferView.as_view()(request)
+            request = self.factory.post(reverse('create-transfer'))
+            response = CreatePackageView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Wrong HTTP code")
         with assembly_vcr.use_cassette('archivematica_cleanup.json'):
             print('*** Cleaning up transfers ***')
