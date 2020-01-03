@@ -21,8 +21,8 @@ bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 assembly_vcr = vcr.VCR(
     serializer='json',
     cassette_library_dir='fixtures/cassettes',
-    record_mode='new_episodes',
-    match_on=['path', 'method', 'query'],
+    record_mode='once',
+    match_on=['path', 'method'],
     filter_query_parameters=['username', 'password'],
     filter_headers=['Authorization'],
 )
@@ -72,17 +72,19 @@ class SIPAssemblyTest(TestCase):
             print('*** Starting transfer ***')
             request = self.factory.post(reverse('create-transfer'))
             response = CreatePackageView.as_view()(request)
-            print(response.data)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], 1, "Only one transfer should be started")
         with assembly_vcr.use_cassette('archivematica_cleanup.json'):
             print('*** Cleaning up transfers ***')
             request = self.factory.post(reverse('remove-transfers'))
             response = RemoveCompletedTransfersView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
             print('*** Cleaning up ingests ***')
             request = self.factory.post(reverse('remove-ingests'))
             response = RemoveCompletedIngestsView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
 
     def request_cleanup(self):
         print('*** Requesting cleanup ***')
@@ -95,31 +97,34 @@ class SIPAssemblyTest(TestCase):
             print('*** Test run view ***')
             request = self.factory.post(reverse('assemble-sip'), {"test": True})
             response = SIPAssemblyView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.CREATED)), "Wrong number of objects processed")
 
     def cleanup_view(self):
         print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
             request = self.factory.post(reverse('cleanup'), data={"test": True, "identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")
 
     def request_cleanup_view(self):
-        print('*** Test cleanup view ***')
+        print('*** Test request cleanup view ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
             request = self.factory.post(reverse('request-cleanup'))
             response = CleanupRequestView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+            self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.APPROVED)), "Wrong number of objects processed")
 
     def schema(self):
         print('*** Getting schema view ***')
         schema = self.client.get(reverse('schema'))
-        self.assertEqual(schema.status_code, 200, "Wrong HTTP code")
+        self.assertEqual(schema.status_code, 200, "Response error: {}".format(schema))
 
     def health_check(self):
         print('*** Getting status view ***')
         status = self.client.get(reverse('api_health_ping'))
-        self.assertEqual(status.status_code, 200, "Wrong HTTP code")
+        self.assertEqual(status.status_code, 200, "Response error: {}".format(status))
 
     def tearDown(self):
         for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
