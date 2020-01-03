@@ -90,30 +90,29 @@ class SIPActions(ArchivematicaRoutine):
 
     def create_package(self):
         """Starts and approves a transfer in Archivematica."""
+        msg = "No transfers to start.",
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             next_queued = SIP.objects.filter(process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
             last_started = next(iter(SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')), None)
             if last_started and self.client.get_unit_status(last_started.bag_identifier) == 'PROCESSING':
-                return "Another transfer is processing, waiting until it finishes.",
-            try:
+                msg = "Another transfer is processing, waiting until it finishes.",
+            else:
                 self.client.transfer_directory = "{}.tar.gz".format(next_queued.bag_identifier)
                 self.client.transfer_name = next_queued.bag_identifier
                 self.client.transfer_type = 'zipped bag'
                 started = self.client.create_package()
                 next_queued.process_status = SIP.APPROVED
                 next_queued.save()
-                return "Transfer started", [started.get('id')]
-            except Exception as e:
-                raise SIPActionError("Error starting transfer in Archivematica: {}".format(e), next_queued.bag_identifier)
-        return "No transfers to start.",
+                msg = "Transfer started", [started.get('id')]
+        return msg
 
     def remove_completed(self, type):
         """Removes completed transfers and ingests from Archivematica dashboard."""
-        try:
-            completed = getattr(self.client, 'close_completed_{}'.format((type)))
-            return "All completed {} removed from dashboard".format(type), completed
-        except Exception as e:
-            raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, e))
+        completed = getattr(self.client, 'close_completed_{}'.format((type)))()
+        if completed.get('close_failed'):
+            raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, completed['close_failed']))
+        else:
+            return "All completed {} removed from dashboard".format(type), completed.get('close_succeeded')
 
 
 class CleanupRequester:
