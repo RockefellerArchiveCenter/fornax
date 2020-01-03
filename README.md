@@ -49,8 +49,8 @@ fornax has six services, all of which are exposed via HTTP endpoints (see [Route
   * Adding a `processingMCP.xml` file which sets processing configurations for Archivematica.
   * Updating bag manifests to account for restructuring and changes to files.
   * Delivering the SIP to the Archivematica Transfer Source (SIPS are validated before and after moving).
-* Start Transfer - starts a transfer in Archivematica.
-* Approve Transfer - approves a transfer in Archivematica.
+* Create Transfer - starts and approves the next assembled transfer in Archivematica.
+* Remove Completed Transfers/Ingests - hides completed transfers or ingests in the Archivematica Dashboard to avoid performance issues.
 * Cleanup - removes files from the destination directory.
 * Request Cleanup - sends a POST request to another service requesting cleanup of the source directory. fornax only has read access for this directory.
 
@@ -67,8 +67,9 @@ For an example of the data fornax expects to receive (both bags and JSON), see t
 |GET|/sips/{id}| |200|Returns data about an individual SIP|
 |POST|/sips||200|Creates a SIP object from an transfer in Aurora.|
 |POST|/assemble||200|Runs the SIPAssembly routine.|
-|POST|/start||200|Starts the next transfer in Archivematica.|
-|POST|/approve||200|Approves the next transfer in Archivematica.|
+|POST|/start||200|Starts and approves  the next transfer in Archivematica.|
+|POST|/remove-transfers||200|Hides transfers in the Archivematica Dashboard.|
+|POST|/remove-ingests||200|Hides ingests in the Archivematica Dashboard.|
 |POST|/cleanup||200|Removes files from destination directory.|
 |POST|/request-cleanup||200|Notifies another service that processing is complete.|
 |GET|/status||200|Return the status of the microservice|
