@@ -36,7 +36,8 @@ class SIPViewSet(ModelViewSet):
             process_status=10,
             bag_path=join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
-            data=request.data
+            data=request.data['bag_data'],
+            origin=request.data['origin']
         )
         sip.save()
         return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
