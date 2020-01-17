@@ -121,7 +121,7 @@ class SIPActions(ArchivematicaRoutine):
             if completed.get('close_failed'):
                 raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, completed['close_failed']))
             else:
-                all_completed += completed.get('close_succeeded')
+                all_completed += completed.get('close_succeeded', [])
         return "All completed {} removed from dashboard".format(type), completed
 
 
