@@ -29,8 +29,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^assemble/', SIPAssemblyView.as_view(), name="assemble-sip"),
-    url(r'^start/', StartTransferView.as_view(), name="start-transfer"),
-    url(r'^approve/', ApproveTransferView.as_view(), name="approve-transfer"),
+    url(r'^start/', CreatePackageView.as_view(), name="create-transfer"),
     url(r'^remove-transfers/', RemoveCompletedTransfersView.as_view(), name="remove-transfers"),
     url(r'^remove-ingests/', RemoveCompletedIngestsView.as_view(), name="remove-ingests"),
     url(r'^cleanup/', CleanupRoutineView.as_view(), name="cleanup"),

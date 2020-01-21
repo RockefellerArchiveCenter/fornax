@@ -36,7 +36,8 @@ class SIPViewSet(ModelViewSet):
             process_status=10,
             bag_path=join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
             bag_identifier=request.data['identifier'],
-            data=request.data
+            data=request.data['bag_data'],
+            origin=request.data['origin']
         )
         sip.save()
         return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
@@ -55,30 +56,25 @@ class ArchivematicaAPIView(APIView):
             return Response(prepare_response(e), status=500)
 
 
-class StartTransferView(ArchivematicaAPIView):
-    """Starts transfers in Archivematica. Accepts POST requests only."""
-    method = 'start_transfer'
-
-
-class ApproveTransferView(ArchivematicaAPIView):
+class CreatePackageView(ArchivematicaAPIView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-    method = 'approve_transfer'
+    method = 'create_package'
 
 
 class RemoveCompletedTransfersView(ArchivematicaAPIView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
     method = 'remove_completed'
-    type = 'transfer'
+    type = 'transfers'
 
 
 class RemoveCompletedIngestsView(ArchivematicaAPIView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
     method = 'remove_completed'
-    type = 'ingest'
+    type = 'ingests'
 
 
 class BaseRoutineView(APIView):
-    """Base view for routines."""
+    """Base view for routines. Provides a `get_args()` method which is overriden by child routines."""
 
     def post(self, request, format=None):
         args = self.get_args(request)

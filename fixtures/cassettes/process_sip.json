@@ -4,7 +4,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -57,7 +57,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -84,7 +84,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:31 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -110,7 +110,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -137,7 +137,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:32 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -163,7 +163,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -190,7 +190,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:33 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -216,7 +216,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -243,7 +243,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:34 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -269,7 +269,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -296,7 +296,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:36 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -322,7 +322,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -349,7 +349,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:36 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -375,7 +375,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -402,7 +402,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:37 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -428,7 +428,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -455,7 +455,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:38 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -481,7 +481,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -508,7 +508,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:39 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -534,7 +534,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -561,7 +561,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:40 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -587,7 +587,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -614,7 +614,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:42 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -640,7 +640,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -667,7 +667,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:44 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -693,7 +693,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -720,7 +720,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:46 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -746,7 +746,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -773,7 +773,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:46 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -799,7 +799,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -826,7 +826,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:47 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
@@ -852,7 +852,7 @@
         {
             "request": {
                 "method": "GET",
-                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated/",
+                "uri": "http://archivematica-dashboard:8000/api/processing-configuration/automated",
                 "body": null,
                 "headers": {
                     "User-Agent": [
@@ -879,7 +879,7 @@
                         "Accept-Language, Cookie"
                     ],
                     "Date": [
-                        "Mon, 12 Nov 2018 21:15:49 GMT"
+                        "Mon, 12 Nov 2018 21:15:30 GMT"
                     ],
                     "Transfer-Encoding": [
                         "chunked"
