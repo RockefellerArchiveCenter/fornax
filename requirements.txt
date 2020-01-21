@@ -1,6 +1,6 @@
 amclient==1.0.0
 bagit==1.7.0
-certifi==2018.8.24
+certifi==2019.11.28
 chardet==3.0.4
 click==7.0
 clinner==1.12.3
