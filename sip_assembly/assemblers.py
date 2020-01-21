@@ -115,14 +115,17 @@ class SIPActions(ArchivematicaRoutine):
     def remove_completed(self, type):
         """Removes completed transfers and ingests from Archivematica dashboard."""
         all_completed = []
+        dashboards = []
         for origin in settings.ARCHIVEMATICA:
-            client = self.get_client(origin)
-            completed = getattr(client, 'close_completed_{}'.format((type)))()
-            if completed.get('close_failed'):
-                raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, completed['close_failed']))
-            else:
-                all_completed += completed.get('close_succeeded', [])
-        return "All completed {} removed from dashboard".format(type), completed
+            if settings.ARCHIVEMATICA[origin].get("close_completed"):
+                client = self.get_client(origin)
+                completed = getattr(client, 'close_completed_{}'.format((type)))()
+                dashboards.append(origin)
+                if completed.get('close_failed'):
+                    raise SIPActionError("Error removing {} from Archivematica dashboard: {}".format(type, completed['close_failed']))
+                else:
+                    all_completed += completed.get('close_succeeded', [])
+        return "All completed {} removed from dashboards {}".format(type, ", ".join(dashboards)), completed
 
 
 class CleanupRequester:
