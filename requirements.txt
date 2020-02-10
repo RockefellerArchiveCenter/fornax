@@ -9,7 +9,7 @@ Django==2.2.5
 djangorestframework==3.10.3
 git+https://github.com/RockefellerArchiveCenter/asterism@v0.1#egg=asterism
 gitdb2==2.0.4
-GitPython==3.0.4
+GitPython==3.0.7
 health-check==3.4.1
 idna==2.7
 jsonpointer==1.14
