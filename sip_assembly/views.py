@@ -32,21 +32,37 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
+        """
+        Allow for post requests from Ursa Major 0.x or 1.x
+        """
         try:
-            sip = SIP(
-                process_status=10,
-                bag_path=join(
-                    settings.BASE_DIR,
-                    settings.SRC_DIR,
-                    "{}.tar.gz".format(
-                        request.data['identifier'])),
-                bag_identifier=request.data['identifier'],
-                data=request.data['bag_data'],
-                origin=request.data['origin']
-            )
-            sip.save()
-            if request.data.get('origin'):
-                sip.origin = request.data.get('origin')
+            if request.data.get('bag_data'):
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data['bag_data'],
+                    origin=request.data['origin']
+                )
+                sip.save()
+                if request.data.get('origin'):
+                    sip.origin = request.data.get('origin')
+                    sip.save()
+            else:
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data
+                )
                 sip.save()
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
