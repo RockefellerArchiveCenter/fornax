@@ -45,8 +45,8 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data['bag_data'],
-                    origin=request.data['origin']
+                    data=request.data['bag_data'], # expects bag data json to be in a certain format (Ursa Major 1.x)
+                    origin=request.data['origin'] # expects origin to be include in POST request (Ursa Major 1.x)
                 )
             else:
                 sip = SIP(
@@ -57,7 +57,7 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data
+                    data=request.data # expects bag data json to be in a certain format (Ursa Major 0.x)
                 )
             sip.save()
             return Response(prepare_response(
