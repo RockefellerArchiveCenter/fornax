@@ -48,10 +48,6 @@ class SIPViewSet(ModelViewSet):
                     data=request.data['bag_data'],
                     origin=request.data['origin']
                 )
-                sip.save()
-                if request.data.get('origin'):
-                    sip.origin = request.data.get('origin')
-                    sip.save()
             else:
                 sip = SIP(
                     process_status=10,
@@ -63,7 +59,7 @@ class SIPViewSet(ModelViewSet):
                     bag_identifier=request.data['identifier'],
                     data=request.data
                 )
-                sip.save()
+            sip.save()
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
         except Exception as e:
