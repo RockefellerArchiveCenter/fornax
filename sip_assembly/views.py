@@ -51,7 +51,7 @@ class SIPViewSet(ModelViewSet):
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
         except Exception as e:
-            return Response(prepare_response("Error creating package: {}".format(str(e))), status=500)
+            return Response(prepare_response("Error creating SIP: {}".format(str(e))), status=500)
 
 class ArchivematicaAPIView(APIView):
     """Base class for Archivematica views."""
