@@ -32,21 +32,23 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
-        sip = SIP(
-            process_status=10,
-            bag_path=join(
-                settings.BASE_DIR,
-                settings.SRC_DIR,
-                "{}.tar.gz".format(
-                    request.data['identifier'])),
-            bag_identifier=request.data['identifier'],
-            data=request.data['bag_data'],
-            origin=request.data['origin']
-        )
-        sip.save()
-        return Response(prepare_response(
-            ("SIP created", sip.bag_identifier)), status=200)
-
+        try:
+            sip = SIP(
+                process_status=10,
+                bag_path=join(
+                    settings.BASE_DIR,
+                    settings.SRC_DIR,
+                    "{}.tar.gz".format(
+                        request.data['identifier'])),
+                bag_identifier=request.data['identifier'],
+                data=request.data['bag_data'],
+                origin=request.data['origin']
+            )
+            sip.save()
+            return Response(prepare_response(
+                ("SIP created", sip.bag_identifier)), status=200)
+        except Exception as e:
+            return Response(prepare_response("Error creating SIP: {}".format(str(e))), status=500)
 
 class ArchivematicaAPIView(APIView):
     """Base class for Archivematica views."""
