@@ -32,18 +32,33 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
+        """
+        Allow for post requests from Ursa Major 0.x or 1.x
+        """
         try:
-            sip = SIP(
-                process_status=10,
-                bag_path=join(
-                    settings.BASE_DIR,
-                    settings.SRC_DIR,
-                    "{}.tar.gz".format(
-                        request.data['identifier'])),
-                bag_identifier=request.data['identifier'],
-                data=request.data['bag_data'],
-                origin=request.data['origin']
-            )
+            if request.data.get('bag_data'):
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data['bag_data'], # expects bag data json to be in a certain format (Ursa Major 1.x)
+                    origin=request.data['origin'] # expects origin to be include in POST request (Ursa Major 1.x)
+                )
+            else:
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data # expects bag data json to be in a certain format (Ursa Major 0.x)
+                )
             sip.save()
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
