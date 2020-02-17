@@ -8,7 +8,7 @@ csvvalidator==1.2
 Django==2.2.5
 djangorestframework==3.10.3
 git+https://github.com/RockefellerArchiveCenter/asterism@v0.1#egg=asterism
-gitdb2==2.0.4
+gitdb2==3.0.2
 GitPython==3.0.4
 health-check==3.4.1
 idna==2.7
