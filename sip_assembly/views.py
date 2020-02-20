@@ -1,15 +1,15 @@
-from os.path import join
 import urllib
+from os.path import join
 
 from asterism.views import prepare_response
+from fornax import settings
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-
-from fornax import settings
-from sip_assembly.routines import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
 from sip_assembly.models import SIP
-from sip_assembly.serializers import SIPSerializer, SIPListSerializer
+from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
+                                   SIPActions, SIPAssembler)
+from sip_assembly.serializers import SIPListSerializer, SIPSerializer
 
 
 class SIPViewSet(ModelViewSet):
@@ -45,8 +45,12 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data['bag_data'], # expects bag data json to be in a certain format (Ursa Major 1.x)
-                    origin=request.data['origin'] # expects origin to be include in POST request (Ursa Major 1.x)
+                    # expects bag data json to be in a certain format (Ursa
+                    # Major 1.x)
+                    data=request.data['bag_data'],
+                    # expects origin to be include in POST request (Ursa Major
+                    # 1.x)
+                    origin=request.data['origin']
                 )
             else:
                 sip = SIP(
@@ -57,13 +61,17 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data # expects bag data json to be in a certain format (Ursa Major 0.x)
+                    # expects bag data json to be in a certain format (Ursa
+                    # Major 0.x)
+                    data=request.data
                 )
             sip.save()
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
         except Exception as e:
-            return Response(prepare_response("Error creating SIP: {}".format(str(e))), status=500)
+            return Response(prepare_response(
+                "Error creating SIP: {}".format(str(e))), status=500)
+
 
 class ArchivematicaAPIView(APIView):
     """Base class for Archivematica views."""

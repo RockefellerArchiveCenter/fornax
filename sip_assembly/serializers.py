@@ -6,11 +6,24 @@ class SIPSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SIP
-        fields = ('url', 'bag_identifier', 'bag_path', 'process_status', 'data', 'created', 'last_modified')
+        fields = (
+            'url',
+            'bag_identifier',
+            'bag_path',
+            'process_status',
+            'data',
+            'created',
+            'last_modified')
 
 
 class SIPListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SIP
-        fields = ('url', 'bag_identifier', 'bag_path', 'process_status', 'created', 'last_modified')
+        fields = (
+            'url',
+            'bag_identifier',
+            'bag_path',
+            'process_status',
+            'created',
+            'last_modified')

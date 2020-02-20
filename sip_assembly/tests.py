@@ -1,24 +1,20 @@
 import json
-from os.path import join, isdir
-from os import listdir, makedirs
 import shutil
-import vcr
+from os import listdir, makedirs
+from os.path import isdir, join
 
+import vcr
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIRequestFactory
-
 from fornax import settings
-from sip_assembly.routines import SIPAssembler, CleanupRoutine, CleanupRequester
+from rest_framework.test import APIRequestFactory
 from sip_assembly.models import SIP
-from sip_assembly.views import (
-    SIPViewSet,
-    CreatePackageView,
-    RemoveCompletedIngestsView,
-    RemoveCompletedTransfersView,
-    SIPAssemblyView,
-    CleanupRoutineView,
-    CleanupRequestView)
+from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
+                                   SIPAssembler)
+from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
+                                CreatePackageView, RemoveCompletedIngestsView,
+                                RemoveCompletedTransfersView, SIPAssemblyView,
+                                SIPViewSet)
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')

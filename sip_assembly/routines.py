@@ -2,11 +2,11 @@ import json
 from os import remove
 from os.path import isdir, isfile, join
 
-from amclient import AMClient, errors
 import requests
-
+from amclient import AMClient, errors
 from fornax import settings
 from sip_assembly import routines_helpers as helpers
+
 from .models import SIP
 
 

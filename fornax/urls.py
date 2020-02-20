@@ -15,16 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.urls import include
-from sip_assembly.views import (
-    SIPViewSet,
-    SIPAssemblyView,
-    CreatePackageView,
-    RemoveCompletedTransfersView,
-    RemoveCompletedIngestsView,
-    CleanupRoutineView,
-    CleanupRequestView)
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
+from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
+                                CreatePackageView, RemoveCompletedIngestsView,
+                                RemoveCompletedTransfersView, SIPAssemblyView,
+                                SIPViewSet)
 
 router = routers.DefaultRouter()
 router.register(r'sips', SIPViewSet)

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+
 from fornax import config as CF
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

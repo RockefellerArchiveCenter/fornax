@@ -15,7 +15,8 @@ class SIP(models.Model):
         (APPROVED, "SIP approved in Archivematica"),
         (CLEANED_UP, "SIP removed from src directory")
     )
-    process_status = models.CharField(max_length=100, choices=PROCESS_STATUS_CHOICES)
+    process_status = models.CharField(
+        max_length=100, choices=PROCESS_STATUS_CHOICES)
     bag_path = models.CharField(max_length=100)
     bag_identifier = models.CharField(max_length=255, unique=True)
     created = models.DateTimeField(auto_now=True)
@@ -26,4 +27,7 @@ class SIP(models.Model):
         ('legacy_digital', 'Legacy Digital Processing'),
         ('digitization', 'Digitization')
     )
-    origin = models.CharField(max_length=20, choices=ORIGIN_CHOICES, default='aurora')
+    origin = models.CharField(
+        max_length=20,
+        choices=ORIGIN_CHOICES,
+        default='aurora')

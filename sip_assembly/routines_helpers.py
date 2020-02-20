@@ -1,10 +1,11 @@
-import bagit
 import csv
-from csvvalidator import CSVValidator, RecordError, enumeration
 import datetime
 import os
 import shutil
 import tarfile
+
+import bagit
+from csvvalidator import CSVValidator, RecordError, enumeration
 
 
 def copy_to_directory(sip, dest):
@@ -111,7 +112,9 @@ def write_rights_row(bag_dir, filenames, rights_statement, csvwriter):
     for file in filenames:
         for rights_granted in rights_statement.get('rights_granted'):
             csvwriter.writerow(
-                [os.path.join(bag_dir, file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                [os.path.join(bag_dir, file).lstrip('/'),
+                 rights_statement.get('rights_basis', ''),
+                 rights_statement.get('status', ''),
                  rights_statement.get(
                     'determination_date', ''), rights_statement.get(
                     'jurisdiction', ''),
