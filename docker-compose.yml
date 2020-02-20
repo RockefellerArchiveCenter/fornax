@@ -10,7 +10,6 @@ services:
     entrypoint: /code/entrypoint.sh
     volumes:
       - .:/code
-      - ~/.am/ss-location-data:/code/archivematica_transfer_source/
     ports:
       - "8003:8003"
     depends_on:

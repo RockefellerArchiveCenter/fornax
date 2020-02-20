@@ -45,11 +45,11 @@ class ArchivematicaRoutine:
 class SIPAssembler(ArchivematicaRoutine):
     """Creates an Archivematica-compliant SIP."""
 
-    def __init__(self, dirs=None):
+    def __init__(self):
         super(SIPAssembler, self).__init__()
-        self.src_dir = dirs['src'] if dirs else settings.SRC_DIR
-        self.tmp_dir = dirs['tmp'] if dirs else settings.TMP_DIR
-        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        self.src_dir = settings.SRC_DIR
+        self.tmp_dir = settings.TMP_DIR
+        self.dest_dir = settings.DEST_DIR
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory does not exist", dir)
@@ -168,14 +168,11 @@ class CleanupRequester:
     another service.
     """
 
-    def __init__(self, url):
-        self.url = url
-
     def run(self):
         sip_ids = []
         for sip in SIP.objects.filter(process_status=SIP.APPROVED):
             r = requests.post(
-                self.url,
+                settings.CLEANUP_URL,
                 data=json.dumps({"identifier": sip.bag_identifier}),
                 headers={"Content-Type": "application/json"},
             )
@@ -191,9 +188,9 @@ class CleanupRequester:
 class CleanupRoutine:
     """Removes files in destination directory."""
 
-    def __init__(self, identifier, dirs):
+    def __init__(self, identifier):
         self.identifier = identifier
-        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        self.dest_dir = settings.DEST_DIR
         if not self.identifier:
             raise CleanupError(
                 "No identifier submitted, unable to perform CleanupRoutine.",)

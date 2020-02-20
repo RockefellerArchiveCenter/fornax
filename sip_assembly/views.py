@@ -1,4 +1,3 @@
-import urllib
 from os.path import join
 
 from asterism.views import prepare_response
@@ -107,9 +106,8 @@ class BaseRoutineView(APIView):
     """Base view for routines. Provides a `get_args()` method which is overriden by child routines."""
 
     def post(self, request, format=None):
-        args = self.get_args(request)
         try:
-            response = self.routine(*args).run()
+            response = self.routine().run()
             return Response(prepare_response(response), status=200)
         except Exception as e:
             return Response(prepare_response(e), status=500)
@@ -119,29 +117,19 @@ class SIPAssemblyView(BaseRoutineView):
     """Runs the AssembleSIPs cron job. Accepts POST requests only."""
     routine = SIPAssembler
 
-    def get_args(self, request):
-        dirs = ({'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
-                if request.POST.get('test') else None)
-        return (dirs,)
-
 
 class CleanupRequestView(BaseRoutineView):
     """Sends request to previous microservice to clean up source directory."""
     routine = CleanupRequester
 
-    def get_args(self, request):
-        url = request.GET.get('post_service_url')
-        data = (urllib.parse.unquote(url) if url else '')
-        return (data,)
 
-
-class CleanupRoutineView(BaseRoutineView):
+class CleanupRoutineView(APIView):
     """Removes a transfer from the destination directory. Accepts POST requests only."""
-    routine = CleanupRoutine
 
-    def get_args(self, request):
-        dirs = {
-            "src": settings.TEST_SRC_DIR,
-            "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
-        identifier = request.data.get('identifier')
-        return (identifier, dirs)
+    def post(self, request, format=None):
+        try:
+            identifier = request.data.get('identifier')
+            response = CleanupRoutine(identifier).run()
+            return Response(prepare_response(response), status=200)
+        except Exception as e:
+            return Response(prepare_response(e), status=500)

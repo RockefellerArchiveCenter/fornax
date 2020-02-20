@@ -15,11 +15,8 @@ ALLOWED_HOSTS = ['fornax-web', 'localhost']
 BASE_DIR = ''
 
 SRC_DIR = '{}/src'.format(BASE_DIR)
-TEST_SRC_DIR = '{}/src_test'.format(BASE_DIR)
 TMP_DIR = '{}/tmp'.format(BASE_DIR)
-TEST_TMP_DIR = '{}/tmp_test'.format(BASE_DIR)
 DEST_DIR = '{}/dest'.format(BASE_DIR)
-TEST_DEST_DIR = '{}/dest_test'.format(BASE_DIR)
 
 PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
@@ -51,4 +48,6 @@ ARCHIVEMATICA = {
   }
 }
 
-STATIC_ROOT = '/static'
+STATIC_ROOT = "/static"
+
+CLEANUP_URL = "http://ursa-major-web:8005/cleanup/"

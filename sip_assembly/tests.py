@@ -32,9 +32,9 @@ assembly_vcr = vcr.VCR(
 class SIPAssemblyTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.src_dir = settings.TEST_SRC_DIR
-        self.tmp_dir = settings.TEST_TMP_DIR
-        self.dest_dir = settings.TEST_DEST_DIR
+        self.src_dir = settings.SRC_DIR
+        self.tmp_dir = settings.TMP_DIR
+        self.dest_dir = settings.DEST_DIR
         if isdir(self.src_dir):
             shutil.rmtree(self.src_dir)
         shutil.copytree(bag_fixture_dir, self.src_dir)
@@ -61,17 +61,14 @@ class SIPAssemblyTest(TestCase):
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Processing SIPs ***')
-            assembly = SIPAssembler(dirs={'src': self.src_dir,
-                                          'tmp': self.tmp_dir,
-                                          'dest': self.dest_dir}).run()
+            assembly = SIPAssembler().run()
             self.assertNotEqual(False, assembly)
 
     def cleanup_sip(self):
         print('*** Cleaning up ***')
         for sip in SIP.objects.all():
             CleanupRoutine(
-                sip.bag_identifier, dirs={
-                    "dest": self.dest_dir}).run()
+                sip.bag_identifier).run()
         self.assertEqual(0, len(listdir(self.dest_dir)))
 
     def archivematica_views(self):
@@ -117,15 +114,13 @@ class SIPAssemblyTest(TestCase):
     def request_cleanup(self):
         print('*** Requesting cleanup ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
-            cleanup = CleanupRequester(
-                'http://ursa-major-web:8005/cleanup/').run()
+            cleanup = CleanupRequester().run()
             self.assertNotEqual(False, cleanup)
 
     def run_view(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Test run view ***')
-            request = self.factory.post(
-                reverse('assemble-sip'), {"test": True})
+            request = self.factory.post(reverse('assemble-sip'))
             response = SIPAssemblyView.as_view()(request)
             self.assertEqual(
                 response.status_code,
@@ -141,8 +136,7 @@ class SIPAssemblyTest(TestCase):
         print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
             request = self.factory.post(
-                reverse('cleanup'), data={
-                    "test": True, "identifier": sip.bag_identifier})
+                reverse('cleanup'), data={"identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
             self.assertEqual(
                 response.status_code,
