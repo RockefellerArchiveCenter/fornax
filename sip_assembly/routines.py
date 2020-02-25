@@ -4,6 +4,7 @@ from os.path import isdir, isfile, join
 
 import requests
 from amclient import AMClient, errors
+from asterism import bagit_helpers
 from fornax import settings
 from sip_assembly import routines_helpers as helpers
 
@@ -61,7 +62,7 @@ class SIPAssembler(ArchivematicaRoutine):
             try:
                 helpers.copy_to_directory(sip, self.tmp_dir)
                 helpers.extract_all(sip, self.tmp_dir)
-                helpers.validate(sip.bag_path)
+                bagit_helpers.validate(sip.bag_path)
             except Exception as e:
                 raise SIPAssemblyError(
                     "Error moving SIP to processing directory: {}".format(e),
@@ -86,12 +87,12 @@ class SIPAssembler(ArchivematicaRoutine):
                         sip.bag_identifier)
 
             try:
-                helpers.update_bag_info(
+                bagit_helpers.update_bag_info(
                     sip.bag_path, {
                         'Internal-Sender-Identifier': sip.bag_identifier})
                 helpers.add_processing_config(
                     sip.bag_path, self.get_processing_config(client))
-                helpers.update_manifests(sip.bag_path)
+                bagit_helpers.update_manifests(sip.bag_path)
                 helpers.create_targz_package(sip)
             except Exception as e:
                 raise SIPAssemblyError(

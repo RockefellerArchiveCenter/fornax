@@ -4,7 +4,6 @@ import os
 import shutil
 import tarfile
 
-import bagit
 from csvvalidator import CSVValidator, RecordError, enumeration
 
 
@@ -51,12 +50,6 @@ def move_objects_dir(bag_path):
     for fname in os.listdir(src):
         if fname != 'objects':
             os.rename(os.path.join(src, fname), os.path.join(dest, fname))
-
-
-def validate(bag_path):
-    """Validates a bag against the BagIt specification"""
-    bag = bagit.Bag(bag_path)
-    return bag.validate()
 
 
 def create_structure(bag_path):
@@ -198,24 +191,10 @@ def create_submission_docs(sip):
     return True
 
 
-def update_bag_info(bag_path, data):
-    """Adds metadata to `bag-info.txt`"""
-    bag = bagit.Bag(bag_path)
-    for k, v in data.items():
-        bag.info[k] = v
-    bag.save()
-
-
 def add_processing_config(bag_path, data):
     """Adds pre-defined Archivematica processing configuration file"""
     with open(os.path.join(bag_path, 'processingMCP.xml'), 'w') as f:
         f.write(data)
-
-
-def update_manifests(bag_path):
-    """Updates bag manifests according to BagIt specification"""
-    bag = bagit.Bag(bag_path)
-    bag.save(manifests=True)
 
 
 def create_targz_package(sip):
