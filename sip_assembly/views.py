@@ -1,9 +1,8 @@
 from os.path import join
 
-from asterism.views import prepare_response
+from asterism.views import BaseServiceView, RoutineView, prepare_response
 from fornax import settings
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from sip_assembly.models import SIP
 from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
@@ -72,64 +71,40 @@ class SIPViewSet(ModelViewSet):
                 "Error creating SIP: {}".format(str(e))), status=500)
 
 
-class ArchivematicaAPIView(APIView):
-    """Base class for Archivematica views."""
-
-    def post(self, request):
-        try:
-            response = (getattr(SIPActions(), self.method)(self.type)
-                        if hasattr(self, 'type')
-                        else getattr(SIPActions(), self.method)())
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
-
-
-class CreatePackageView(ArchivematicaAPIView):
+class CreatePackageView(BaseServiceView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-    method = 'create_package'
+
+    def get_service_response(self, request):
+        return SIPActions().create_package()
 
 
-class RemoveCompletedTransfersView(ArchivematicaAPIView):
+class RemoveCompletedTransfersView(BaseServiceView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
-    method = 'remove_completed'
-    type = 'transfers'
+
+    def get_service_response(self, request):
+        return SIPActions().remove_completed('transfers')
 
 
-class RemoveCompletedIngestsView(ArchivematicaAPIView):
+class RemoveCompletedIngestsView(BaseServiceView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
-    method = 'remove_completed'
-    type = 'ingests'
+
+    def get_service_response(self, request):
+        return SIPActions().remove_completed('ingests')
 
 
-class BaseRoutineView(APIView):
-    """Base view for routines. Provides a `get_args()` method which is overriden by child routines."""
-
-    def post(self, request, format=None):
-        try:
-            response = self.routine().run()
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
-
-
-class SIPAssemblyView(BaseRoutineView):
+class SIPAssemblyView(RoutineView):
     """Runs the AssembleSIPs cron job. Accepts POST requests only."""
     routine = SIPAssembler
 
 
-class CleanupRequestView(BaseRoutineView):
+class CleanupRequestView(RoutineView):
     """Sends request to previous microservice to clean up source directory."""
     routine = CleanupRequester
 
 
-class CleanupRoutineView(APIView):
+class CleanupRoutineView(BaseServiceView):
     """Removes a transfer from the destination directory. Accepts POST requests only."""
 
-    def post(self, request, format=None):
-        try:
-            identifier = request.data.get('identifier')
-            response = CleanupRoutine(identifier).run()
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
+    def get_service_response(self, request):
+        identifier = request.data.get('identifier')
+        return CleanupRoutine(identifier).run()
