@@ -159,7 +159,7 @@ class SIPActions(ArchivematicaRoutine):
                 else:
                     all_completed += completed.get('close_succeeded', [])
         return "All completed {} removed from dashboards {}".format(
-            type, ", ".join(dashboards)), completed
+            type, ", ".join(dashboards)), all_completed
 
 
 class CleanupRequester:
