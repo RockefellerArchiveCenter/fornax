@@ -1,30 +1,32 @@
-{
-    "additional_error_info": null, 
-    "appraisal_note": null, 
-    "bag_it_name": "valid_bag1", 
-    "collections": [], 
-    "created_time": "2018-09-18T11:32:56.040249-04:00", 
+{ "identifier": "3a9f9461-a554-42f7-8d0a-7708a29c1a1c",
+  "origin": "aurora",
+  "bag_data": {
+    "additional_error_info": null,
+    "appraisal_note": null,
+    "bag_it_name": "valid_bag1",
+    "collections": [],
+    "created_time": "2018-09-18T11:32:56.040249-04:00",
     "events": [
         {
-            "endTime": "2018-09-18 15:32:56.474107+00:00", 
-            "object": "http://testserver/api/transfers/7/", 
+            "endTime": "2018-09-18 15:32:56.474107+00:00",
+            "object": "http://testserver/api/transfers/7/",
             "result": {
                 "name": "Transfer sent to archival storage"
-            }, 
-            "summary": "Transfer accessioned", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer accessioned",
+            "type": "Accept",
             "url": "http://testserver/api/events/10/"
         }
-    ], 
-    "external_identifiers": [], 
-    "file_size": "447", 
-    "file_type": "OTHER", 
-    "identifier": "3a9f9461-a554-42f7-8d0a-7708a29c1a1c", 
-    "metadata": null, 
-    "modified_time": "2018-09-18T11:32:56.474892-04:00", 
-    "organization": "http://testserver/api/orgs/2/", 
-    "parents": [], 
-    "process_status": 75, 
-    "rights_statements": [], 
+    ],
+    "external_identifiers": [],
+    "file_size": "447",
+    "file_type": "OTHER",
+    "identifier": "3a9f9461-a554-42f7-8d0a-7708a29c1a1c",
+    "metadata": null,
+    "modified_time": "2018-09-18T11:32:56.474892-04:00",
+    "organization": "http://testserver/api/orgs/2/",
+    "parents": [],
+    "process_status": 75,
+    "rights_statements": [],
     "url": "http://testserver/api/transfers/7/"
-}
+}}

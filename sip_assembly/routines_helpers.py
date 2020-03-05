@@ -1,6 +1,6 @@
 import bagit
 import csv
-from csvvalidator import *
+from csvvalidator import CSVValidator, RecordError, enumeration
 import datetime
 import os
 import shutil
@@ -9,14 +9,20 @@ import tarfile
 
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path."""
-    shutil.copyfile(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+    shutil.copyfile(
+        sip.bag_path, os.path.join(
+            dest, "{}.tar.gz".format(
+                sip.bag_identifier)))
     sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
     sip.save()
 
 
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path"""
-    shutil.move(sip.bag_path, os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier)))
+    shutil.move(
+        sip.bag_path, os.path.join(
+            dest, "{}.tar.gz".format(
+                sip.bag_identifier)))
     sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
     sip.save()
 
@@ -56,7 +62,11 @@ def create_structure(bag_path):
     """Creates Archivematica-compliant directory structure within a bag"""
     log_dir = os.path.join(bag_path, 'data', 'logs')
     md_dir = os.path.join(bag_path, 'data', 'metadata')
-    docs_dir = os.path.join(bag_path, 'data', 'metadata', 'submissionDocumentation')
+    docs_dir = os.path.join(
+        bag_path,
+        'data',
+        'metadata',
+        'submissionDocumentation')
     for dir in [log_dir, md_dir, docs_dir]:
         if not os.path.exists(dir):
             os.makedirs(dir)
@@ -65,63 +75,102 @@ def create_structure(bag_path):
 def create_rights_csv(bag_path, rights_statements):
     """Creates Archivematica-compliant CSV containing PREMIS rights"""
     filepath = os.path.join(bag_path, 'data', 'metadata', 'rights.csv')
-    mode = 'w'
     for rights_statement in rights_statements:
-        firstrow = ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
-                    'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
-                    'grant_restriction', 'grant_start_date', 'grant_end_date',
-                    'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
-        if os.path.isfile(filepath):
-            mode = 'a'
-            firstrow = None
+        csvwriter = setup_csv_file(filepath)
+        for (dirpath, dirnames, filenames) in os.walk(
+                os.path.join(bag_path, 'data', 'objects')):
+            write_rights_row(
+                dirpath.split(bag_path)[1],
+                filenames,
+                rights_statement,
+                csvwriter)
+
+
+def setup_csv_file(filepath):
+    """
+    If file already exists, sets mode to append. Otherwise, creates new file and
+    writes a header row.
+    """
+    if not os.path.isfile(filepath):
         if not os.path.exists(os.path.dirname(filepath)):
             os.makedirs(os.path.dirname(filepath))
-        with open(filepath, mode) as csvfile:
-            csvwriter = csv.writer(csvfile)
-            if firstrow:
-                csvwriter.writerow(firstrow)
-            for (dirpath, dirnames, filenames) in os.walk(os.path.join(bag_path, 'data', 'objects')):
-                for file in filenames:
-                    for rights_granted in rights_statement.get('rights_granted'):
-                        csvwriter.writerow(
-                            [os.path.join(dirpath.split(bag_path)[1], file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
-                             rights_statement.get('determination_date', ''), rights_statement.get('jurisdiction', ''),
-                             rights_statement.get('start_date', ''), rights_statement.get('end_date', ''),
-                             rights_statement.get('terms', ''), rights_statement.get('citation', ''),
-                             rights_statement.get('note', ''), rights_granted.get('act', ''),
-                             rights_granted.get('restriction', ''), rights_granted.get('start_date', ''),
-                             rights_granted.get('end_date', ''), rights_granted.get('note', ''),
-                             rights_statement.get('doc_id_type', ''), rights_statement.get('doc_id_value', ''),
-                             rights_statement.get('doc_id_role', '')])
+        csvfile = open(filepath, 'w')
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(
+            ['file', 'basis', 'status', 'determination_date', 'jurisdiction',
+             'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+             'grant_restriction', 'grant_start_date', 'grant_end_date',
+             'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role'])
+    else:
+        csvfile = open(filepath, 'a')
+        csvwriter = csv.writer(csvfile)
+    return csvwriter
+
+
+def write_rights_row(bag_dir, filenames, rights_statement, csvwriter):
+    for file in filenames:
+        for rights_granted in rights_statement.get('rights_granted'):
+            csvwriter.writerow(
+                [os.path.join(bag_dir, file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                 rights_statement.get(
+                    'determination_date', ''), rights_statement.get(
+                    'jurisdiction', ''),
+                    rights_statement.get(
+                    'start_date', ''), rights_statement.get(
+                    'end_date', ''),
+                    rights_statement.get(
+                    'terms', ''), rights_statement.get(
+                    'citation', ''),
+                    rights_statement.get(
+                    'note', ''), rights_granted.get(
+                    'act', ''),
+                    rights_granted.get(
+                    'restriction', ''), rights_granted.get(
+                    'start_date', ''),
+                    rights_granted.get(
+                    'end_date', ''), rights_granted.get(
+                    'note', ''),
+                    rights_statement.get(
+                    'doc_id_type', ''), rights_statement.get(
+                    'doc_id_value', ''),
+                    rights_statement.get('doc_id_role', '')])
 
 
 def validate_rights_csv(bag_path):
     """Validate a CSV to ensure it complies with Archivematica validation"""
     field_names = (
-           'file', 'basis', 'status', 'determination_date', 'jurisdiction',
-           'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
-           'grant_restriction', 'grant_start_date', 'grant_end_date',
-           'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role'
-           )
+        'file', 'basis', 'status', 'determination_date', 'jurisdiction',
+        'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+        'grant_restriction', 'grant_start_date', 'grant_end_date',
+        'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role'
+    )
 
     validator = CSVValidator(field_names)
 
     validator.add_header_check('EX1', 'bad header')
     validator.add_record_length_check('EX2', 'unexpected record length')
-    validator.add_value_check('basis', enumeration('Copyright', 'Statute', 'License', 'Other'),
-                              'EX3', 'invalid basis')
-    validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown', ''),
-                              'EX4', 'invalid status')
-    validator.add_value_check('grant_act', enumeration('publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete'),
-                              'EX5', 'invalid act')
-    validator.add_value_check('grant_restriction', enumeration('allow', 'disallow', 'conditional'),
-                              'EX6', 'invalid restriction')
+    validator.add_value_check(
+        'basis', enumeration('Copyright', 'Statute',
+                             'License', 'Other'), 'EX3', 'invalid basis'
+    )
+    validator.add_value_check(
+        'status', enumeration('copyrighted', 'public domain',
+                              'unknown', ''), 'EX4', 'invalid status'
+    )
+    validator.add_value_check(
+        'grant_act', enumeration('publish', 'disseminate', 'replicate',
+                                 'migrate', 'modify', 'use', 'delete'), 'EX5', 'invalid act'
+    )
+    validator.add_value_check(
+        'grant_restriction', enumeration(
+            'allow', 'disallow', 'conditional'), 'EX6', 'invalid restriction'
+    )
     for field in ['file', 'note', 'grant_note']:
-        validator.add_value_check(field, str,
-                                  'EX7', 'field must exist')
+        validator.add_value_check(field, str, 'EX7', 'field must exist')
 
     def check_dates(r):
-        for field in [r['determination_date'], r['start_date'], r['end_date'], r['grant_start_date'], r['grant_end_date']]:
+        for field in [r['determination_date'], r['start_date'],
+                      r['end_date'], r['grant_start_date'], r['grant_end_date']]:
             format = True
             try:
                 datetime.datetime.strptime(field, '%Y-%m-%d')
@@ -149,7 +198,7 @@ def create_submission_docs(sip):
 def update_bag_info(bag_path, data):
     """Adds metadata to `bag-info.txt`"""
     bag = bagit.Bag(bag_path)
-    for k,v in data.items():
+    for k, v in data.items():
         bag.info[k] = v
     bag.save()
 

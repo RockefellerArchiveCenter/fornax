@@ -21,3 +21,9 @@ class SIP(models.Model):
     created = models.DateTimeField(auto_now=True)
     last_modified = models.DateTimeField(auto_now_add=True)
     data = JSONField(null=True, blank=True)
+    ORIGIN_CHOICES = (
+        ('aurora', 'Aurora'),
+        ('legacy_digital', 'Legacy Digital Processing'),
+        ('digitization', 'Digitization')
+    )
+    origin = models.CharField(max_length=20, choices=ORIGIN_CHOICES, default='aurora')

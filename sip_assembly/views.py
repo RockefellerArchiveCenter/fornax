@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from fornax import settings
-from sip_assembly.assemblers import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
+from sip_assembly.routines import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
 from sip_assembly.models import SIP
 from sip_assembly.serializers import SIPSerializer, SIPListSerializer
 
@@ -32,15 +32,38 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
-        sip = SIP(
-            process_status=10,
-            bag_path=join(settings.BASE_DIR, settings.SRC_DIR, "{}.tar.gz".format(request.data['identifier'])),
-            bag_identifier=request.data['identifier'],
-            data=request.data
-        )
-        sip.save()
-        return Response(prepare_response(("SIP created", sip.bag_identifier)), status=200)
-
+        """
+        Allow for post requests from Ursa Major 0.x or 1.x
+        """
+        try:
+            if request.data.get('bag_data'):
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data['bag_data'], # expects bag data json to be in a certain format (Ursa Major 1.x)
+                    origin=request.data['origin'] # expects origin to be include in POST request (Ursa Major 1.x)
+                )
+            else:
+                sip = SIP(
+                    process_status=10,
+                    bag_path=join(
+                        settings.BASE_DIR,
+                        settings.SRC_DIR,
+                        "{}.tar.gz".format(
+                            request.data['identifier'])),
+                    bag_identifier=request.data['identifier'],
+                    data=request.data # expects bag data json to be in a certain format (Ursa Major 0.x)
+                )
+            sip.save()
+            return Response(prepare_response(
+                ("SIP created", sip.bag_identifier)), status=200)
+        except Exception as e:
+            return Response(prepare_response("Error creating SIP: {}".format(str(e))), status=500)
 
 class ArchivematicaAPIView(APIView):
     """Base class for Archivematica views."""
@@ -109,6 +132,8 @@ class CleanupRoutineView(BaseRoutineView):
     routine = CleanupRoutine
 
     def get_args(self, request):
-        dirs = {"src": settings.TEST_SRC_DIR, "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
+        dirs = {
+            "src": settings.TEST_SRC_DIR,
+            "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
         identifier = request.data.get('identifier')
         return (identifier, dirs)

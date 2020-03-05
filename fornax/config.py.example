@@ -25,11 +25,30 @@ PROCESSING_CONFIG_DIR = 'processing_configs'
 PROCESSING_CONFIG = 'processingMCP.xml'
 
 ARCHIVEMATICA = {
-  "baseurl": "http://archivematica-dashboard:8000",
-  "username": "test",
-  "api_key": "test",
-  "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
-  "processing_config": "automated"
+  "aurora": {
+    "baseurl": "http://archivematica-dashboard:8000",
+    "username": "test",
+    "api_key": "test",
+    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
+    "processing_config": "automated",
+    "close_completed": True,
+  },
+  "digitization": {
+    "baseurl": "http://archivematica-dashboard:8000",
+    "username": "test",
+    "api_key": "test",
+    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
+    "processing_config": "automated",
+    "close_completed": False,
+  },
+  "legacy_digital": {
+    "baseurl": "http://archivematica-dashboard:8000",
+    "username": "test",
+    "api_key": "test",
+    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
+    "processing_config": "automated",
+    "close_completed": False,
+  }
 }
 
 STATIC_ROOT = '/static'

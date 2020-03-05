@@ -1,144 +1,146 @@
-{
-    "additional_error_info": null, 
-    "appraisal_note": null, 
-    "bag_it_name": "board_records4", 
-    "collections": [], 
-    "created_time": "2018-09-19T10:18:53.024498-04:00", 
+{ "identifier": "1d81a875-0517-4329-9f9d-07f67d099d83",
+  "origin": "aurora",
+  "bag_data": {
+    "additional_error_info": null,
+    "appraisal_note": null,
+    "bag_it_name": "board_records4",
+    "collections": [],
+    "created_time": "2018-09-19T10:18:53.024498-04:00",
     "events": [
         {
-            "endTime": "2018-09-19 14:20:22.394767+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:20:22.394767+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer sent to archival storage"
-            }, 
-            "summary": "Transfer accessioned", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer accessioned",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/172/"
-        }, 
+        },
         {
-            "endTime": "2018-09-19 14:19:16.961432+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:19:16.961432+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer staged for accessioning"
-            }, 
-            "summary": "Transfer accepted by appraisal archivist", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer accepted by appraisal archivist",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/150/"
-        }, 
+        },
         {
-            "endTime": "2018-09-19 14:18:53.162568+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:18:53.162568+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer staged for appraisal"
-            }, 
-            "summary": "Transfer passed all validation", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer passed all validation",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/63/"
-        }, 
+        },
         {
-            "endTime": "2018-09-19 14:18:53.158277+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:18:53.158277+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer staged for appraisal"
-            }, 
-            "summary": "Transfer passed BagIt Profile and datatype validation", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer passed BagIt Profile and datatype validation",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/62/"
-        }, 
+        },
         {
-            "endTime": "2018-09-19 14:18:53.059240+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:18:53.059240+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer staged for BagIt Profile validation"
-            }, 
-            "summary": "Transfer passed BagIt validation", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer passed BagIt validation",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/61/"
-        }, 
+        },
         {
-            "endTime": "2018-09-19 14:18:53.044426+00:00", 
-            "object": "http://localhost:8000/api/transfers/18/", 
+            "endTime": "2018-09-19 14:18:53.044426+00:00",
+            "object": "http://localhost:8000/api/transfers/18/",
             "result": {
                 "name": "Transfer staged for BagIt validation"
-            }, 
-            "summary": "Transfer saved", 
-            "type": "Accept", 
+            },
+            "summary": "Transfer saved",
+            "type": "Accept",
             "url": "http://localhost:8000/api/events/60/"
         }
-    ], 
-    "external_identifiers": [], 
-    "file_size": "254", 
-    "file_type": "ZIP", 
-    "identifier": "1d81a875-0517-4329-9f9d-07f67d099d83", 
+    ],
+    "external_identifiers": [],
+    "file_size": "254",
+    "file_type": "ZIP",
+    "identifier": "1d81a875-0517-4329-9f9d-07f67d099d83",
     "metadata": {
-        "bag_count": "", 
-        "bag_group_identifier": "", 
-        "bagging_date": "2017-12-11T20:24:10.772070-05:00", 
-        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/", 
-        "date_end": "2001-06-30T00:00:00-04:00", 
-        "date_start": "1982-07-06T00:00:00-04:00", 
-        "external_identifier": "records-2017-12-11T20:24:10.772070", 
-        "internal_sender_description": "Board materials from the foundation's board meetings.", 
+        "bag_count": "",
+        "bag_group_identifier": "",
+        "bagging_date": "2017-12-11T20:24:10.772070-05:00",
+        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/",
+        "date_end": "2001-06-30T00:00:00-04:00",
+        "date_start": "1982-07-06T00:00:00-04:00",
+        "external_identifier": "records-2017-12-11T20:24:10.772070",
+        "internal_sender_description": "Board materials from the foundation's board meetings.",
         "language": [
             "eng"
-        ], 
-        "payload_oxum": "249376.6", 
+        ],
+        "payload_oxum": "249376.6",
         "record_creators": [
             {
-                "name": "Office of Important Affairs", 
+                "name": "Office of Important Affairs",
                 "type": "organization"
             }
-        ], 
-        "record_type": "board materials", 
-        "source_organization": "Test Organization", 
+        ],
+        "record_type": "board materials",
+        "source_organization": "Test Organization",
         "title": "Supporting records for Board meetings"
-    }, 
-    "modified_time": "2018-09-19T10:20:22.396734-04:00", 
-    "organization": "http://localhost:8000/api/orgs/1/", 
-    "parents": [], 
-    "process_status": 75, 
+    },
+    "modified_time": "2018-09-19T10:20:22.396734-04:00",
+    "organization": "http://localhost:8000/api/orgs/1/",
+    "parents": [],
+    "process_status": 75,
     "rights_statements": [
         {
-            "determination_date": "2018-09-19", 
-            "end_date": "2041-06-29", 
-            "jurisdiction": "us", 
-            "note": "Work for hire, under copyright until 40 years after creation.", 
-            "rights_basis": "Copyright", 
+            "determination_date": "2018-09-19",
+            "end_date": "2041-06-29",
+            "jurisdiction": "us",
+            "note": "Work for hire, under copyright until 40 years after creation.",
+            "rights_basis": "Copyright",
             "rights_granted": [
                 {
-                    "act": "publish", 
-                    "end_date": "2041-06-29", 
-                    "note": "Records under copyright may not be republished without permission from the copyright holder.", 
-                    "restriction": "disallow", 
+                    "act": "publish",
+                    "end_date": "2041-06-29",
+                    "note": "Records under copyright may not be republished without permission from the copyright holder.",
+                    "restriction": "disallow",
                     "start_date": "1982-07-06"
                 }
-            ], 
-            "start_date": "1982-07-06", 
+            ],
+            "start_date": "1982-07-06",
             "status": "copyrighted"
-        }, 
+        },
         {
-            "end_date": "2011-06-30", 
-            "note": "Records embargoed for 10 years after date of creation.", 
-            "other_rights_basis": "Donor", 
-            "rights_basis": "Other", 
+            "end_date": "2011-06-30",
+            "note": "Records embargoed for 10 years after date of creation.",
+            "other_rights_basis": "Donor",
+            "rights_basis": "Other",
             "rights_granted": [
                 {
-                    "act": "disseminate", 
-                    "end_date": "2001-06-30", 
-                    "note": "Records are open for research after expiration of embargo period.", 
-                    "restriction": "allow", 
+                    "act": "disseminate",
+                    "end_date": "2001-06-30",
+                    "note": "Records are open for research after expiration of embargo period.",
+                    "restriction": "allow",
                     "start_date": "1992-07-06"
-                }, 
+                },
                 {
-                    "act": "disseminate", 
-                    "end_date": "2011-06-30", 
-                    "note": "Records are open for research after expiration of embargo period.", 
-                    "restriction": "disallow", 
+                    "act": "disseminate",
+                    "end_date": "2011-06-30",
+                    "note": "Records are open for research after expiration of embargo period.",
+                    "restriction": "disallow",
                     "start_date": "1982-07-06"
                 }
-            ], 
+            ],
             "start_date": "1982-07-06"
         }
-    ], 
+    ],
     "url": "http://localhost:8000/api/transfers/18/"
-}
+}}
