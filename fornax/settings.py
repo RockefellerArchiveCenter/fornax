@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'sip_assembly',
     'rest_framework',
     'health_check',
+    'asterism',
 ]
 
 MIDDLEWARE = [
