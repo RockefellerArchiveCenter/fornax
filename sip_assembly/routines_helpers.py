@@ -1,29 +1,24 @@
 import csv
 import datetime
 import os
-import shutil
-import tarfile
 
+from asterism import file_helpers
 from csvvalidator import CSVValidator, RecordError, enumeration
 
 
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path."""
-    shutil.copyfile(
-        sip.bag_path, os.path.join(
-            dest, "{}.tar.gz".format(
-                sip.bag_identifier)))
-    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    file_helpers.copy_file_or_dir(sip.bag_path, dest_path)
+    sip.bag_path = dest_path
     sip.save()
 
 
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path"""
-    shutil.move(
-        sip.bag_path, os.path.join(
-            dest, "{}.tar.gz".format(
-                sip.bag_identifier)))
-    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    file_helpers.move_file_or_dir(sip.bag_path, dest_path)
+    sip.bag_path = os.path.join(dest_path)
     sip.save()
 
 
@@ -31,9 +26,8 @@ def extract_all(sip, extract_dir):
     """Extracts a tar.gz file to the `extract dir` directory"""
     ext = os.path.splitext(sip.bag_path)[-1]
     if ext in ['.tgz', '.tar.gz', '.gz']:
-        tf = tarfile.open(sip.bag_path, 'r')
-        tf.extractall(extract_dir)
-        tf.close()
+        if not file_helpers.tar_extract_all(sip.bag_path, extract_dir):
+            raise Exception("Error extracting TAR file.")
         os.remove(sip.bag_path)
         sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
         sip.save()
@@ -199,9 +193,8 @@ def add_processing_config(bag_path, data):
 
 def create_targz_package(sip):
     """Creates a compressed archive file from a bag"""
-    with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
-        tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))
-        tar.close()
-    shutil.rmtree(sip.bag_path)
-    sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
+    tar_path = "{}.tar.gz".format(sip.bag_path)
+    file_helpers.make_tarfile(
+        sip.bag_path, tar_path, compressed=True, remove_src=True)
+    sip.bag_path = tar_path
     sip.save()
