@@ -1,4 +1,5 @@
 amclient==1.0.0
+asterism==0.5
 bagit==1.7.0
 certifi==2019.11.28
 chardet==3.0.4
@@ -8,7 +9,6 @@ colorlog==4.0.2
 csvvalidator==1.2
 Django==2.2.10
 djangorestframework==3.10.3
-git+https://github.com/RockefellerArchiveCenter/asterism@v0.4.1#egg=asterism
 gitdb2==2.0.6
 GitPython==3.0.5
 health-check==3.4.1
