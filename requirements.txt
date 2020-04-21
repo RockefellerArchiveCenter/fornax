@@ -1,5 +1,5 @@
 amclient==1.0.0
-asterism==0.5
+asterism==0.5.2
 bagit==1.7.0
 certifi==2019.11.28
 chardet==3.0.4
