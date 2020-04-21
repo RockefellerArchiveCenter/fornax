@@ -72,59 +72,15 @@ class SIPAssemblyTest(TestCase):
         self.assertEqual(0, len(listdir(self.dest_dir)))
 
     def archivematica_views(self):
-        with assembly_vcr.use_cassette('archivematica.json'):
-            print('*** Starting transfer ***')
-            request = self.factory.post(reverse('create-transfer'))
-            response = CreatePackageView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                1,
-                "Only one transfer should be started")
-=======
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 1, "Only one transfer should be started")
->>>>>>> master
-        with assembly_vcr.use_cassette('archivematica_cleanup.json'):
-            print('*** Cleaning up transfers ***')
-            request = self.factory.post(reverse('remove-transfers'))
-            response = RemoveCompletedTransfersView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                0,
-                "Wrong number of objects processed")
-            print('*** Cleaning up ingests ***')
-            request = self.factory.post(reverse('remove-ingests'))
-            response = RemoveCompletedIngestsView.as_view()(request)
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                0,
-                "Wrong number of objects processed")
-=======
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
-            print('*** Cleaning up ingests ***')
-            request = self.factory.post(reverse('remove-ingests'))
-            response = RemoveCompletedIngestsView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
->>>>>>> master
+        for cassette, view_str, view, count in [
+                ('archivematica.json', 'create-transfer', CreatePackageView, 1),
+                ('archivematica_cleanup.json', 'remove-transfers', RemoveCompletedTransfersView, 0),
+                ('archivematica_cleanup.json', 'remove-ingests', RemoveCompletedIngestsView, 0)]:
+            with assembly_vcr.use_cassette(cassette):
+                request = self.factory.post(reverse(view_str))
+                response = view.as_view()(request)
+                self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+                self.assertEqual(response.data['count'], count, "Only one transfer should be started")
 
     def request_cleanup(self):
         print('*** Requesting cleanup ***')
@@ -137,20 +93,8 @@ class SIPAssemblyTest(TestCase):
             print('*** Test run view ***')
             request = self.factory.post(reverse('assemble-sip'))
             response = SIPAssemblyView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'], len(
-                    SIP.objects.filter(
-                        process_status=SIP.CREATED)), "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.CREATED)), "Wrong number of objects processed")
->>>>>>> master
 
     def cleanup_view(self):
         print('*** Test cleanup view ***')
@@ -158,64 +102,26 @@ class SIPAssemblyTest(TestCase):
             request = self.factory.post(
                 reverse('cleanup'), data={"identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                1,
-                "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")
->>>>>>> master
 
     def request_cleanup_view(self):
         print('*** Test request cleanup view ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
             request = self.factory.post(reverse('request-cleanup'))
             response = CleanupRequestView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'], len(
-                    SIP.objects.filter(
-                        process_status=SIP.APPROVED)), "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.APPROVED)), "Wrong number of objects processed")
->>>>>>> master
 
     def schema(self):
         print('*** Getting schema view ***')
         schema = self.client.get(reverse('schema'))
-<<<<<<< HEAD
-        self.assertEqual(
-            schema.status_code,
-            200,
-            "Response error: {}".format(schema))
-=======
         self.assertEqual(schema.status_code, 200, "Response error: {}".format(schema))
->>>>>>> master
 
     def health_check(self):
         print('*** Getting status view ***')
         status = self.client.get(reverse('api_health_ping'))
-<<<<<<< HEAD
-        self.assertEqual(
-            status.status_code,
-            200,
-            "Response error: {}".format(status))
-=======
         self.assertEqual(status.status_code, 200, "Response error: {}".format(status))
->>>>>>> master
 
     def tearDown(self):
         for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
