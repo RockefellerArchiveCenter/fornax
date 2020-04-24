@@ -54,8 +54,6 @@ fornax has six services, all of which are exposed via HTTP endpoints (see [Route
 * Cleanup - removes files from the destination directory.
 * Request Cleanup - sends a POST request to another service requesting cleanup of the source directory. fornax only has read access for this directory.
 
-  ![SIP Assembly diagram](fornax-services.png)
-
 For an example of the data fornax expects to receive (both bags and JSON), see the `fixtures/` directory
 
 
