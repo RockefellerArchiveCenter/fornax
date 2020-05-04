@@ -9,17 +9,19 @@ from csvvalidator import CSVValidator, RecordError, enumeration
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path."""
     dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    file_helpers.copy_file_or_dir(sip.bag_path, dest_path)
-    sip.bag_path = dest_path
-    sip.save()
+    copied = file_helpers.copy_file_or_dir(sip.bag_path, dest_path)
+    if copied:
+        sip.bag_path = dest_path
+        sip.save()
 
 
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path"""
     dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    file_helpers.move_file_or_dir(sip.bag_path, dest_path)
-    sip.bag_path = os.path.join(dest_path)
-    sip.save()
+    moved = file_helpers.move_file_or_dir(sip.bag_path, dest_path)
+    if moved:
+        sip.bag_path = os.path.join(dest_path)
+        sip.save()
 
 
 def extract_all(sip, extract_dir):
