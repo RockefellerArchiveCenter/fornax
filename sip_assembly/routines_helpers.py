@@ -26,7 +26,8 @@ def extract_all(sip, extract_dir):
     """Extracts a tar.gz file to the `extract dir` directory"""
     ext = os.path.splitext(sip.bag_path)[-1]
     if ext in ['.tgz', '.tar.gz', '.gz']:
-        if not file_helpers.tar_extract_all(sip.bag_path, extract_dir):
+        extracted = file_helpers.tar_extract_all(sip.bag_path, extract_dir)
+        if not extracted:
             raise Exception("Error extracting TAR file.")
         os.remove(sip.bag_path)
         sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
