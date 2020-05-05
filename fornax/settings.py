@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+
 from fornax import config as CF
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'sip_assembly',
     'rest_framework',
     'health_check',
+    'asterism',
 ]
 
 MIDDLEWARE = [
@@ -115,14 +117,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = CF.STATIC_ROOT
 
 SRC_DIR = CF.SRC_DIR
-TEST_SRC_DIR = CF.TEST_SRC_DIR
 TMP_DIR = CF.TMP_DIR
-TEST_TMP_DIR = CF.TEST_TMP_DIR
 DEST_DIR = CF.DEST_DIR
-TEST_DEST_DIR = CF.TEST_DEST_DIR
 PROCESSING_CONFIG_DIR = CF.PROCESSING_CONFIG_DIR
 PROCESSING_CONFIG = CF.PROCESSING_CONFIG
 ARCHIVEMATICA = CF.ARCHIVEMATICA
+CLEANUP_URL = CF.CLEANUP_URL
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

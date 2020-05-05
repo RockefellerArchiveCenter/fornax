@@ -1,15 +1,13 @@
 from os.path import join
-import urllib
 
-from asterism.views import prepare_response
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-
+from asterism.views import BaseServiceView, RoutineView, prepare_response
 from fornax import settings
-from sip_assembly.routines import SIPActions, SIPAssembler, CleanupRequester, CleanupRoutine
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from sip_assembly.models import SIP
-from sip_assembly.serializers import SIPSerializer, SIPListSerializer
+from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
+                                   SIPActions, SIPAssembler)
+from sip_assembly.serializers import SIPListSerializer, SIPSerializer
 
 
 class SIPViewSet(ModelViewSet):
@@ -45,8 +43,12 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data['bag_data'], # expects bag data json to be in a certain format (Ursa Major 1.x)
-                    origin=request.data['origin'] # expects origin to be include in POST request (Ursa Major 1.x)
+                    # expects bag data json to be in a certain format (Ursa
+                    # Major 1.x)
+                    data=request.data['bag_data'],
+                    # expects origin to be include in POST request (Ursa Major
+                    # 1.x)
+                    origin=request.data['origin']
                 )
             else:
                 sip = SIP(
@@ -57,83 +59,52 @@ class SIPViewSet(ModelViewSet):
                         "{}.tar.gz".format(
                             request.data['identifier'])),
                     bag_identifier=request.data['identifier'],
-                    data=request.data # expects bag data json to be in a certain format (Ursa Major 0.x)
+                    # expects bag data json to be in a certain format (Ursa
+                    # Major 0.x)
+                    data=request.data
                 )
             sip.save()
             return Response(prepare_response(
                 ("SIP created", sip.bag_identifier)), status=200)
         except Exception as e:
-            return Response(prepare_response("Error creating SIP: {}".format(str(e))), status=500)
-
-class ArchivematicaAPIView(APIView):
-    """Base class for Archivematica views."""
-
-    def post(self, request):
-        try:
-            response = (getattr(SIPActions(), self.method)(self.type)
-                        if hasattr(self, 'type')
-                        else getattr(SIPActions(), self.method)())
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
+            return Response(prepare_response(
+                "Error creating SIP: {}".format(str(e))), status=500)
 
 
-class CreatePackageView(ArchivematicaAPIView):
+class CreatePackageView(BaseServiceView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-    method = 'create_package'
+
+    def get_service_response(self, request):
+        return SIPActions().create_package()
 
 
-class RemoveCompletedTransfersView(ArchivematicaAPIView):
+class RemoveCompletedTransfersView(BaseServiceView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
-    method = 'remove_completed'
-    type = 'transfers'
+
+    def get_service_response(self, request):
+        return SIPActions().remove_completed('transfers')
 
 
-class RemoveCompletedIngestsView(ArchivematicaAPIView):
+class RemoveCompletedIngestsView(BaseServiceView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
-    method = 'remove_completed'
-    type = 'ingests'
+
+    def get_service_response(self, request):
+        return SIPActions().remove_completed('ingests')
 
 
-class BaseRoutineView(APIView):
-    """Base view for routines. Provides a `get_args()` method which is overriden by child routines."""
-
-    def post(self, request, format=None):
-        args = self.get_args(request)
-        try:
-            response = self.routine(*args).run()
-            return Response(prepare_response(response), status=200)
-        except Exception as e:
-            return Response(prepare_response(e), status=500)
-
-
-class SIPAssemblyView(BaseRoutineView):
+class SIPAssemblyView(RoutineView):
     """Runs the AssembleSIPs cron job. Accepts POST requests only."""
     routine = SIPAssembler
 
-    def get_args(self, request):
-        dirs = ({'src': settings.TEST_SRC_DIR, 'tmp': settings.TEST_TMP_DIR, 'dest': settings.TEST_DEST_DIR}
-                if request.POST.get('test') else None)
-        return (dirs,)
 
-
-class CleanupRequestView(BaseRoutineView):
+class CleanupRequestView(RoutineView):
     """Sends request to previous microservice to clean up source directory."""
     routine = CleanupRequester
 
-    def get_args(self, request):
-        url = request.GET.get('post_service_url')
-        data = (urllib.parse.unquote(url) if url else '')
-        return (data,)
 
-
-class CleanupRoutineView(BaseRoutineView):
+class CleanupRoutineView(BaseServiceView):
     """Removes a transfer from the destination directory. Accepts POST requests only."""
-    routine = CleanupRoutine
 
-    def get_args(self, request):
-        dirs = {
-            "src": settings.TEST_SRC_DIR,
-            "dest": settings.TEST_DEST_DIR} if request.POST.get('test') else None
+    def get_service_response(self, request):
         identifier = request.data.get('identifier')
-        return (identifier, dirs)
+        return CleanupRoutine(identifier).run()

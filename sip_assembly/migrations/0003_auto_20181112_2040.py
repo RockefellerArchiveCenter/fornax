@@ -13,6 +13,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sip',
             name='process_status',
-            field=models.CharField(choices=[(10, 'New SIP created'), (20, 'SIP assembled and delivered to Archivematica'), (30, 'SIP started in Archivematica'), (40, 'SIP approved in Archivematica')], max_length=100),
+            field=models.CharField(
+                choices=[
+                    (10,
+                     'New SIP created'),
+                    (20,
+                     'SIP assembled and delivered to Archivematica'),
+                    (30,
+                     'SIP started in Archivematica'),
+                    (40,
+                     'SIP approved in Archivematica')],
+                max_length=100),
         ),
     ]

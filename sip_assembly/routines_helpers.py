@@ -1,39 +1,36 @@
-import bagit
 import csv
-from csvvalidator import CSVValidator, RecordError, enumeration
 import datetime
 import os
-import shutil
-import tarfile
+
+from asterism import file_helpers
+from csvvalidator import CSVValidator, RecordError, enumeration
 
 
 def copy_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path."""
-    shutil.copyfile(
-        sip.bag_path, os.path.join(
-            dest, "{}.tar.gz".format(
-                sip.bag_identifier)))
-    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    sip.save()
+    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    copied = file_helpers.copy_file_or_dir(sip.bag_path, dest_path)
+    if copied:
+        sip.bag_path = dest_path
+        sip.save()
 
 
 def move_to_directory(sip, dest):
     """Moves a bag to the `dest` directory and updates the object's bag_path"""
-    shutil.move(
-        sip.bag_path, os.path.join(
-            dest, "{}.tar.gz".format(
-                sip.bag_identifier)))
-    sip.bag_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    sip.save()
+    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
+    moved = file_helpers.move_file_or_dir(sip.bag_path, dest_path)
+    if moved:
+        sip.bag_path = os.path.join(dest_path)
+        sip.save()
 
 
 def extract_all(sip, extract_dir):
     """Extracts a tar.gz file to the `extract dir` directory"""
     ext = os.path.splitext(sip.bag_path)[-1]
     if ext in ['.tgz', '.tar.gz', '.gz']:
-        tf = tarfile.open(sip.bag_path, 'r')
-        tf.extractall(extract_dir)
-        tf.close()
+        extracted = file_helpers.tar_extract_all(sip.bag_path, extract_dir)
+        if not extracted:
+            raise Exception("Error extracting TAR file.")
         os.remove(sip.bag_path)
         sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
         sip.save()
@@ -50,12 +47,6 @@ def move_objects_dir(bag_path):
     for fname in os.listdir(src):
         if fname != 'objects':
             os.rename(os.path.join(src, fname), os.path.join(dest, fname))
-
-
-def validate(bag_path):
-    """Validates a bag against the BagIt specification"""
-    bag = bagit.Bag(bag_path)
-    return bag.validate()
 
 
 def create_structure(bag_path):
@@ -111,7 +102,9 @@ def write_rights_row(bag_dir, filenames, rights_statement, csvwriter):
     for file in filenames:
         for rights_granted in rights_statement.get('rights_granted'):
             csvwriter.writerow(
-                [os.path.join(bag_dir, file).lstrip('/'), rights_statement.get('rights_basis', ''), rights_statement.get('status', ''),
+                [os.path.join(bag_dir, file).lstrip('/'),
+                 rights_statement.get('rights_basis', ''),
+                 rights_statement.get('status', ''),
                  rights_statement.get(
                     'determination_date', ''), rights_statement.get(
                     'jurisdiction', ''),
@@ -195,31 +188,16 @@ def create_submission_docs(sip):
     return True
 
 
-def update_bag_info(bag_path, data):
-    """Adds metadata to `bag-info.txt`"""
-    bag = bagit.Bag(bag_path)
-    for k, v in data.items():
-        bag.info[k] = v
-    bag.save()
-
-
 def add_processing_config(bag_path, data):
     """Adds pre-defined Archivematica processing configuration file"""
     with open(os.path.join(bag_path, 'processingMCP.xml'), 'w') as f:
         f.write(data)
 
 
-def update_manifests(bag_path):
-    """Updates bag manifests according to BagIt specification"""
-    bag = bagit.Bag(bag_path)
-    bag.save(manifests=True)
-
-
 def create_targz_package(sip):
     """Creates a compressed archive file from a bag"""
-    with tarfile.open('{}.tar.gz'.format(sip.bag_path), "w:gz") as tar:
-        tar.add(sip.bag_path, arcname=os.path.basename(sip.bag_path))
-        tar.close()
-    shutil.rmtree(sip.bag_path)
-    sip.bag_path = '{}.tar.gz'.format(sip.bag_path)
+    tar_path = "{}.tar.gz".format(sip.bag_path)
+    file_helpers.make_tarfile(
+        sip.bag_path, tar_path, compressed=True, remove_src=True)
+    sip.bag_path = tar_path
     sip.save()

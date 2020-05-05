@@ -2,11 +2,12 @@ import json
 from os import remove
 from os.path import isdir, isfile, join
 
-from amclient import AMClient, errors
 import requests
-
+from amclient import AMClient, errors
+from asterism import bagit_helpers
 from fornax import settings
 from sip_assembly import routines_helpers as helpers
+
 from .models import SIP
 
 
@@ -45,11 +46,11 @@ class ArchivematicaRoutine:
 class SIPAssembler(ArchivematicaRoutine):
     """Creates an Archivematica-compliant SIP."""
 
-    def __init__(self, dirs=None):
+    def __init__(self):
         super(SIPAssembler, self).__init__()
-        self.src_dir = dirs['src'] if dirs else settings.SRC_DIR
-        self.tmp_dir = dirs['tmp'] if dirs else settings.TMP_DIR
-        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        self.src_dir = settings.SRC_DIR
+        self.tmp_dir = settings.TMP_DIR
+        self.dest_dir = settings.DEST_DIR
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
                 raise SIPAssemblyError("Directory does not exist", dir)
@@ -61,7 +62,7 @@ class SIPAssembler(ArchivematicaRoutine):
             try:
                 helpers.copy_to_directory(sip, self.tmp_dir)
                 helpers.extract_all(sip, self.tmp_dir)
-                helpers.validate(sip.bag_path)
+                bagit_helpers.validate(sip.bag_path)
             except Exception as e:
                 raise SIPAssemblyError(
                     "Error moving SIP to processing directory: {}".format(e),
@@ -86,12 +87,12 @@ class SIPAssembler(ArchivematicaRoutine):
                         sip.bag_identifier)
 
             try:
-                helpers.update_bag_info(
+                bagit_helpers.update_bag_info(
                     sip.bag_path, {
                         'Internal-Sender-Identifier': sip.bag_identifier})
                 helpers.add_processing_config(
                     sip.bag_path, self.get_processing_config(client))
-                helpers.update_manifests(sip.bag_path)
+                bagit_helpers.update_manifests(sip.bag_path)
                 helpers.create_targz_package(sip)
             except Exception as e:
                 raise SIPAssemblyError(
@@ -168,14 +169,11 @@ class CleanupRequester:
     another service.
     """
 
-    def __init__(self, url):
-        self.url = url
-
     def run(self):
         sip_ids = []
         for sip in SIP.objects.filter(process_status=SIP.APPROVED):
             r = requests.post(
-                self.url,
+                settings.CLEANUP_URL,
                 data=json.dumps({"identifier": sip.bag_identifier}),
                 headers={"Content-Type": "application/json"},
             )
@@ -191,9 +189,9 @@ class CleanupRequester:
 class CleanupRoutine:
     """Removes files in destination directory."""
 
-    def __init__(self, identifier, dirs):
+    def __init__(self, identifier):
         self.identifier = identifier
-        self.dest_dir = dirs['dest'] if dirs else settings.DEST_DIR
+        self.dest_dir = settings.DEST_DIR
         if not self.identifier:
             raise CleanupError(
                 "No identifier submitted, unable to perform CleanupRoutine.",)

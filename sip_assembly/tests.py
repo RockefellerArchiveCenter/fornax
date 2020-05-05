@@ -1,24 +1,20 @@
 import json
-from os.path import join, isdir
-from os import listdir, makedirs
 import shutil
-import vcr
+from os import listdir, makedirs
+from os.path import isdir, join
 
+import vcr
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIRequestFactory
-
 from fornax import settings
-from sip_assembly.routines import SIPAssembler, CleanupRoutine, CleanupRequester
+from rest_framework.test import APIRequestFactory
 from sip_assembly.models import SIP
-from sip_assembly.views import (
-    SIPViewSet,
-    CreatePackageView,
-    RemoveCompletedIngestsView,
-    RemoveCompletedTransfersView,
-    SIPAssemblyView,
-    CleanupRoutineView,
-    CleanupRequestView)
+from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
+                                   SIPAssembler)
+from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
+                                CreatePackageView, RemoveCompletedIngestsView,
+                                RemoveCompletedTransfersView, SIPAssemblyView,
+                                SIPViewSet)
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
@@ -36,9 +32,9 @@ assembly_vcr = vcr.VCR(
 class SIPAssemblyTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.src_dir = settings.TEST_SRC_DIR
-        self.tmp_dir = settings.TEST_TMP_DIR
-        self.dest_dir = settings.TEST_DEST_DIR
+        self.src_dir = settings.SRC_DIR
+        self.tmp_dir = settings.TMP_DIR
+        self.dest_dir = settings.DEST_DIR
         if isdir(self.src_dir):
             shutil.rmtree(self.src_dir)
         shutil.copytree(bag_fixture_dir, self.src_dir)
@@ -65,167 +61,67 @@ class SIPAssemblyTest(TestCase):
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Processing SIPs ***')
-            assembly = SIPAssembler(dirs={'src': self.src_dir,
-                                          'tmp': self.tmp_dir,
-                                          'dest': self.dest_dir}).run()
+            assembly = SIPAssembler().run()
             self.assertNotEqual(False, assembly)
 
     def cleanup_sip(self):
         print('*** Cleaning up ***')
         for sip in SIP.objects.all():
             CleanupRoutine(
-                sip.bag_identifier, dirs={
-                    "dest": self.dest_dir}).run()
+                sip.bag_identifier).run()
         self.assertEqual(0, len(listdir(self.dest_dir)))
 
     def archivematica_views(self):
-        with assembly_vcr.use_cassette('archivematica.json'):
-            print('*** Starting transfer ***')
-            request = self.factory.post(reverse('create-transfer'))
-            response = CreatePackageView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                1,
-                "Only one transfer should be started")
-=======
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 1, "Only one transfer should be started")
->>>>>>> master
-        with assembly_vcr.use_cassette('archivematica_cleanup.json'):
-            print('*** Cleaning up transfers ***')
-            request = self.factory.post(reverse('remove-transfers'))
-            response = RemoveCompletedTransfersView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                0,
-                "Wrong number of objects processed")
-            print('*** Cleaning up ingests ***')
-            request = self.factory.post(reverse('remove-ingests'))
-            response = RemoveCompletedIngestsView.as_view()(request)
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                0,
-                "Wrong number of objects processed")
-=======
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
-            print('*** Cleaning up ingests ***')
-            request = self.factory.post(reverse('remove-ingests'))
-            response = RemoveCompletedIngestsView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 0, "Wrong number of objects processed")
->>>>>>> master
+        for cassette, view_str, view, count in [
+                ('archivematica.json', 'create-transfer', CreatePackageView, 1),
+                ('archivematica_cleanup.json', 'remove-transfers', RemoveCompletedTransfersView, 0),
+                ('archivematica_cleanup.json', 'remove-ingests', RemoveCompletedIngestsView, 0)]:
+            with assembly_vcr.use_cassette(cassette):
+                request = self.factory.post(reverse(view_str))
+                response = view.as_view()(request)
+                self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
+                self.assertEqual(response.data['count'], count, "Only one transfer should be started")
 
     def request_cleanup(self):
         print('*** Requesting cleanup ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
-            cleanup = CleanupRequester(
-                'http://ursa-major-web:8005/cleanup/').run()
+            cleanup = CleanupRequester().run()
             self.assertNotEqual(False, cleanup)
 
     def run_view(self):
         with assembly_vcr.use_cassette('process_sip.json'):
             print('*** Test run view ***')
-            request = self.factory.post(
-                reverse('assemble-sip'), {"test": True})
+            request = self.factory.post(reverse('assemble-sip'))
             response = SIPAssemblyView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'], len(
-                    SIP.objects.filter(
-                        process_status=SIP.CREATED)), "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.CREATED)), "Wrong number of objects processed")
->>>>>>> master
 
     def cleanup_view(self):
         print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
             request = self.factory.post(
-                reverse('cleanup'), data={
-                    "test": True, "identifier": sip.bag_identifier})
+                reverse('cleanup'), data={"identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'],
-                1,
-                "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")
->>>>>>> master
 
     def request_cleanup_view(self):
         print('*** Test request cleanup view ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
             request = self.factory.post(reverse('request-cleanup'))
             response = CleanupRequestView.as_view()(request)
-<<<<<<< HEAD
-            self.assertEqual(
-                response.status_code,
-                200,
-                "Response error: {}".format(
-                    response.data))
-            self.assertEqual(
-                response.data['count'], len(
-                    SIP.objects.filter(
-                        process_status=SIP.APPROVED)), "Wrong number of objects processed")
-=======
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.APPROVED)), "Wrong number of objects processed")
->>>>>>> master
 
     def schema(self):
         print('*** Getting schema view ***')
         schema = self.client.get(reverse('schema'))
-<<<<<<< HEAD
-        self.assertEqual(
-            schema.status_code,
-            200,
-            "Response error: {}".format(schema))
-=======
         self.assertEqual(schema.status_code, 200, "Response error: {}".format(schema))
->>>>>>> master
 
     def health_check(self):
         print('*** Getting status view ***')
         status = self.client.get(reverse('api_health_ping'))
-<<<<<<< HEAD
-        self.assertEqual(
-            status.status_code,
-            200,
-            "Response error: {}".format(status))
-=======
         self.assertEqual(status.status_code, 200, "Response error: {}".format(status))
->>>>>>> master
 
     def tearDown(self):
         for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
