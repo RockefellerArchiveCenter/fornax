@@ -1,5 +1,5 @@
 amclient==1.1.1
-asterism==0.6.2
+asterism==0.7.2
 bagit==1.8.1
 csvvalidator==1.2
 Django==3.2.4
