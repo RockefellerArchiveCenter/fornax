@@ -2,7 +2,7 @@ amclient==1.1.1
 asterism==0.6.2
 bagit==1.8.1
 csvvalidator==1.2
-Django==3.2
+Django==3.2.1
 djangorestframework==3.12.4
 health-check==3.4.1
 jsonschema==3.2.0
