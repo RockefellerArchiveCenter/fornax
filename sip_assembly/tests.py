@@ -51,7 +51,7 @@ class SIPAssemblyTest(TestCase):
                     reverse('sip-list'), aurora_data, format='json')
                 response = SIPViewSet.as_view(
                     actions={"post": "create"})(request)
-                self.assertEqual(response.status_code, 200, "Wrong HTTP code")
+                self.assertEqual(response.status_code, 201, "Wrong HTTP code")
                 print('Created SIPs')
         self.assertEqual(len(SIP.objects.all()),
                          len(listdir(data_fixture_dir)),
