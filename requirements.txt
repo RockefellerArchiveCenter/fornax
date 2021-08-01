@@ -18,7 +18,7 @@ bagit==1.8.1
     #   asterism
 certifi==2020.12.5
     # via requests
-chardet==3.0.4
+charset-normalizer==2.0.4
     # via requests
 clinner==1.12.3
     # via health-check
@@ -45,8 +45,6 @@ idna==2.8
     # via
     #   requests
     #   yarl
-importlib-metadata==3.10.1
-    # via jsonschema
 jsonschema==3.2.0
     # via -r requirements.in
 multidict==5.1.0
@@ -65,7 +63,7 @@ pyyaml==5.4.1
     # via
     #   health-check
     #   vcrpy
-requests==2.25.1
+requests==2.26.0
     # via
     #   -r requirements.in
     #   amclient
@@ -79,11 +77,6 @@ smmap==4.0.0
     # via gitdb
 sqlparse==0.4.1
     # via django
-typing-extensions==3.7.4.3
-    # via
-    #   asgiref
-    #   importlib-metadata
-    #   yarl
 uritemplate==3.0.1
     # via -r requirements.in
 urllib3==1.25.11
@@ -96,8 +89,6 @@ wrapt==1.12.1
     # via vcrpy
 yarl==1.6.3
     # via vcrpy
-zipp==3.4.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
