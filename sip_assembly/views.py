@@ -1,8 +1,7 @@
 from os.path import join
 
-from asterism.views import BaseServiceView, RoutineView, prepare_response
+from asterism.views import BaseServiceView, RoutineView
 from fornax import settings
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from sip_assembly.models import SIP
 from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
@@ -30,45 +29,16 @@ class SIPViewSet(ModelViewSet):
         return SIPSerializer
 
     def create(self, request):
-        """
-        Allow for post requests from Ursa Major 0.x or 1.x
-        """
-        try:
-            if request.data.get('bag_data'):
-                sip = SIP(
-                    process_status=10,
-                    bag_path=join(
-                        settings.BASE_DIR,
-                        settings.SRC_DIR,
-                        "{}.tar.gz".format(
-                            request.data['identifier'])),
-                    bag_identifier=request.data['identifier'],
-                    # expects bag data json to be in a certain format (Ursa
-                    # Major 1.x)
-                    data=request.data['bag_data'],
-                    # expects origin to be include in POST request (Ursa Major
-                    # 1.x)
-                    origin=request.data['origin']
-                )
-            else:
-                sip = SIP(
-                    process_status=10,
-                    bag_path=join(
-                        settings.BASE_DIR,
-                        settings.SRC_DIR,
-                        "{}.tar.gz".format(
-                            request.data['identifier'])),
-                    bag_identifier=request.data['identifier'],
-                    # expects bag data json to be in a certain format (Ursa
-                    # Major 0.x)
-                    data=request.data
-                )
-            sip.save()
-            return Response(prepare_response(
-                ("SIP created", sip.bag_identifier)), status=200)
-        except Exception as e:
-            return Response(prepare_response(
-                "Error creating SIP: {}".format(str(e))), status=500)
+        """Set data attributes to allow for post requests from Ursa Major 0.x or 1.x."""
+        request.data["process_status"] = SIP.CREATED
+        request.data["bag_path"] = join(
+            settings.BASE_DIR,
+            settings.SRC_DIR,
+            "{}.tar.gz".format(
+                request.data["identifier"]))
+        request.data["bag_identifier"] = request.data["identifier"]
+        request.data["data"] = request.data.get("bag_data")
+        return super().create(request)
 
 
 class CreatePackageView(BaseServiceView):
