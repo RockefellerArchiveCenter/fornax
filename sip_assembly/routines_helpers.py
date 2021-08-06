@@ -99,11 +99,12 @@ def setup_csv_file(filepath):
 
 
 def write_rights_row(bag_dir, filenames, rights_statement, csvwriter):
+    """Creates a row in the rights CSV file for each file and rights statement."""
     for file in filenames:
         for rights_granted in rights_statement.get('rights_granted'):
             csvwriter.writerow(
                 [os.path.join(bag_dir, file).lstrip('/'),
-                 rights_statement.get('rights_basis', ''),
+                 rights_statement.get('rights_basis', '').capitalize(),
                  rights_statement.get('status', ''),
                  rights_statement.get(
                     'determination_date', ''), rights_statement.get(
@@ -143,8 +144,8 @@ def validate_rights_csv(bag_path):
     validator.add_header_check('EX1', 'bad header')
     validator.add_record_length_check('EX2', 'unexpected record length')
     validator.add_value_check(
-        'basis', enumeration('Copyright', 'Statute',
-                             'License', 'Other'), 'EX3', 'invalid basis'
+        'basis', enumeration('copyright', 'Copyright', 'statute', 'Statute',
+                             'license', 'License', 'other', 'Other'), 'EX3', 'invalid basis'
     )
     validator.add_value_check(
         'status', enumeration('copyrighted', 'public domain',
