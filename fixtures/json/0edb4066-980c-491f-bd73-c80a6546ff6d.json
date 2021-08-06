@@ -106,7 +106,7 @@
             "end_date": "2041-06-29",
             "jurisdiction": "us",
             "note": "Work for hire, under copyright until 40 years after creation.",
-            "rights_basis": "Copyright",
+            "rights_basis": "copyright",
             "rights_granted": [
                 {
                     "act": "publish",
@@ -123,7 +123,7 @@
             "end_date": "2011-06-30",
             "note": "Records embargoed for 10 years after date of creation.",
             "other_rights_basis": "Donor",
-            "rights_basis": "Other",
+            "rights_basis": "other",
             "rights_granted": [
                 {
                     "act": "disseminate",
