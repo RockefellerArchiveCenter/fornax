@@ -132,10 +132,8 @@ def get_rights_rows(bag_dir, file, rights_statement):
 
 def get_basis_fields(rights_statement):
     """docstring for get_basis_fields"""
-    basis_values = []
-    for field in ['rights_basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']:
-        basis_values.append(rights_statement.get(field, ''))
-    return basis_values
+    basis_fields = ['rights_basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+    return [rights_statement.get(field, "") for field in basis_fields]
 
 
 def get_grant_restriction(rights_granted):
