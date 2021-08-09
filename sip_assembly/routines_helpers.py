@@ -68,13 +68,11 @@ def create_rights_csv(bag_path, rights_statements):
     filepath = os.path.join(bag_path, 'data', 'metadata', 'rights.csv')
     for rights_statement in rights_statements:
         csvwriter = setup_csv_file(filepath)
-        for (dirpath, dirnames, filenames) in os.walk(
-                os.path.join(bag_path, 'data', 'objects')):
-            write_rights_row(
-                dirpath.split(bag_path)[1],
-                filenames,
-                rights_statement,
-                csvwriter)
+        for (dirpath, dirnames, filenames) in os.walk(os.path.join(bag_path, 'data', 'objects')):
+            for file in filenames:
+                rights_rows = get_rights_rows(dirpath.split(bag_path)[1], file, rights_statement)
+                for rights_row in rights_rows:
+                    csvwriter.writerow(rights_row)
 
 
 def setup_csv_file(filepath):
@@ -98,25 +96,56 @@ def setup_csv_file(filepath):
     return csvwriter
 
 
-def write_rights_row(bag_dir, filenames, rights_statement, csvwriter):
-    """Creates a row in the rights CSV file for each file and rights statement."""
-    for file in filenames:
+def get_rights_rows(bag_dir, file, rights_statement):
+    """Gets rows for each rights statement for a file
+
+    Args:
+        bag_dir (str): path to "objects" directory of bag
+        file (str): filename
+        rights
+
+    """
+    rights_rows = []
+    if len(rights_statement.get('rights_granted')) == 0:
+        rights_row = []
+        rights_row.append(os.path.join(bag_dir, file).lstrip('/'))
+        for basis_value in get_basis_fields(rights_statement):
+            rights_row.append(basis_value)
+        count = 10
+        while count < 15:
+            rights_row.insert(count, '')
+            count += 1
+        rights_rows.append(rights_row)
+    else:
         for rights_granted in rights_statement.get('rights_granted'):
             rights_row = []
             rights_row.append(os.path.join(bag_dir, file).lstrip('/'))
-            rights_row.append(rights_statement.get('rights_basis', '').capitalize())
-            for field in ['status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note']:
-                rights_row.append(rights_statement.get(field, ''))
-            rights_row.append(rights_granted.get('act', ''))
-            grant_restriction = ''
-            if rights_granted.get('restriction'):
-                grant_restriction = rights_granted.get('restriction')
-            elif rights_granted.get('grant_restriction'):
-                grant_restriction = rights_granted.get('grant_restriction')
-            rights_row.append(grant_restriction)
-            for field in ['start_date', 'end_date', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']:
-                rights_row.append(rights_granted.get(field, ''))
-            csvwriter.writerow(rights_row)
+            for basis_value in get_basis_fields(rights_statement):
+                rights_row.append(basis_value)
+            count = 10
+            for grant_value in get_grant_restriction(rights_granted):
+                rights_row.insert(count, grant_value)
+                count += 1
+            rights_rows.append(rights_row)
+    return rights_rows
+
+
+def get_basis_fields(rights_statement):
+    """docstring for get_basis_fields"""
+    basis_values = []
+    for field in ['rights_basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']:
+        basis_values.append(rights_statement.get(field, ''))
+    return basis_values
+
+
+def get_grant_restriction(rights_granted):
+    """docstring for get_grant_restriction"""
+    grant_restriction = ''
+    if rights_granted.get('restriction'):
+        grant_restriction = rights_granted.get('restriction')
+    elif rights_granted.get('grant_restriction'):
+        grant_restriction = rights_granted.get('grant_restriction')
+    return rights_granted['act'], grant_restriction, rights_granted.get('start_date', ''), rights_granted.get('end_date', ''), rights_granted.get('note', '')
 
 
 def validate_rights_csv(bag_path):
