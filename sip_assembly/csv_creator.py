@@ -21,6 +21,7 @@ class CsvCreator:
                 rights_rows = self.get_rights_rows(dirpath, file)
                 for rights_row in rights_rows:
                     csvwriter.writerow(rights_row)
+        self.validate_rights_csv()
 
     def setup_csv_file(self):
         """
