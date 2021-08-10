@@ -83,7 +83,7 @@ class CsvCreator:
         validator.add_value_check('basis', enumeration('copyright', 'Copyright', 'statute', 'Statute', 'license', 'License', 'other', 'Other'), 'EX3', 'invalid basis')
         validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown', ''), 'EX4', 'invalid status')
         for field in ['file', 'note']:
-            validator.add_value_check(field, str, 'EX7', 'field must exist')
+            validator.add_value_check(field, str, 'EX5', 'field must exist')
 
         def check_dates(r):
             for field in [r['determination_date'], r['start_date'],
@@ -95,18 +95,18 @@ class CsvCreator:
                     format = False
                 valid = (format or field == 'OPEN')
             if not valid:
-                raise RecordError('EX8', 'invalid date format')
+                raise RecordError('EX6', 'invalid date format')
         validator.add_record_check(check_dates)
 
         def check_restriction(r):
             grant_fields = ["grant_act", "grant_restriction", "grant_start_date", "grant_end_date", "grant_note"]
             if [g for g in grant_fields if r[g]]:
                 if r["grant_act"].lower() not in ['publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete']:
-                    raise RecordError('EX10', 'invalid act')
+                    raise RecordError('EX7', 'invalid act')
                 elif r["grant_restriction"].lower() not in ["disallow", "conditional", "allow"]:
-                    raise RecordError('EX10', 'invalid restriction')
+                    raise RecordError('EX8', 'invalid restriction')
                 elif not r['grant_note']:
-                    RecordError('EX7', 'field must exist')
+                    RecordError('EX5', 'field must exist')
         validator.add_record_check(check_restriction)
 
         with open(self.csv_filepath, 'r') as csvfile:
