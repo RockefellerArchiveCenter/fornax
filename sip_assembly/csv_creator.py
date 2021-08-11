@@ -49,7 +49,7 @@ class CsvCreator:
                 rights_row.append(path_to_file)
                 for basis_value in self.get_basis_fields(rights_statement):
                     rights_row.append(basis_value)
-                rights_row = rights_row[:10] + ([''] * 5) + rights_row[11:]
+                rights_row = rights_row[:10] + ([''] * 5) + rights_row[10:]
                 rights_rows.append(rights_row)
             else:
                 for rights_granted in rights_statement.get('rights_granted'):
