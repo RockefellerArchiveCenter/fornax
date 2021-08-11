@@ -49,7 +49,8 @@ class CsvCreatorTest(TestCase):
         csv_creator.rights_statements = json_data["bag_data"]["rights_statements"]
         rights_rows = csv_creator.get_rights_rows(join(self.tmp_dir, 'digitization_example', 'data', 'objects'), "sample.txt")
         self.assertEqual(len(rights_rows), 2)
-        self.assertEqual(len(rights_rows[0]), 18)
+        for row in rights_rows:
+            self.assertEqual(len(row), 18)
 
     def tearDown(self):
         if isdir(self.tmp_dir):
