@@ -52,7 +52,8 @@ class CsvCreatorTest(TestCase):
                 self.assertEqual(len(rights_rows), 2)
             elif am_version == "1.12":
                 self.assertEqual(len(rights_rows), 1)
-            self.assertEqual(len(rights_rows[0]), 18)
+            for row in rights_rows:
+                self.assertEqual(len(row), 18)
 
     def tearDown(self):
         if isdir(self.tmp_dir):
