@@ -20,7 +20,7 @@ from .csv_creator import CsvCreator
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
-rights_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'rights_test_json')
+csv_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'csv_creation')
 
 assembly_vcr = vcr.VCR(serializer='json', cassette_library_dir='fixtures/cassettes', record_mode='once', match_on=['path', 'method'], filter_query_parameters=['username', 'password'], filter_headers=['Authorization'],)
 
@@ -28,19 +28,28 @@ assembly_vcr = vcr.VCR(serializer='json', cassette_library_dir='fixtures/cassett
 class CsvCreatorTest(TestCase):
     def setUp(self):
         self.tmp_dir = settings.TMP_DIR
-
         if isdir(self.tmp_dir):
             shutil.rmtree(self.tmp_dir)
         makedirs(self.tmp_dir)
-        shutil.copytree(join(rights_fixture_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"), join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"))
+        for directory in ['aurora_example', 'digitization_example']:
+            shutil.copytree(join(csv_fixture_dir, directory), join(self.tmp_dir, directory))
 
     def test_run(self):
-        """docstring for test_create_rights_csv"""
-        with open(join(rights_fixture_dir, "9267884e-9ec9-43fb-a8f4-ecc8c817cf5b.json"), 'r') as json_file:
+        print(join(csv_fixture_dir, "{}.json".format("aurora_example")))
+        with open(join(csv_fixture_dir, "{}.json".format("aurora_example")), 'r') as json_file:
             json_data = json.load(json_file)
-        self.assertTrue(isdir(join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a")))
-        created_csv = CsvCreator().run(join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"), json_data["rights_statements"])
-        self.assertTrue(created_csv)
+        created_csv = CsvCreator().run(join(self.tmp_dir, "aurora_example"), json_data["bag_data"]["rights_statements"])
+        self.assertEqual(created_csv, "CSV {} created.".format(join(self.tmp_dir, 'aurora_example', 'data', 'metadata', 'rights.csv')))
+
+    def test_get_rights_rows(self):
+        csv_creator = CsvCreator()
+        csv_creator.bag_path = join(self.tmp_dir, 'digitization_example')
+        with open(join(csv_fixture_dir, "{}.json".format("digitization_example")), 'r') as json_file:
+            json_data = json.load(json_file)
+        csv_creator.rights_statements = json_data["bag_data"]["rights_statements"]
+        rights_rows = csv_creator.get_rights_rows(join(self.tmp_dir, 'digitization_example', 'data', 'objects'), "sample.txt")
+        self.assertEqual(len(rights_rows), 2)
+        self.assertEqual(len(rights_rows[0]), 18)
 
     def tearDown(self):
         if isdir(self.tmp_dir):
