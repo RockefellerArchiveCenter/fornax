@@ -33,6 +33,10 @@ class CsvCreator:
         """
         If file already exists, sets mode to append. Otherwise, creates new file and
         writes a header row.
+
+        Returns:
+            csvfile: file object
+            csvwriter csv writer object
         """
         if not path.isfile(self.csv_filepath):
             if not path.exists(path.dirname(self.csv_filepath)):
@@ -46,7 +50,12 @@ class CsvCreator:
         return csvfile, csvwriter
 
     def get_rights_rows(self, dirpath, file):
-        """Gets rows for each rights statement for a file"""
+        """
+        Gets rows (array of arrays) for each rights statement for a file
+
+        Handles rights statements that have 0, 1, or multiple rights granted or restricted
+
+        """
         path_to_file = path.join(dirpath.split(self.bag_path)[1], file).lstrip('/')
         rights_rows = []
         for rights_statement in self.rights_statements:
@@ -68,7 +77,12 @@ class CsvCreator:
         return rights_rows
 
     def get_basis_fields(self, rights_statement):
-        """docstring for get_basis_fields"""
+        """
+        Gets values of rights basis fields from a dictionary and returns an array
+
+        Checks for copyright status field to be represented by 'status' or 'copyright_status' key
+
+        """
         copyright_status = ''
         if rights_statement.get('status'):
             copyright_status = rights_statement.get('status')
@@ -80,7 +94,12 @@ class CsvCreator:
         return basis_values
 
     def get_grant_restriction(self, rights_granted):
-        """docstring for get_grant_restriction"""
+        """
+        Gets values of rights granted fields from a dictionary and returns an array
+
+        Checks for grant or restriction field to be represented by 'restriction' or 'grant_restriction' key
+
+        """
         grant_restriction = ''
         if rights_granted.get('restriction'):
             grant_restriction = rights_granted.get('restriction')
