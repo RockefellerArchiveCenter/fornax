@@ -54,12 +54,7 @@ class CsvCreator:
         return csvfile, csvwriter
 
     def get_rights_rows(self, dirpath, file):
-        """
-        Gets rows (array of arrays) for each rights statement for a file
-
-        Handles rights statements that have 0, 1, or multiple rights granted or restricted
-
-        """
+        """Gets rows (array of arrays) for each rights statement for a file."""
         path_to_file = path.join(dirpath.split(self.bag_path)[1], file).lstrip('/')
         rights_rows = []
         for rights_statement in self.rights_statements:
@@ -75,7 +70,7 @@ class CsvCreator:
 
     def get_basis_fields(self, rights_statement):
         """
-        Gets values of rights basis fields from a dictionary and returns an array
+        Gets values of rights basis fields from a dictionary and returns a list
 
         Checks for copyright status field to be represented by 'status' or 'copyright_status' key
 
