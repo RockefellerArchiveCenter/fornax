@@ -35,21 +35,24 @@ class CsvCreatorTest(TestCase):
             shutil.copytree(join(csv_fixture_dir, directory), join(self.tmp_dir, directory))
 
     def test_run(self):
-        print(join(csv_fixture_dir, "{}.json".format("aurora_example")))
         with open(join(csv_fixture_dir, "{}.json".format("aurora_example")), 'r') as json_file:
             json_data = json.load(json_file)
-        created_csv = CsvCreator().run(join(self.tmp_dir, "aurora_example"), json_data["bag_data"]["rights_statements"])
+        created_csv = CsvCreator("1.11.2").run(join(self.tmp_dir, "aurora_example"), json_data["bag_data"]["rights_statements"])
         self.assertEqual(created_csv, "CSV {} created.".format(join(self.tmp_dir, 'aurora_example', 'data', 'metadata', 'rights.csv')))
 
     def test_get_rights_rows(self):
-        csv_creator = CsvCreator()
-        csv_creator.bag_path = join(self.tmp_dir, 'digitization_example')
-        with open(join(csv_fixture_dir, "{}.json".format("digitization_example")), 'r') as json_file:
-            json_data = json.load(json_file)
-        csv_creator.rights_statements = json_data["bag_data"]["rights_statements"]
-        rights_rows = csv_creator.get_rights_rows(join(self.tmp_dir, 'digitization_example', 'data', 'objects'), "sample.txt")
-        self.assertEqual(len(rights_rows), 2)
-        self.assertEqual(len(rights_rows[0]), 18)
+        for am_version in ["1.12", "1.13.1"]:
+            csv_creator = CsvCreator(am_version)
+            csv_creator.bag_path = join(self.tmp_dir, 'digitization_example')
+            with open(join(csv_fixture_dir, "{}.json".format("digitization_example")), 'r') as json_file:
+                json_data = json.load(json_file)
+            csv_creator.rights_statements = json_data["bag_data"]["rights_statements"]
+            rights_rows = csv_creator.get_rights_rows(join(self.tmp_dir, 'digitization_example', 'data', 'objects'), "sample.txt")
+            if am_version == "1.13.1":
+                self.assertEqual(len(rights_rows), 2)
+            elif am_version == "1.12":
+                self.assertEqual(len(rights_rows), 1)
+            self.assertEqual(len(rights_rows[0]), 18)
 
     def tearDown(self):
         if isdir(self.tmp_dir):

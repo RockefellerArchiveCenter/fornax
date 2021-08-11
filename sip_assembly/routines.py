@@ -79,7 +79,7 @@ class SIPAssembler(ArchivematicaRoutine):
 
             if sip.data['rights_statements']:
                 try:
-                    CsvCreator().run(sip.bag_path, sip.data.get('rights_statements'))
+                    CsvCreator(settings.ARCHIVEMATICA_VERSION).run(sip.bag_path, sip.data.get('rights_statements'))
                 except Exception as e:
                     raise SIPAssemblyError(
                         "Error creating rights.csv: {}".format(e),

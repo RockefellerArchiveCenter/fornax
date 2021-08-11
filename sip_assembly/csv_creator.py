@@ -8,8 +8,11 @@ from csvvalidator import CSVValidator, RecordError, enumeration
 class CsvCreator:
     """Creates and validates Archivematica-compliant CSV containing PREMIS rights"""
 
-    def __init__(self):
+    def __init__(self, am_version):
         self.field_names = ['file', 'basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act', 'grant_restriction', 'grant_start_date', 'grant_end_date', 'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+        self.skip_no_act = True
+        if int(am_version.split(".")[0]) <= 1 and int(am_version.split(".")[1]) >= 13:
+            self.skip_no_act = False
 
     def run(self, bag_path, rights_statements):
         self.bag_path = bag_path
@@ -59,13 +62,15 @@ class CsvCreator:
         path_to_file = path.join(dirpath.split(self.bag_path)[1], file).lstrip('/')
         rights_rows = []
         for rights_statement in self.rights_statements:
-            if len(rights_statement.get('rights_granted')) == 0:
+            if len(rights_statement.get('rights_granted')) == 0 and self.skip_no_act is False:
                 rights_row = []
                 rights_row.append(path_to_file)
                 for basis_value in self.get_basis_fields(rights_statement):
                     rights_row.append(basis_value)
                 rights_row = rights_row[:10] + ([''] * 5) + rights_row[10:]
                 rights_rows.append(rights_row)
+            elif len(rights_statement.get('rights_granted')) == 0 and self.skip_no_act is True:
+                pass
             else:
                 for rights_granted in rights_statement.get('rights_granted'):
                     rights_row = []
