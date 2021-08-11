@@ -69,8 +69,15 @@ class CsvCreator:
 
     def get_basis_fields(self, rights_statement):
         """docstring for get_basis_fields"""
-        basis_fields = ['rights_basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
-        return [rights_statement.get(field, "") for field in basis_fields]
+        copyright_status = ''
+        if rights_statement.get('status'):
+            copyright_status = rights_statement.get('status')
+        elif rights_statement.get('copyright_status'):
+            copyright_status = rights_statement.get('copyright_status')
+        basis_fields = ['rights_basis', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+        basis_values = [rights_statement.get(field, "") for field in basis_fields]
+        basis_values.insert(1, copyright_status)
+        return basis_values
 
     def get_grant_restriction(self, rights_granted):
         """docstring for get_grant_restriction"""
@@ -88,7 +95,6 @@ class CsvCreator:
         validator.add_header_check('EX1', 'bad header')
         validator.add_record_length_check('EX2', 'unexpected record length')
         validator.add_value_check('basis', enumeration('copyright', 'Copyright', 'statute', 'Statute', 'license', 'License', 'other', 'Other'), 'EX3', 'invalid basis')
-        validator.add_value_check('status', enumeration('copyrighted', 'public domain', 'unknown', ''), 'EX4', 'invalid status')
         for field in ['file', 'note']:
             validator.add_value_check(field, str, 'EX5', 'field must exist')
 
@@ -115,6 +121,12 @@ class CsvCreator:
                 elif not r['grant_note']:
                     RecordError('EX5', 'field must exist')
         validator.add_record_check(check_restriction)
+
+        def check_copyright_status(r):
+            if r['basis'].lower() == 'copyright':
+                if r['status'].lower() not in ['copyrighted', 'public domain', 'unknown']:
+                    raise RecordError('EX4', 'invalid copyright status')
+        validator.add_record_check(check_copyright_status)
 
         with open(self.csv_filepath, 'r') as csvfile:
             data = csv.reader(csvfile)
