@@ -16,17 +16,35 @@ from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
                                 RemoveCompletedTransfersView, SIPAssemblyView,
                                 SIPViewSet)
 
+from .csv_creator import CsvCreator
+
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
+rights_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'rights_test_json')
 
-assembly_vcr = vcr.VCR(
-    serializer='json',
-    cassette_library_dir='fixtures/cassettes',
-    record_mode='once',
-    match_on=['path', 'method'],
-    filter_query_parameters=['username', 'password'],
-    filter_headers=['Authorization'],
-)
+assembly_vcr = vcr.VCR(serializer='json', cassette_library_dir='fixtures/cassettes', record_mode='once', match_on=['path', 'method'], filter_query_parameters=['username', 'password'], filter_headers=['Authorization'],)
+
+
+class CsvCreatorTest(TestCase):
+    def setUp(self):
+        self.tmp_dir = settings.TMP_DIR
+
+        if isdir(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
+        makedirs(self.tmp_dir)
+        shutil.copytree(join(rights_fixture_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"), join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"))
+
+    def test_run(self):
+        """docstring for test_create_rights_csv"""
+        with open(join(rights_fixture_dir, "9267884e-9ec9-43fb-a8f4-ecc8c817cf5b.json"), 'r') as json_file:
+            json_data = json.load(json_file)
+        self.assertTrue(isdir(join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a")))
+        created_csv = CsvCreator().run(join(self.tmp_dir, "9de98d3b-709f-418e-941f-b9bdb19dd48a"), json_data["rights_statements"])
+        self.assertTrue(created_csv)
+
+    def tearDown(self):
+        if isdir(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
 
 
 class SIPAssemblyTest(TestCase):
@@ -47,15 +65,11 @@ class SIPAssemblyTest(TestCase):
         for f in listdir(data_fixture_dir):
             with open(join(data_fixture_dir, f), 'r') as json_file:
                 aurora_data = json.load(json_file)
-                request = self.factory.post(
-                    reverse('sip-list'), aurora_data, format='json')
-                response = SIPViewSet.as_view(
-                    actions={"post": "create"})(request)
-                self.assertEqual(response.status_code, 201, "Wrong HTTP code")
-                print('Created SIPs')
-        self.assertEqual(len(SIP.objects.all()),
-                         len(listdir(data_fixture_dir)),
-                         "Incorrect number of SIPs created")
+            request = self.factory.post(reverse('sip-list'), aurora_data, format='json')
+            response = SIPViewSet.as_view(actions={"post": "create"})(request)
+            self.assertEqual(response.status_code, 201, "Wrong HTTP code")
+            print('Created SIPs')
+        self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
         return SIP.objects.all()
 
     def process_sip(self):
@@ -99,8 +113,7 @@ class SIPAssemblyTest(TestCase):
     def cleanup_view(self):
         print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
-            request = self.factory.post(
-                reverse('cleanup'), data={"identifier": sip.bag_identifier})
+            request = self.factory.post(reverse('cleanup'), data={"identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")

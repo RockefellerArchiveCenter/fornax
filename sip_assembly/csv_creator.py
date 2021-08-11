@@ -113,14 +113,12 @@ class CsvCreator:
         validator.add_record_check(check_dates)
 
         def check_restriction(r):
-            grant_fields = ["grant_act", "grant_restriction", "grant_start_date", "grant_end_date", "grant_note"]
+            grant_fields = ['grant_act', 'grant_restriction', 'grant_start_date', 'grant_end_date', 'grant_note']
             if [g for g in grant_fields if r[g]]:
-                if r["grant_act"].lower() not in ['publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete']:
+                if r['grant_act'].lower() not in ['publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete']:
                     raise RecordError('EX7', 'invalid act')
-                elif r["grant_restriction"].lower() not in ["disallow", "conditional", "allow"]:
+                elif r['grant_restriction'].lower() not in ['disallow', 'conditional', 'allow']:
                     raise RecordError('EX8', 'invalid restriction')
-                elif not r['grant_note']:
-                    RecordError('EX5', 'field must exist')
         validator.add_record_check(check_restriction)
 
         def check_copyright_status(r):
@@ -133,4 +131,4 @@ class CsvCreator:
             data = csv.reader(csvfile)
             problems = validator.validate(data)
             if problems:
-                raise Exception(problems)
+                raise Exception("{} errors: {}".format(len(problems), problems))
