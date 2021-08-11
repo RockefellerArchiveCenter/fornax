@@ -101,14 +101,15 @@ class CsvCreator:
         def check_dates(r):
             for field in [r['determination_date'], r['start_date'],
                           r['end_date'], r['grant_start_date'], r['grant_end_date']]:
-                format = True
-                try:
-                    datetime.datetime.strptime(field, '%Y-%m-%d')
-                except ValueError:
-                    format = False
-                valid = (format or field == 'OPEN')
-            if not valid:
-                raise RecordError('EX6', 'invalid date format')
+                if r.get(field):
+                    format = True
+                    try:
+                        datetime.datetime.strptime(field, '%Y-%m-%d')
+                    except ValueError:
+                        format = False
+                    valid = (format or field.lower() == 'open')
+                    if not valid:
+                        raise RecordError('EX6', 'invalid date format')
         validator.add_record_check(check_dates)
 
         def check_restriction(r):
