@@ -9,7 +9,11 @@ class CsvCreator:
     """Creates and validates Archivematica-compliant CSV containing PREMIS rights"""
 
     def __init__(self):
-        self.field_names = ['file', 'basis', 'status', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act', 'grant_restriction', 'grant_start_date', 'grant_end_date', 'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+        self.field_names = [
+            'file', 'basis', 'status', 'determination_date', 'jurisdiction',
+            'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
+            'grant_restriction', 'grant_start_date', 'grant_end_date',
+            'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
 
     def run(self, bag_path, rights_statements):
         self.bag_path = bag_path
@@ -59,21 +63,14 @@ class CsvCreator:
         path_to_file = path.join(dirpath.split(self.bag_path)[1], file).lstrip('/')
         rights_rows = []
         for rights_statement in self.rights_statements:
-            if len(rights_statement.get('rights_granted')) == 0:
+            rights_granted_rows = self.get_grant_restriction_rows(rights_statement['rights_granted'])
+            for rights_granted_row in rights_granted_rows:
                 rights_row = []
                 rights_row.append(path_to_file)
                 for basis_value in self.get_basis_fields(rights_statement):
                     rights_row.append(basis_value)
-                rights_row = rights_row[:10] + ([''] * 5) + rights_row[10:]
+                rights_row[10:10] = rights_granted_row
                 rights_rows.append(rights_row)
-            else:
-                for rights_granted in rights_statement.get('rights_granted'):
-                    rights_row = []
-                    rights_row.append(path_to_file)
-                    for basis_value in self.get_basis_fields(rights_statement):
-                        rights_row.append(basis_value)
-                    rights_row[10:10] = self.get_grant_restriction(rights_granted)
-                    rights_rows.append(rights_row)
         return rights_rows
 
     def get_basis_fields(self, rights_statement):
@@ -88,24 +85,29 @@ class CsvCreator:
             copyright_status = rights_statement.get('status')
         elif rights_statement.get('copyright_status'):
             copyright_status = rights_statement.get('copyright_status')
-        basis_fields = ['rights_basis', 'determination_date', 'jurisdiction', 'start_date', 'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
+        basis_fields = [
+            'rights_basis', 'determination_date', 'jurisdiction', 'start_date',
+            'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value',
+            'doc_id_role']
         basis_values = [rights_statement.get(field, "") for field in basis_fields]
         basis_values.insert(1, copyright_status)
         return basis_values
 
-    def get_grant_restriction(self, rights_granted):
+    def get_grant_restriction_rows(self, rights_granted_list):
         """
-        Gets values of rights granted fields from a dictionary and returns an array
+        Returns a row for each grant or restriction in a rights_granted list. If
+        no grants or restrictions are present, returns one row with five empty strings.
 
         Checks for grant or restriction field to be represented by 'restriction' or 'grant_restriction' key
-
         """
-        grant_restriction = ''
-        if rights_granted.get('restriction'):
-            grant_restriction = rights_granted.get('restriction')
-        elif rights_granted.get('grant_restriction'):
-            grant_restriction = rights_granted.get('grant_restriction')
-        return rights_granted['act'], grant_restriction, rights_granted.get('start_date', ''), rights_granted.get('end_date', ''), rights_granted.get('note', '')
+        if not(len(rights_granted_list)):
+            return [[''] * 5]
+        rows = []
+        for rights_granted in rights_granted_list:
+            grant_restriction = rights_granted.get('restriction') if rights_granted.get('restriction') else rights_granted.get('grant_restriction')
+            rows.append([rights_granted['act'], grant_restriction, rights_granted.get('start_date', ''),
+                         rights_granted.get('end_date', ''), rights_granted.get('note', '')])
+        return rows
 
     def validate_rights_csv(self):
         """Validate a CSV to ensure it complies with Archivematica validation"""
@@ -113,7 +115,10 @@ class CsvCreator:
 
         validator.add_header_check('EX1', 'bad header')
         validator.add_record_length_check('EX2', 'unexpected record length')
-        validator.add_value_check('basis', enumeration('copyright', 'Copyright', 'statute', 'Statute', 'license', 'License', 'other', 'Other'), 'EX3', 'invalid basis')
+        validator.add_value_check(
+            'basis', enumeration(
+                'copyright', 'Copyright', 'statute', 'Statute', 'license',
+                'License', 'other', 'Other'), 'EX3', 'invalid basis')
         for field in ['file', 'note']:
             validator.add_value_check(field, str, 'EX5', 'field must exist')
 
