@@ -15,13 +15,17 @@ class CsvCreator:
         self.bag_path = bag_path
         self.rights_statements = rights_statements
         self.csv_filepath = path.join(bag_path, 'data', 'metadata', 'rights.csv')
-        csvwriter = self.setup_csv_file()
-        for (dirpath, dirnames, filenames) in walk(path.join(self.bag_path, 'data', 'objects')):
-            for file in filenames:
-                rights_rows = self.get_rights_rows(dirpath, file)
-                for rights_row in rights_rows:
-                    csvwriter.writerow(rights_row)
-        self.validate_rights_csv()
+        try:
+            csvfile, csvwriter = self.setup_csv_file()
+            for (dirpath, dirnames, filenames) in walk(path.join(self.bag_path, 'data', 'objects')):
+                for file in filenames:
+                    rights_rows = self.get_rights_rows(dirpath, file)
+                    for rights_row in rights_rows:
+                        csvwriter.writerow(rights_row)
+            csvfile.close()
+            self.validate_rights_csv()
+        except Exception as e:
+            print(e)
 
     def setup_csv_file(self):
         """
@@ -37,7 +41,7 @@ class CsvCreator:
         else:
             csvfile = open(self.csv_filepath, 'a')
             csvwriter = csv.writer(csvfile)
-        return csvwriter
+        return csvfile, csvwriter
 
     def get_rights_rows(self, dirpath, file):
         """Gets rows for each rights statement for a file"""
