@@ -8,6 +8,7 @@ from asterism import bagit_helpers
 from fornax import settings
 from sip_assembly import routines_helpers as helpers
 
+from .csv_creator import CsvCreator
 from .models import SIP
 
 
@@ -78,9 +79,7 @@ class SIPAssembler(ArchivematicaRoutine):
 
             if sip.data['rights_statements']:
                 try:
-                    helpers.create_rights_csv(
-                        sip.bag_path, sip.data.get('rights_statements'))
-                    helpers.validate_rights_csv(sip.bag_path)
+                    CsvCreator(settings.ARCHIVEMATICA_VERSION).run(sip.bag_path, sip.data.get('rights_statements'))
                 except Exception as e:
                     raise SIPAssemblyError(
                         "Error creating rights.csv: {}".format(e),
