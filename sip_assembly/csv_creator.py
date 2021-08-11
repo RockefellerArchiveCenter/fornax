@@ -15,7 +15,7 @@ class CsvCreator:
             'grant_restriction', 'grant_start_date', 'grant_end_date',
             'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
         self.skip_no_act = True
-        if int(am_version.split(".")[0]) <= 1 and int(am_version.split(".")[1]) >= 13:
+        if int(am_version.split(".")[1]) >= 13:
             self.skip_no_act = False
 
     def run(self, bag_path, rights_statements):
@@ -65,15 +65,15 @@ class CsvCreator:
         for rights_statement in self.rights_statements:
             rights_granted_rows = self.get_grant_restriction_rows(rights_statement['rights_granted'])
             for rights_granted_row in rights_granted_rows:
-                if self.skip_no_act is False:
+                if self.skip_no_act is True and rights_granted_row == ['', '', '', '', '']:
+                    pass
+                else:
                     rights_row = []
                     rights_row.append(path_to_file)
                     for basis_value in self.get_basis_fields(rights_statement):
                         rights_row.append(basis_value)
                     rights_row[10:10] = rights_granted_row
                     rights_rows.append(rights_row)
-                elif self.skip_no_act is True and rights_granted_row == [[''] * 5]:
-                    pass
         return rights_rows
 
     def get_basis_fields(self, rights_statement):
