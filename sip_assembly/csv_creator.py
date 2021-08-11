@@ -24,6 +24,8 @@ class CsvCreator:
                         csvwriter.writerow(rights_row)
             csvfile.close()
             self.validate_rights_csv()
+            csvfile.close()
+            return "CSV {} created.".format(self.csv_filepath)
         except Exception as e:
             print(e)
 
