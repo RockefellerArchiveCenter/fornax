@@ -4,24 +4,12 @@ from os.path import isdir, isfile, join
 
 import requests
 from amclient import AMClient, errors
-from asterism import bagit_helpers
+from asterism import bagit_helpers, file_helpers
 from fornax import settings
 from sip_assembly import routines_helpers as helpers
 
 from .csv_creator import CsvCreator
 from .models import SIP
-
-
-class SIPAssemblyError(Exception):
-    pass
-
-
-class SIPActionError(Exception):
-    pass
-
-
-class CleanupError(Exception):
-    pass
 
 
 class ArchivematicaRoutine:
@@ -40,7 +28,7 @@ class ArchivematicaRoutine:
         """Returns a processing configuration file from Archivematica"""
         processing_config = client.get_processing_config()
         if isinstance(processing_config, int):
-            raise SIPAssemblyError(errors.error_lookup(processing_config),)
+            raise Exception(errors.error_lookup(processing_config),)
         return processing_config
 
 
@@ -54,7 +42,7 @@ class SIPAssembler(ArchivematicaRoutine):
         self.dest_dir = settings.DEST_DIR
         for dir in [self.src_dir, self.tmp_dir, self.dest_dir]:
             if not isdir(dir):
-                raise SIPAssemblyError("Directory does not exist", dir)
+                raise Exception("Directory does not exist", dir)
 
     def run(self):
         sip_ids = []
@@ -64,28 +52,10 @@ class SIPAssembler(ArchivematicaRoutine):
                 helpers.copy_to_directory(sip, self.tmp_dir)
                 helpers.extract_all(sip, self.tmp_dir)
                 bagit_helpers.validate(sip.bag_path)
-            except Exception as e:
-                raise SIPAssemblyError(
-                    "Error moving SIP to processing directory: {}".format(e),
-                    sip.bag_identifier)
-
-            try:
                 helpers.move_objects_dir(sip.bag_path)
                 helpers.create_structure(sip.bag_path)
-            except Exception as e:
-                raise SIPAssemblyError(
-                    "Error restructuring SIP: {}".format(e),
-                    sip.bag_identifier)
-
-            if sip.data['rights_statements']:
-                try:
+                if sip.data['rights_statements']:
                     CsvCreator(settings.ARCHIVEMATICA_VERSION).run(sip.bag_path, sip.data.get('rights_statements'))
-                except Exception as e:
-                    raise SIPAssemblyError(
-                        "Error creating rights.csv: {}".format(e),
-                        sip.bag_identifier)
-
-            try:
                 bagit_helpers.update_bag_info(
                     sip.bag_path, {
                         'Internal-Sender-Identifier': sip.bag_identifier})
@@ -93,24 +63,17 @@ class SIPAssembler(ArchivematicaRoutine):
                     sip.bag_path, self.get_processing_config(client))
                 bagit_helpers.update_manifests(sip.bag_path)
                 helpers.create_targz_package(sip)
-            except Exception as e:
-                raise SIPAssemblyError(
-                    "Error updating SIP contents: {}".format(e),
-                    sip.bag_identifier)
-
-            try:
                 helpers.move_to_directory(sip, self.dest_dir)
                 sip.process_status = SIP.ASSEMBLED
                 sip.save()
             except Exception as e:
-                raise SIPAssemblyError(
-                    "Error delivering SIP to Archivematica transfer source: {}".format(
-                        e),
-                    sip.bag_identifier)
+                file_helpers.remove_file_or_dir(join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier)))
+                file_helpers.remove_file_or_dir(join(self.tmp_dir, sip.bag_identifier))
+                raise Exception("Error assembling SIP: {}".format(e), sip.bag_identifier)
 
             sip_ids.append(sip.bag_identifier)
 
-        return "All SIPs assembled.", sip_ids
+        return "All SIPs assembled." if len(sip_ids) else "No SIPS to assemble.", sip_ids
 
 
 class SIPActions(ArchivematicaRoutine):
@@ -153,7 +116,7 @@ class SIPActions(ArchivematicaRoutine):
                                     'close_completed_{}'.format((type)))()
                 dashboards.append(origin)
                 if completed.get('close_failed'):
-                    raise SIPActionError(
+                    raise Exception(
                         "Error removing {} from Archivematica dashboard: {}".format(
                             type, completed['close_failed']))
                 else:
@@ -177,7 +140,7 @@ class CleanupRequester:
                 headers={"Content-Type": "application/json"},
             )
             if r.status_code != 200:
-                raise CleanupError(r.reason, sip.bag_identifier)
+                raise Exception(r.reason, sip.bag_identifier)
             sip.process_status = SIP.CLEANED_UP
             sip.save()
         message = "Requests sent to clean up SIPs." if len(
@@ -192,7 +155,7 @@ class CleanupRoutine:
         self.identifier = identifier
         self.dest_dir = settings.DEST_DIR
         if not self.identifier:
-            raise CleanupError(
+            raise Exception(
                 "No identifier submitted, unable to perform CleanupRoutine.",)
 
     def run(self):
@@ -204,4 +167,4 @@ class CleanupRoutine:
                 return "Transfer removed.", self.identifier
             return "Transfer was not found.", self.identifier
         except Exception as e:
-            raise CleanupError(e, self.identifier)
+            raise Exception(e, self.identifier)
