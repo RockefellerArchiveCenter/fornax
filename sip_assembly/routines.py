@@ -69,6 +69,8 @@ class SIPAssembler(ArchivematicaRoutine):
             except Exception as e:
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier)))
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, sip.bag_identifier))
+                sip.bag_path = join(self.src_dir, "{}.tar.gz".format(sip.bag_identifier))
+                sip.save()
                 raise Exception("Error assembling SIP: {}".format(e), sip.bag_identifier)
 
             sip_ids.append(sip.bag_identifier)
