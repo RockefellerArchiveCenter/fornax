@@ -14,9 +14,8 @@ class CsvCreator:
             'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
             'grant_restriction', 'grant_start_date', 'grant_end_date',
             'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
-        self.skip_no_act = True
-        if int(am_version.split(".")[1]) >= 13:
-            self.skip_no_act = False
+        split_version = am_version.split(".")
+        self.skip_no_act = True if (int(split_version[0]) <= 1 and int(split_version[1]) < 13) else False
 
     def run(self, bag_path, rights_statements):
         self.bag_path = bag_path
