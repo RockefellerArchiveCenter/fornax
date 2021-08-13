@@ -3,34 +3,15 @@ import os
 from asterism import file_helpers
 
 
-def copy_to_directory(sip, dest):
-    """Moves a bag to the `dest` directory and updates the object's bag_path."""
-    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    copied = file_helpers.copy_file_or_dir(sip.bag_path, dest_path)
-    if copied:
-        sip.bag_path = dest_path
-        sip.save()
-
-
-def move_to_directory(sip, dest):
-    """Moves a bag to the `dest` directory and updates the object's bag_path"""
-    dest_path = os.path.join(dest, "{}.tar.gz".format(sip.bag_identifier))
-    moved = file_helpers.move_file_or_dir(sip.bag_path, dest_path)
-    if moved:
-        sip.bag_path = os.path.join(dest_path)
-        sip.save()
-
-
-def extract_all(sip, extract_dir):
+def extract_all(sip_path, sip_identifier, extract_dir):
     """Extracts a tar.gz file to the `extract dir` directory"""
-    ext = os.path.splitext(sip.bag_path)[-1]
+    ext = os.path.splitext(sip_path)[-1]
     if ext in ['.tgz', '.tar.gz', '.gz']:
-        extracted = file_helpers.tar_extract_all(sip.bag_path, extract_dir)
+        extracted = file_helpers.tar_extract_all(sip_path, extract_dir)
         if not extracted:
             raise Exception("Error extracting TAR file.")
-        os.remove(sip.bag_path)
-        sip.bag_path = os.path.join(extract_dir, sip.bag_identifier)
-        sip.save()
+        os.remove(sip_path)
+        return os.path.join(extract_dir, sip_identifier)
     else:
         raise Exception("Unrecognized archive format")
 
@@ -73,10 +54,9 @@ def add_processing_config(bag_path, data):
         f.write(data)
 
 
-def create_targz_package(sip):
+def create_targz_package(sip_path):
     """Creates a compressed archive file from a bag"""
-    tar_path = "{}.tar.gz".format(sip.bag_path)
+    tar_path = "{}.tar.gz".format(sip_path)
     file_helpers.make_tarfile(
-        sip.bag_path, tar_path, compressed=True, remove_src=True)
-    sip.bag_path = tar_path
-    sip.save()
+        sip_path, tar_path, compressed=True, remove_src=True)
+    return tar_path

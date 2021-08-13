@@ -17,7 +17,7 @@ class CsvCreator:
         split_version = am_version.split(".")
         self.skip_no_act = True if (int(split_version[0]) <= 1 and int(split_version[1]) < 13) else False
 
-    def run(self, bag_path, rights_statements):
+    def create_rights_csv(self, bag_path, rights_statements):
         self.bag_path = bag_path
         self.rights_statements = rights_statements
         self.csv_filepath = path.join(bag_path, 'data', 'metadata', 'rights.csv')

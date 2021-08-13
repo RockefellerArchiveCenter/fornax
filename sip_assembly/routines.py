@@ -49,28 +49,28 @@ class SIPAssembler(ArchivematicaRoutine):
         for sip in SIP.objects.filter(process_status=SIP.CREATED):
             client = self.get_client(sip.origin)
             try:
-                helpers.copy_to_directory(sip, self.tmp_dir)
-                helpers.extract_all(sip, self.tmp_dir)
-                bagit_helpers.validate(sip.bag_path)
-                helpers.move_objects_dir(sip.bag_path)
-                helpers.create_structure(sip.bag_path)
+                tmp_path = join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier))
+                file_helpers.copy_file_or_dir(sip.bag_path, tmp_path)
+                extracted_path = helpers.extract_all(tmp_path, sip.bag_identifier, self.tmp_dir)
+                bagit_helpers.validate(extracted_path)
+                helpers.move_objects_dir(extracted_path)
+                helpers.create_structure(extracted_path)
                 if sip.data['rights_statements']:
-                    CsvCreator(settings.ARCHIVEMATICA_VERSION).run(sip.bag_path, sip.data.get('rights_statements'))
-                bagit_helpers.update_bag_info(
-                    sip.bag_path, {
-                        'Internal-Sender-Identifier': sip.bag_identifier})
+                    CsvCreator(settings.ARCHIVEMATICA_VERSION).create_rights_csv(extracted_path, sip.data.get('rights_statements'))
                 helpers.add_processing_config(
-                    sip.bag_path, self.get_processing_config(client))
-                bagit_helpers.update_manifests(sip.bag_path)
-                helpers.create_targz_package(sip)
-                helpers.move_to_directory(sip, self.dest_dir)
+                    extracted_path, self.get_processing_config(client))
+                bagit_helpers.update_bag_info(
+                    extracted_path, {'Internal-Sender-Identifier': sip.bag_identifier})
+                bagit_helpers.update_manifests(extracted_path)
+                packaged_path = helpers.create_targz_package(extracted_path)
+                destination_path = join(self.dest_dir, "{}.tar.gz".format(sip.bag_identifier))
+                file_helpers.move_file_or_dir(packaged_path, destination_path)
                 sip.process_status = SIP.ASSEMBLED
+                sip.bag_path = destination_path
                 sip.save()
             except Exception as e:
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier)))
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, sip.bag_identifier))
-                sip.bag_path = join(self.src_dir, "{}.tar.gz".format(sip.bag_identifier))
-                sip.save()
                 raise Exception("Error assembling SIP: {}".format(e), sip.bag_identifier)
 
             sip_ids.append(sip.bag_identifier)
