@@ -34,11 +34,14 @@ class CsvCreatorTest(TestCase):
         for directory in ['aurora_example', 'digitization_example']:
             shutil.copytree(join(csv_fixture_dir, directory), join(self.tmp_dir, directory))
 
-    def test_run(self):
+    def test_create_rights_csv(self):
         with open(join(csv_fixture_dir, "{}.json".format("aurora_example")), 'r') as json_file:
             json_data = json.load(json_file)
-        created_csv = CsvCreator("1.11.2").run(join(self.tmp_dir, "aurora_example"), json_data["bag_data"]["rights_statements"])
-        self.assertEqual(created_csv, "CSV {} created.".format(join(self.tmp_dir, 'aurora_example', 'data', 'metadata', 'rights.csv')))
+        created_csv = CsvCreator("1.11.2").create_rights_csv(
+            join(self.tmp_dir, "aurora_example"),
+            json_data["bag_data"]["rights_statements"])
+        self.assertEqual(
+            created_csv, "CSV {} created.".format(join(self.tmp_dir, 'aurora_example', 'data', 'metadata', 'rights.csv')))
 
     def test_get_rights_rows(self):
         for am_version in ["1.12", "1.13.1"]:
