@@ -48,6 +48,8 @@ ARCHIVEMATICA = {
   }
 }
 
+ARCHIVEMATICA_VERSION = "1.11.2"
+
 STATIC_ROOT = "/static"
 
 CLEANUP_URL = "http://ursa-major-web:8005/cleanup/"
