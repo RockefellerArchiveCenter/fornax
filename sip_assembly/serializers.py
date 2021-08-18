@@ -9,6 +9,7 @@ class SIPSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'url',
             'bag_identifier',
+            'origin',
             'bag_path',
             'process_status',
             'data',

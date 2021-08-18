@@ -77,25 +77,24 @@ class SIPAssemblyTest(TestCase):
                 makedirs(dir)
 
     def create_sip(self):
-        print('*** Creating new SIPs ***')
         for f in listdir(data_fixture_dir):
             with open(join(data_fixture_dir, f), 'r') as json_file:
                 aurora_data = json.load(json_file)
             request = self.factory.post(reverse('sip-list'), aurora_data, format='json')
             response = SIPViewSet.as_view(actions={"post": "create"})(request)
+            self.assertEqual(response.data["bag_identifier"], aurora_data["identifier"])
+            self.assertEqual(response.data["origin"], aurora_data["origin"])
+            self.assertEqual(response.data["data"], aurora_data["bag_data"])
             self.assertEqual(response.status_code, 201, "Wrong HTTP code")
-            print('Created SIPs')
         self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
         return SIP.objects.all()
 
     def process_sip(self):
         with assembly_vcr.use_cassette('process_sip.json'):
-            print('*** Processing SIPs ***')
             assembly = SIPAssembler().run()
             self.assertNotEqual(False, assembly)
 
     def cleanup_sip(self):
-        print('*** Cleaning up ***')
         for sip in SIP.objects.all():
             CleanupRoutine(
                 sip.bag_identifier).run()
@@ -113,21 +112,18 @@ class SIPAssemblyTest(TestCase):
                 self.assertEqual(response.data['count'], count, "Only one transfer should be started")
 
     def request_cleanup(self):
-        print('*** Requesting cleanup ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
             cleanup = CleanupRequester().run()
             self.assertNotEqual(False, cleanup)
 
     def run_view(self):
         with assembly_vcr.use_cassette('process_sip.json'):
-            print('*** Test run view ***')
             request = self.factory.post(reverse('assemble-sip'))
             response = SIPAssemblyView.as_view()(request)
             self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.CREATED)), "Wrong number of objects processed")
 
     def cleanup_view(self):
-        print('*** Test cleanup view ***')
         for sip in SIP.objects.all():
             request = self.factory.post(reverse('cleanup'), data={"identifier": sip.bag_identifier})
             response = CleanupRoutineView.as_view()(request)
@@ -135,7 +131,6 @@ class SIPAssemblyTest(TestCase):
             self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")
 
     def request_cleanup_view(self):
-        print('*** Test request cleanup view ***')
         with assembly_vcr.use_cassette('request_cleanup.json'):
             request = self.factory.post(reverse('request-cleanup'))
             response = CleanupRequestView.as_view()(request)
@@ -143,12 +138,10 @@ class SIPAssemblyTest(TestCase):
             self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.APPROVED)), "Wrong number of objects processed")
 
     def schema(self):
-        print('*** Getting schema view ***')
         schema = self.client.get(reverse('schema'))
         self.assertEqual(schema.status_code, 200, "Response error: {}".format(schema))
 
     def health_check(self):
-        print('*** Getting status view ***')
         status = self.client.get(reverse('api_health_ping'))
         self.assertEqual(status.status_code, 200, "Response error: {}".format(status))
 
