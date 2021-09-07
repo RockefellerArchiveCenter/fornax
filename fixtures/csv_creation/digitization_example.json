@@ -4,32 +4,32 @@
     "bag_data": {
         "rights_statements": [
             {
-                "note": "Copyright term 120 years from date of creation.",
-                "end_date": "2023-12-31",
-                "start_date": "1961-01-01",
-                "jurisdiction": "us",
-                "rights_basis": "copyright",
-                "rights_granted": [
-
-                ],
-                "copyright_status": "copyrighted",
-                "determination_date": "2021-06-22"
-            },
-            {
-                "note": "These materials have an online embargo period of 50 years.",
-                "end_date": null,
-                "start_date": "2021-01-01",
-                "other_basis": "policy",
                 "rights_basis": "other",
+                "start_date": "2019-01-01",
+                "end_date": null,
+                "basis_note": "These materials may only be accessed in a reading room setting.",
                 "rights_granted": [
                     {
                         "act": "publish",
-                        "note": "",
-                        "end_date": "2013-12-31",
-                        "start_date": "1961-01-01",
-                        "grant_restriction": "disallow"
+                        "grant_restriction": "disallow",
+                        "start_date": "1911-06-12",
+                        "end_date": null,
+                        "granted_note": null
                     }
-                ]
+                ],
+                "other_basis": "donor"
+            },
+            {
+                "rights_basis": "copyright",
+                "start_date": "2031-06-12",
+                "end_date": null,
+                "basis_note": "Copyright term has expired.",
+                "rights_granted": [
+
+                ],
+                "determination_date": "2021-08-02",
+                "jurisdiction": "us",
+                "copyright_status": "public domain"
             }
         ]
     }

@@ -87,11 +87,13 @@ class CsvCreator:
             copyright_status = rights_statement.get('status')
         elif rights_statement.get('copyright_status'):
             copyright_status = rights_statement.get('copyright_status')
+        basis_note = rights_statement.get('basis_note') if rights_statement.get('basis_note') else rights_statement.get('note')
         basis_fields = [
             'rights_basis', 'determination_date', 'jurisdiction', 'start_date',
-            'end_date', 'terms', 'citation', 'note', 'doc_id_type', 'doc_id_value',
+            'end_date', 'terms', 'citation', 'doc_id_type', 'doc_id_value',
             'doc_id_role']
         basis_values = [rights_statement.get(field, "") for field in basis_fields]
+        basis_values.insert(7, basis_note)
         basis_values.insert(1, copyright_status)
         return basis_values
 
@@ -107,8 +109,9 @@ class CsvCreator:
         rows = []
         for rights_granted in rights_granted_list:
             grant_restriction = rights_granted.get('restriction') if rights_granted.get('restriction') else rights_granted.get('grant_restriction')
+            granted_note = rights_granted.get('granted_note') if rights_granted.get('granted_note') else rights_granted.get('note')
             rows.append([rights_granted['act'], grant_restriction, rights_granted.get('start_date', ''),
-                         rights_granted.get('end_date', ''), rights_granted.get('note', '')])
+                         rights_granted.get('end_date', ''), granted_note])
         return rows
 
     def validate_rights_csv(self):
