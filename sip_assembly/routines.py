@@ -28,7 +28,7 @@ class ArchivematicaRoutine:
         """Returns a processing configuration file from Archivematica"""
         processing_config = client.get_processing_config()
         if isinstance(processing_config, int):
-            raise Exception(errors.error_lookup(processing_config),)
+            raise Exception(errors.error_lookup(processing_config), processing_config)
         return processing_config
 
 
@@ -88,23 +88,24 @@ class SIPActions(ArchivematicaRoutine):
             next_queued = SIP.objects.filter(
                 process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
             last_started = next(
-                iter(
-                    SIP.objects.filter(
-                        process_status=SIP.APPROVED).order_by('-last_modified')),
-                None)
+                iter(SIP.objects.filter(process_status=SIP.APPROVED).order_by('-last_modified')), None)
             client = self.get_client(next_queued.origin)
-            if last_started and client.get_unit_status(
-                    last_started.bag_identifier) == 'PROCESSING':
-                msg = "Another transfer is processing, waiting until it finishes.",
-            else:
-                client.transfer_directory = "{}.tar.gz".format(
-                    next_queued.bag_identifier)
-                client.transfer_name = next_queued.bag_identifier
-                client.transfer_type = 'zipped bag'
-                started = client.create_package()
-                next_queued.process_status = SIP.APPROVED
-                next_queued.save()
-                msg = "Transfer started", [started.get('id')]
+            try:
+                if last_started and client.get_unit_status(
+                        last_started.archivematica_uuid) == 'PROCESSING':
+                    msg = "Another transfer is processing, waiting until it finishes.",
+                else:
+                    client.transfer_directory = "{}.tar.gz".format(
+                        next_queued.bag_identifier)
+                    client.transfer_name = next_queued.bag_identifier
+                    client.transfer_type = 'zipped bag'
+                    started = client.create_package()
+                    next_queued.process_status = SIP.APPROVED
+                    next_queued.archivematica_uuid = started.get("id")
+                    next_queued.save()
+                    msg = "Transfer started", [started.get("id")]
+            except Exception as e:
+                raise Exception(str(e), next_queued.bag_identifier)
         return msg
 
     def remove_completed(self, type):
@@ -114,13 +115,12 @@ class SIPActions(ArchivematicaRoutine):
         for origin in settings.ARCHIVEMATICA:
             if settings.ARCHIVEMATICA[origin].get("close_completed"):
                 client = self.get_client(origin)
-                completed = getattr(client,
-                                    'close_completed_{}'.format((type)))()
+                completed = getattr(client, 'close_completed_{}'.format((type)))()
                 dashboards.append(origin)
                 if completed.get('close_failed'):
                     raise Exception(
-                        "Error removing {} from Archivematica dashboard: {}".format(
-                            type, completed['close_failed']))
+                        "Error removing {} from Archivematica dashboard".format(
+                            type), completed['close_failed'])
                 else:
                     all_completed += completed.get('close_succeeded', [])
         return "All completed {} removed from dashboards {}".format(
@@ -139,8 +139,7 @@ class CleanupRequester:
             r = requests.post(
                 settings.CLEANUP_URL,
                 data=json.dumps({"identifier": sip.bag_identifier}),
-                headers={"Content-Type": "application/json"},
-            )
+                headers={"Content-Type": "application/json"})
             if r.status_code != 200:
                 raise Exception(r.reason, sip.bag_identifier)
             sip.process_status = SIP.CLEANED_UP
