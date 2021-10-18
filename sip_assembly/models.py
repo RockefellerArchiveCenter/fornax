@@ -1,4 +1,5 @@
 from asterism.models import BasePackage
+from django.db import models
 
 
 class SIP(BasePackage):
@@ -14,3 +15,4 @@ class SIP(BasePackage):
         (APPROVED, "SIP approved in Archivematica"),
         (CLEANED_UP, "SIP removed from src directory")
     )
+    archivematica_uuid = models.CharField(max_length=255, null=True, blank=True)
