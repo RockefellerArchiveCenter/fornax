@@ -2,6 +2,7 @@ import json
 import shutil
 from os import listdir, makedirs
 from os.path import isdir, join
+from unittest.mock import patch
 
 import vcr
 from django.test import TestCase
@@ -11,10 +12,7 @@ from rest_framework.test import APIRequestFactory
 from sip_assembly.models import SIP
 from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
                                    SIPAssembler)
-from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
-                                CreatePackageView, RemoveCompletedIngestsView,
-                                RemoveCompletedTransfersView, SIPAssemblyView,
-                                SIPViewSet)
+from sip_assembly.views import SIPViewSet
 
 from .csv_creator import CsvCreator
 
@@ -64,6 +62,8 @@ class CsvCreatorTest(TestCase):
 
 
 class SIPAssemblyTest(TestCase):
+
+    # TODO: replace this with fixtures
     def setUp(self):
         self.factory = APIRequestFactory()
         self.src_dir = settings.SRC_DIR
@@ -100,55 +100,10 @@ class SIPAssemblyTest(TestCase):
                 sip.bag_identifier).run()
         self.assertEqual(0, len(listdir(self.dest_dir)))
 
-    def archivematica_views(self):
-        for cassette, view_str, view, count in [
-                ('archivematica.json', 'create-transfer', CreatePackageView, 1),
-                ('archivematica_cleanup.json', 'remove-transfers', RemoveCompletedTransfersView, 0),
-                ('archivematica_cleanup.json', 'remove-ingests', RemoveCompletedIngestsView, 0)]:
-            with assembly_vcr.use_cassette(cassette):
-                request = self.factory.post(reverse(view_str))
-                response = view.as_view()(request)
-                self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-                self.assertEqual(response.data['count'], count, "Only one transfer should be started")
-
     def request_cleanup(self):
         with assembly_vcr.use_cassette('request_cleanup.json'):
             cleanup = CleanupRequester().run()
             self.assertNotEqual(False, cleanup)
-
-    def run_view(self):
-        with assembly_vcr.use_cassette('process_sip.json'):
-            request = self.factory.post(reverse('assemble-sip'))
-            response = SIPAssemblyView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.CREATED)), "Wrong number of objects processed")
-
-    def cleanup_view(self):
-        for sip in SIP.objects.all():
-            request = self.factory.post(reverse('cleanup'), data={"identifier": sip.bag_identifier})
-            response = CleanupRoutineView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], 1, "Wrong number of objects processed")
-
-    def request_cleanup_view(self):
-        with assembly_vcr.use_cassette('request_cleanup.json'):
-            request = self.factory.post(reverse('request-cleanup'))
-            response = CleanupRequestView.as_view()(request)
-            self.assertEqual(response.status_code, 200, "Response error: {}".format(response.data))
-            self.assertEqual(response.data['count'], len(SIP.objects.filter(process_status=SIP.APPROVED)), "Wrong number of objects processed")
-
-    def schema(self):
-        schema = self.client.get(reverse('schema'))
-        self.assertEqual(schema.status_code, 200, "Response error: {}".format(schema))
-
-    def health_check(self):
-        status = self.client.get(reverse('api_health_ping'))
-        self.assertEqual(status.status_code, 200, "Response error: {}".format(status))
-
-    def tearDown(self):
-        for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
-            if isdir(d):
-                shutil.rmtree(d)
 
     def test_sips(self):
         sips = self.create_sip()
@@ -159,10 +114,86 @@ class SIPAssemblyTest(TestCase):
             sip.save()
         self.process_sip()
         self.cleanup_sip()
-        self.archivematica_views()
         self.request_cleanup()
-        self.run_view()
-        self.cleanup_view()
-        self.request_cleanup_view()
-        self.schema()
-        self.health_check()
+
+    def tearDown(self):
+        for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
+            if isdir(d):
+                shutil.rmtree(d)
+
+
+class ViewTests(TestCase):
+    """Tests views."""
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+    def assert_status_code(self, method, url, status_code, data=None):
+        """Asserts that a request returns the expected HTTP status_code."""
+        response = getattr(self.client, method)(url, data, content_type="application/json")
+        self.assertEqual(
+            response.status_code, status_code,
+            f"Unexpected status code {response.status_code} for url {url}")
+        return response
+
+    def test_create_sip_view(self):
+        for f in listdir(data_fixture_dir):
+            with open(join(data_fixture_dir, f), 'r') as json_file:
+                source_data = json.load(json_file)
+                response = self.assert_status_code("post", reverse("sip-list"), 201, data=source_data)
+                self.assertEqual(response.data["bag_identifier"], source_data["identifier"])
+                self.assertEqual(response.data["origin"], source_data["origin"])
+                self.assertEqual(response.data["data"], source_data["bag_data"])
+                self.assertEqual(response.data["process_status"], SIP.CREATED)
+                self.assertEqual(response.data["bag_path"], join(
+                    settings.BASE_DIR,
+                    settings.SRC_DIR,
+                    f"{source_data['identifier']}.tar.gz"))
+
+    @patch('sip_assembly.routines.SIPActions.create_package')
+    def test_archivematica_create_view(self, mock_create):
+        """Tests view which creates a package in Archivematica."""
+        self.assert_status_code("post", reverse("create-transfer"), 200)
+        mock_create.assert_called_once()
+        self.assertEqual(mock_create.call_count, 1)
+
+    @patch('sip_assembly.routines.SIPActions.remove_completed')
+    def test_archivematica_close_transfer_view(self, mock_remove):
+        """Tests view which closes transfers in Archivematica"""
+        self.assert_status_code("post", reverse("remove-transfers"), 200)
+        mock_remove.assert_called_once()
+        mock_remove.assert_called_with('transfers')
+
+    @patch('sip_assembly.routines.SIPActions.remove_completed')
+    def test_archivematica_close_ingests_view(self, mock_remove):
+        """Tests view which closes ingests in Archivematica"""
+        self.assert_status_code("post", reverse("remove-ingests"), 200)
+        mock_remove.assert_called_once()
+        mock_remove.assert_called_with('ingests')
+
+    @patch('sip_assembly.routines.SIPAssembler.__init__')
+    @patch('sip_assembly.routines.SIPAssembler.run')
+    def test_run_view(self, mock_assemble, mock_init):
+        mock_init.return_value = None
+        self.assert_status_code("post", reverse("assemble-sip"), 200)
+        mock_assemble.assert_called_once()
+
+    @patch('sip_assembly.routines.CleanupRoutine.__init__')
+    @patch('sip_assembly.routines.CleanupRoutine.run')
+    def test_cleanup_view(self, mock_cleanup, mock_init):
+        mock_init.return_value = None
+        identifier = "12345"
+        self.assert_status_code("post", reverse("cleanup"), 200, {"identifier": identifier})
+        mock_cleanup.assert_called_once()
+        mock_init.assert_called_with(identifier)
+
+    @patch('sip_assembly.routines.CleanupRequester.run')
+    def test_request_cleanup_view(self, mock_request):
+        self.assert_status_code("post", reverse("request-cleanup"), 200)
+        mock_request.assert_called_once()
+
+    def test_schema_view(self):
+        self.assert_status_code("get", reverse("schema"), 200)
+
+    def test_health_check_view(self):
+        self.assert_status_code("get", reverse("api_health_ping"), 200)
