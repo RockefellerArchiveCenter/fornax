@@ -173,7 +173,8 @@ class ViewTests(TestCase):
 
     @patch('sip_assembly.routines.SIPAssembler.__init__')
     @patch('sip_assembly.routines.SIPAssembler.run')
-    def test_run_view(self, mock_assemble, mock_init):
+    def test_sip_assembly_view(self, mock_assemble, mock_init):
+        """Tests the SIPAssemblyView."""
         mock_init.return_value = None
         self.assert_status_code("post", reverse("assemble-sip"), 200)
         mock_assemble.assert_called_once()
@@ -181,6 +182,7 @@ class ViewTests(TestCase):
     @patch('sip_assembly.routines.CleanupRoutine.__init__')
     @patch('sip_assembly.routines.CleanupRoutine.run')
     def test_cleanup_view(self, mock_cleanup, mock_init):
+        """Tests the CleanupRoutineView."""
         mock_init.return_value = None
         identifier = "12345"
         self.assert_status_code("post", reverse("cleanup"), 200, {"identifier": identifier})
@@ -189,11 +191,14 @@ class ViewTests(TestCase):
 
     @patch('sip_assembly.routines.CleanupRequester.run')
     def test_request_cleanup_view(self, mock_request):
+        """Tests the CleanupRequestView."""
         self.assert_status_code("post", reverse("request-cleanup"), 200)
         mock_request.assert_called_once()
 
     def test_schema_view(self):
+        """Tests the OpenAPI schema view."""
         self.assert_status_code("get", reverse("schema"), 200)
 
     def test_health_check_view(self):
+        """Tests the health check view."""
         self.assert_status_code("get", reverse("api_health_ping"), 200)
