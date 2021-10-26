@@ -1,29 +1,30 @@
 import json
+import random
 import shutil
+import tarfile
 from os import listdir, makedirs
-from os.path import isdir, join
+from os.path import basename, isdir, isfile, join
 from unittest.mock import patch
 
-import vcr
+import bagit
 from django.test import TestCase
 from django.urls import reverse
 from fornax import settings
-from rest_framework.test import APIRequestFactory
-from sip_assembly.models import SIP
-from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
-                                   SIPAssembler)
-from sip_assembly.views import SIPViewSet
 
 from .csv_creator import CsvCreator
+from .models import SIP
+from .routines import (CleanupRequester, CleanupRoutine, SIPActions,
+                       SIPAssembler)
+from .routines_helpers import extract_all
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 csv_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'csv_creation')
 
-assembly_vcr = vcr.VCR(serializer='json', cassette_library_dir='fixtures/cassettes', record_mode='once', match_on=['path', 'method'], filter_query_parameters=['username', 'password'], filter_headers=['Authorization'],)
 
+class CsvCreatorTests(TestCase):
+    """Tests CSV creation."""
 
-class CsvCreatorTest(TestCase):
     def setUp(self):
         self.tmp_dir = settings.TMP_DIR
         if isdir(self.tmp_dir):
@@ -61,72 +62,147 @@ class CsvCreatorTest(TestCase):
             shutil.rmtree(self.tmp_dir)
 
 
-class SIPAssemblyTest(TestCase):
+class RoutineTests(TestCase):
+    """Tests the routines."""
 
-    # TODO: replace this with fixtures
+    fixtures = ["fixtures/initial.json"]
+
     def setUp(self):
-        self.factory = APIRequestFactory()
-        self.src_dir = settings.SRC_DIR
-        self.tmp_dir = settings.TMP_DIR
-        self.dest_dir = settings.DEST_DIR
-        if isdir(self.src_dir):
-            shutil.rmtree(self.src_dir)
-        shutil.copytree(bag_fixture_dir, self.src_dir)
-        for dir in [self.tmp_dir, self.dest_dir]:
+        if isdir(settings.SRC_DIR):
+            shutil.rmtree(settings.SRC_DIR)
+        shutil.copytree(bag_fixture_dir, settings.SRC_DIR)
+        for dir in [settings.TMP_DIR, settings.DEST_DIR]:
             if not isdir(dir):
                 makedirs(dir)
 
-    def create_sip(self):
-        for f in listdir(data_fixture_dir):
-            with open(join(data_fixture_dir, f), 'r') as json_file:
-                aurora_data = json.load(json_file)
-            request = self.factory.post(reverse('sip-list'), aurora_data, format='json')
-            response = SIPViewSet.as_view(actions={"post": "create"})(request)
-            self.assertEqual(response.data["bag_identifier"], aurora_data["identifier"])
-            self.assertEqual(response.data["origin"], aurora_data["origin"])
-            self.assertEqual(response.data["data"], aurora_data["bag_data"])
-            self.assertEqual(response.status_code, 201, "Wrong HTTP code")
-        self.assertEqual(len(SIP.objects.all()), len(listdir(data_fixture_dir)), "Incorrect number of SIPs created")
-        return SIP.objects.all()
-
-    def process_sip(self):
-        with assembly_vcr.use_cassette('process_sip.json'):
-            assembly = SIPAssembler().run()
-            self.assertNotEqual(False, assembly)
-
-    def cleanup_sip(self):
+    def set_process_status(self, status):
         for sip in SIP.objects.all():
-            CleanupRoutine(
-                sip.bag_identifier).run()
-        self.assertEqual(0, len(listdir(self.dest_dir)))
-
-    def request_cleanup(self):
-        with assembly_vcr.use_cassette('request_cleanup.json'):
-            cleanup = CleanupRequester().run()
-            self.assertNotEqual(False, cleanup)
-
-    def test_sips(self):
-        sips = self.create_sip()
-        for sip in sips:
-            sip.bag_path = join(
-                self.src_dir, "{}.tar.gz".format(
-                    sip.bag_identifier))
+            sip.process_status = status
             sip.save()
-        self.process_sip()
-        self.cleanup_sip()
-        self.request_cleanup()
+
+    def assert_files_not_removed(self, sip):
+        """Asserts that existing files are not preserved and moved to the correct directory."""
+        source_tar = tarfile.open(join(bag_fixture_dir, f"{sip.bag_identifier}.tar.gz"))
+        processed_tar = tarfile.open(join(settings.DEST_DIR, f"{sip.bag_identifier}.tar.gz"))
+        source_members = source_tar.getnames()
+        processed_members = processed_tar.getnames()
+        for source_dir, processed_dir in [
+                (f"{sip.bag_identifier}/data/metadata/submissionDocumentation/", f"{sip.bag_identifier}/data/objects/metadata/submissionDocumentation/"),
+                (f"{sip.bag_identifier}/objects/", f"{sip.bag_identifier}/data/objects/")]:
+            source_files = [basename(m) for m in source_members if source_dir in m]
+            processed_files = [basename(p) for p in processed_members if processed_dir in p]
+            self.assertTrue(all([f in processed_files for f in source_files]))
+
+    @patch("sip_assembly.routines.AMClient.get_processing_config")
+    @patch("asterism.file_helpers.remove_file_or_dir")
+    def test_process_sip(self, mock_remove_file_or_dir, mock_processing_config):
+        self.set_process_status(SIP.CREATED)
+        with open(join("processing_configs", "processingMCP.xml"), "r") as config_file:
+            config_contents = config_file.read()
+        mock_processing_config.return_value = config_contents
+        message, sip_ids = SIPAssembler().run()
+        self.assertEqual(message, "All SIPs assembled.")
+        self.assertEqual(len(sip_ids), len(SIP.objects.all()))
+        for sip in SIP.objects.all():
+            self.assertEqual(sip.process_status, SIP.ASSEMBLED)
+            self.assertEqual(join(settings.DEST_DIR, f"{sip.bag_identifier}.tar.gz"), sip.bag_path)
+            self.assertTrue(isfile(sip.bag_path))
+            self.assert_files_not_removed(sip)
+        for sip_path in listdir(settings.DEST_DIR):
+            sip_identifier = sip_path.split(".")[0]
+            extracted_path = extract_all(join(settings.DEST_DIR, sip_path), sip_identifier, settings.DEST_DIR)
+            self.assertTrue(isfile(join(extracted_path, "processingMCP.xml")))
+            bag = bagit.Bag(extracted_path)
+            self.assertEqual(sip_identifier, bag.info["Internal-Sender-Identifier"])
+
+        self.set_process_status(SIP.CREATED)
+        mock_processing_config.side_effect = Exception()
+        with self.assertRaises(Exception) as e:
+            SIPAssembler().run()
+        self.assertIn("Error assembling SIP", str(e.exception))
+        self.assertEqual(mock_remove_file_or_dir.call_count, 2)
+
+    def test_cleanup_sip(self):
+        """Asserts that the CleanupRoutine removes binaries and does not throw
+        an exception if a bag has already been cleaned up."""
+        shutil.rmtree(settings.DEST_DIR)
+        shutil.copytree(bag_fixture_dir, settings.DEST_DIR)
+        for sip in SIP.objects.all():
+            message, _ = CleanupRoutine(sip.bag_identifier).run()
+            self.assertEqual(message, "Transfer removed.")
+        self.assertEqual(0, len(listdir(settings.DEST_DIR)))
+        for sip in SIP.objects.all():
+            message, _ = CleanupRoutine(sip.bag_identifier).run()
+            self.assertEqual(message, "Transfer was not found.")
+
+    @patch("sip_assembly.routines.requests.post")
+    def test_request_cleanup(self, mock_post):
+        """Asserts that the CleanupRequester returns expected values and handles exceptions."""
+        self.set_process_status(SIP.APPROVED)
+        mock_post.return_value.status_code = 200
+        message, sip_ids = CleanupRequester().run()
+        self.assertEqual(message, "Requests sent to clean up SIPs.")
+        self.assertEqual(len(sip_ids), len(SIP.objects.all()))
+        self.assertTrue(all([s.process_status == SIP.CLEANED_UP for s in SIP.objects.all()]))
+
+        self.set_process_status(SIP.APPROVED)
+        mock_post.return_value.status_code = 400
+        reason = "foobar"
+        mock_post.return_value.reason = reason
+        with self.assertRaises(Exception) as e:
+            message, sip_ids = CleanupRequester().run()
+        self.assertIn(reason, str(e.exception))
+
+    @patch("sip_assembly.routines.AMClient.get_unit_status")
+    @patch("sip_assembly.routines.AMClient.create_package")
+    def test_create_package(self, mock_create, mock_status):
+        """Asserts packge is successfully created if another package is not
+        processing in Archivematica."""
+        self.set_process_status(SIP.ASSEMBLED)
+        mock_create.return_value = {"id": "12345"}
+        mock_status.return_value = "STORED"
+        message, sip_ids = SIPActions().create_package()
+        self.assertEqual(message, "Transfer started")
+        self.assertEqual(sip_ids, ["12345"])
+        mock_create.assert_called_once()
+        mock_create.assert_called_with()
+
+        self.set_process_status(SIP.ASSEMBLED)
+        last_started = random.choice(SIP.objects.all())
+        last_started.process_status = SIP.APPROVED
+        last_started.save()
+        mock_status.return_value = "PROCESSING"
+        message, sip_ids = SIPActions().create_package()
+        self.assertEqual(message, "Another transfer is processing, waiting until it finishes.")
+        self.assertEqual(sip_ids, None)
+
+    @patch("sip_assembly.routines.AMClient.close_completed_transfers")
+    @patch("sip_assembly.routines.AMClient.close_completed_ingests")
+    def test_remove_completed(self, mock_close_ingests, mock_close_transfers):
+        """Asserts completed transfers and ingests are closed and exceptions are handled."""
+        mock_close_ingests.return_value = {}
+        mock_close_transfers.return_value = {}
+
+        SIPActions().remove_completed("transfers")
+        self.assertEqual(mock_close_transfers.call_count, 3)
+
+        SIPActions().remove_completed("ingests")
+        self.assertEqual(mock_close_ingests.call_count, 3)
+
+        mock_close_ingests.return_value = {"close_failed": "12345"}
+        with self.assertRaises(Exception) as e:
+            SIPActions().remove_completed("ingests")
+        self.assertIn("Error removing ingests from Archivematica dashboard", str(e.exception))
+        self.assertIn("12345", str(e.exception))
 
     def tearDown(self):
-        for d in [self.src_dir, self.tmp_dir, self.dest_dir]:
+        for d in [settings.SRC_DIR, settings.TMP_DIR, settings.DEST_DIR]:
             if isdir(d):
                 shutil.rmtree(d)
 
 
 class ViewTests(TestCase):
     """Tests views."""
-
-    def setUp(self):
-        self.factory = APIRequestFactory()
 
     def assert_status_code(self, method, url, status_code, data=None):
         """Asserts that a request returns the expected HTTP status_code."""

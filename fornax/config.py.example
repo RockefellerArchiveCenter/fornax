@@ -36,7 +36,7 @@ ARCHIVEMATICA = {
     "api_key": "test",
     "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
     "processing_config": "automated",
-    "close_completed": False,
+    "close_completed": True,
   },
   "legacy_digital": {
     "baseurl": "http://archivematica-dashboard:8000",
@@ -44,7 +44,7 @@ ARCHIVEMATICA = {
     "api_key": "test",
     "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
     "processing_config": "automated",
-    "close_completed": False,
+    "close_completed": True,
   }
 }
 
