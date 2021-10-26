@@ -1,0 +1,670 @@
+[{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 4,
+    "codename": "add_user"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 4,
+    "codename": "change_user"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 4,
+    "codename": "delete_user"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 4,
+    "codename": "view_user"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 5,
+    "codename": "add_contenttype"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 5,
+    "codename": "change_contenttype"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 5,
+    "codename": "delete_contenttype"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 5,
+    "codename": "view_contenttype"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 6,
+    "codename": "add_session"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 6,
+    "codename": "change_session"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 6,
+    "codename": "delete_session"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 6,
+    "codename": "view_session"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add sip",
+    "content_type": 7,
+    "codename": "add_sip"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change sip",
+    "content_type": 7,
+    "codename": "change_sip"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete sip",
+    "content_type": 7,
+    "codename": "delete_sip"
+  }
+}, {
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view sip",
+    "content_type": 7,
+    "codename": "view_sip"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+}, {
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "sip_assembly",
+    "model": "sip"
+  }
+}, {
+  "model": "sip_assembly.sip",
+  "pk": 1,
+  "fields": {
+    "bag_identifier": "0edb4066-980c-491f-bd73-c80a6546ff6d",
+    "bag_path": "/src/0edb4066-980c-491f-bd73-c80a6546ff6d.tar.gz",
+    "type": null,
+    "origin": "aurora",
+    "process_status": 10,
+    "data": {
+      "url": "http://localhost:8000/api/transfers/30/",
+      "events": [{
+        "url": "http://localhost:8000/api/events/176/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer sent to archival storage"
+        },
+        "endTime": "2018-09-19 14:20:31.890557+00:00",
+        "summary": "Transfer accessioned"
+      }, {
+        "url": "http://localhost:8000/api/events/152/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer staged for accessioning"
+        },
+        "endTime": "2018-09-19 14:19:17.312131+00:00",
+        "summary": "Transfer accepted by appraisal archivist"
+      }, {
+        "url": "http://localhost:8000/api/events/108/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer staged for appraisal"
+        },
+        "endTime": "2018-09-19 14:18:55.172597+00:00",
+        "summary": "Transfer passed all validation"
+      }, {
+        "url": "http://localhost:8000/api/events/107/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer staged for appraisal"
+        },
+        "endTime": "2018-09-19 14:18:55.169971+00:00",
+        "summary": "Transfer passed BagIt Profile and datatype validation"
+      }, {
+        "url": "http://localhost:8000/api/events/106/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer staged for BagIt Profile validation"
+        },
+        "endTime": "2018-09-19 14:18:55.090578+00:00",
+        "summary": "Transfer passed BagIt validation"
+      }, {
+        "url": "http://localhost:8000/api/events/105/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/30/",
+        "result": {
+          "name": "Transfer staged for BagIt validation"
+        },
+        "endTime": "2018-09-19 14:18:55.080080+00:00",
+        "summary": "Transfer saved"
+      }],
+      "parents": [],
+      "metadata": {
+        "title": "Photo shoots",
+        "date_end": "2001-06-30T00:00:00-04:00",
+        "language": ["eng", "spa"],
+        "bag_count": "",
+        "date_start": "1982-07-06T00:00:00-04:00",
+        "record_type": "communications and publications",
+        "bagging_date": "2017-12-11T20:26:23.983048-05:00",
+        "payload_oxum": "249376.6",
+        "record_creators": [{
+          "name": "Communications staff",
+          "type": "organization"
+        }],
+        "external_identifier": "records-2017-12-11T20:26:23.983048",
+        "source_organization": "Test Organization",
+        "bag_group_identifier": "",
+        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/",
+        "internal_sender_description": "Communications and publications from the foundation's communications department"
+      },
+      "file_size": "254",
+      "file_type": "TAR",
+      "identifier": "0edb4066-980c-491f-bd73-c80a6546ff6d",
+      "bag_it_name": "communications2",
+      "collections": [],
+      "created_time": "2018-09-19T10:18:55.076140-04:00",
+      "organization": "http://localhost:8000/api/orgs/1/",
+      "modified_time": "2018-09-19T10:20:31.892975-04:00",
+      "appraisal_note": null,
+      "process_status": 75,
+      "rights_statements": [{
+        "note": "Work for hire, under copyright until 40 years after creation.",
+        "status": "copyrighted",
+        "end_date": "2041-06-29",
+        "start_date": "1982-07-06",
+        "jurisdiction": "us",
+        "rights_basis": "copyright",
+        "rights_granted": [{
+          "act": "publish",
+          "note": "Records under copyright may not be republished without permission from the copyright holder.",
+          "end_date": "2041-06-29",
+          "start_date": "1982-07-06",
+          "restriction": "disallow"
+        }],
+        "determination_date": "2018-09-19"
+      }, {
+        "note": "Records embargoed for 10 years after date of creation.",
+        "end_date": "2011-06-30",
+        "start_date": "1982-07-06",
+        "rights_basis": "other",
+        "rights_granted": [{
+          "act": "disseminate",
+          "note": "Records are open for research after expiration of embargo period.",
+          "end_date": "2001-06-30",
+          "start_date": "1992-07-06",
+          "restriction": "allow"
+        }, {
+          "act": "disseminate",
+          "note": "Records are open for research after expiration of embargo period.",
+          "end_date": "2011-06-30",
+          "start_date": "1982-07-06",
+          "restriction": "disallow"
+        }],
+        "other_rights_basis": "Donor"
+      }],
+      "external_identifiers": [],
+      "additional_error_info": null
+    },
+    "created": "2021-10-26T16:23:45.845Z",
+    "last_modified": "2021-10-26T16:23:45.845Z",
+    "archivematica_uuid": null
+  }
+}, {
+  "model": "sip_assembly.sip",
+  "pk": 2,
+  "fields": {
+    "bag_identifier": "1d81a875-0517-4329-9f9d-07f67d099d83",
+    "bag_path": "/src/1d81a875-0517-4329-9f9d-07f67d099d83.tar.gz",
+    "type": null,
+    "origin": "aurora",
+    "process_status": 10,
+    "data": {
+      "url": "http://localhost:8000/api/transfers/18/",
+      "events": [{
+        "url": "http://localhost:8000/api/events/172/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer sent to archival storage"
+        },
+        "endTime": "2018-09-19 14:20:22.394767+00:00",
+        "summary": "Transfer accessioned"
+      }, {
+        "url": "http://localhost:8000/api/events/150/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer staged for accessioning"
+        },
+        "endTime": "2018-09-19 14:19:16.961432+00:00",
+        "summary": "Transfer accepted by appraisal archivist"
+      }, {
+        "url": "http://localhost:8000/api/events/63/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer staged for appraisal"
+        },
+        "endTime": "2018-09-19 14:18:53.162568+00:00",
+        "summary": "Transfer passed all validation"
+      }, {
+        "url": "http://localhost:8000/api/events/62/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer staged for appraisal"
+        },
+        "endTime": "2018-09-19 14:18:53.158277+00:00",
+        "summary": "Transfer passed BagIt Profile and datatype validation"
+      }, {
+        "url": "http://localhost:8000/api/events/61/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer staged for BagIt Profile validation"
+        },
+        "endTime": "2018-09-19 14:18:53.059240+00:00",
+        "summary": "Transfer passed BagIt validation"
+      }, {
+        "url": "http://localhost:8000/api/events/60/",
+        "type": "Accept",
+        "object": "http://localhost:8000/api/transfers/18/",
+        "result": {
+          "name": "Transfer staged for BagIt validation"
+        },
+        "endTime": "2018-09-19 14:18:53.044426+00:00",
+        "summary": "Transfer saved"
+      }],
+      "parents": [],
+      "metadata": {
+        "title": "Supporting records for Board meetings",
+        "date_end": "2001-06-30T00:00:00-04:00",
+        "language": ["eng"],
+        "bag_count": "",
+        "date_start": "1982-07-06T00:00:00-04:00",
+        "record_type": "board materials",
+        "bagging_date": "2017-12-11T20:24:10.772070-05:00",
+        "payload_oxum": "249376.6",
+        "record_creators": [{
+          "name": "Office of Important Affairs",
+          "type": "organization"
+        }],
+        "external_identifier": "records-2017-12-11T20:24:10.772070",
+        "source_organization": "Test Organization",
+        "bag_group_identifier": "",
+        "bagit_profile_identifier": "http://localhost:8000/api/bagit_profiles/1/",
+        "internal_sender_description": "Board materials from the foundation's board meetings."
+      },
+      "file_size": "254",
+      "file_type": "ZIP",
+      "identifier": "1d81a875-0517-4329-9f9d-07f67d099d83",
+      "bag_it_name": "board_records4",
+      "collections": [],
+      "created_time": "2018-09-19T10:18:53.024498-04:00",
+      "organization": "http://localhost:8000/api/orgs/1/",
+      "modified_time": "2018-09-19T10:20:22.396734-04:00",
+      "appraisal_note": null,
+      "process_status": 75,
+      "rights_statements": [{
+        "note": "Work for hire, under copyright until 40 years after creation.",
+        "status": "copyrighted",
+        "end_date": "2041-06-29",
+        "start_date": "1982-07-06",
+        "jurisdiction": "us",
+        "rights_basis": "Copyright",
+        "rights_granted": [{
+          "act": "publish",
+          "note": "Records under copyright may not be republished without permission from the copyright holder.",
+          "end_date": "2041-06-29",
+          "start_date": "1982-07-06",
+          "restriction": "disallow"
+        }],
+        "determination_date": "2018-09-19"
+      }, {
+        "note": "Records embargoed for 10 years after date of creation.",
+        "end_date": "2011-06-30",
+        "start_date": "1982-07-06",
+        "rights_basis": "Other",
+        "rights_granted": [{
+          "act": "disseminate",
+          "note": "Records are open for research after expiration of embargo period.",
+          "end_date": "2001-06-30",
+          "start_date": "1992-07-06",
+          "restriction": "allow"
+        }, {
+          "act": "disseminate",
+          "note": "Records are open for research after expiration of embargo period.",
+          "end_date": "2011-06-30",
+          "start_date": "1982-07-06",
+          "restriction": "disallow"
+        }],
+        "other_rights_basis": "Donor"
+      }],
+      "external_identifiers": [],
+      "additional_error_info": null
+    },
+    "created": "2021-10-26T16:24:15.254Z",
+    "last_modified": "2021-10-26T16:24:15.255Z",
+    "archivematica_uuid": null
+  }
+}, {
+  "model": "sip_assembly.sip",
+  "pk": 3,
+  "fields": {
+    "bag_identifier": "6810fd48-fe82-4bee-b254-64838f68f1e0",
+    "bag_path": "/src/6810fd48-fe82-4bee-b254-64838f68f1e0.tar.gz",
+    "type": null,
+    "origin": "aurora",
+    "process_status": 10,
+    "data": {
+      "origin": "digitization",
+      "identifier": "6810fd48-fe82-4bee-b254-64838f68f1e0",
+      "rights_statements": [{
+        "end_date": "2084-12-31",
+        "basis_note": "Copyright term 120 years from date of creation.",
+        "start_date": "1964-01-01",
+        "jurisdiction": "us",
+        "rights_basis": "copyright",
+        "rights_granted": [],
+        "copyright_status": "copyrighted",
+        "determination_date": "2021-06-22"
+      }, {
+        "end_date": null,
+        "basis_note": "These materials have an online embargo period of 50 years.",
+        "start_date": "2021-01-01",
+        "other_basis": "policy",
+        "rights_basis": "other",
+        "rights_granted": [{
+          "act": "publish",
+          "end_date": "2014-12-31",
+          "start_date": "1964-01-01",
+          "granted_note": "",
+          "grant_restriction": "disallow"
+        }]
+      }]
+    },
+    "created": "2021-10-26T16:25:30.342Z",
+    "last_modified": "2021-10-26T16:27:07.784Z",
+    "archivematica_uuid": null
+  }
+}, {
+  "model": "sip_assembly.sip",
+  "pk": 4,
+  "fields": {
+    "bag_identifier": "f78742e5-6af9-4756-a94a-6cd297406d50",
+    "bag_path": "/src/f78742e5-6af9-4756-a94a-6cd297406d50.tar.gz",
+    "type": null,
+    "origin": "aurora",
+    "process_status": 10,
+    "data": {
+      "origin": "digitization",
+      "identifier": "f78742e5-6af9-4756-a94a-6cd297406d50",
+      "rights_statements": [{
+        "end_date": "2076-12-31",
+        "basis_note": "Copyright term 120 years from date of creation.",
+        "start_date": "1955-01-01",
+        "jurisdiction": "us",
+        "rights_basis": "copyright",
+        "rights_granted": [],
+        "copyright_status": "copyrighted",
+        "determination_date": "2021-06-22"
+      }, {
+        "end_date": null,
+        "basis_note": "These materials have an online embargo period of 50 years.",
+        "start_date": "2021-01-01",
+        "other_basis": "policy",
+        "rights_basis": "other",
+        "rights_granted": [{
+          "act": "publish",
+          "end_date": "2006-12-31",
+          "start_date": "1955-01-01",
+          "granted_note": "",
+          "grant_restriction": "disallow"
+        }]
+      }]
+    },
+    "created": "2021-10-26T16:26:23.285Z",
+    "last_modified": "2021-10-26T16:26:23.285Z",
+    "archivematica_uuid": null
+  }
+}, {
+  "model": "sip_assembly.sip",
+  "pk": 5,
+  "fields": {
+    "bag_identifier": "40c40d96-b759-48d0-95c4-f30d3ef5576a",
+    "bag_path": "/src/40c40d96-b759-48d0-95c4-f30d3ef5576a.tar.gz",
+    "type": null,
+    "origin": "aurora",
+    "process_status": 10,
+    "data": {
+      "origin": "digitization",
+      "identifier": "40c40d96-b759-48d0-95c4-f30d3ef5576a",
+      "rights_statements": [{
+        "end_date": "2076-12-31",
+        "basis_note": "Copyright term 120 years from date of creation.",
+        "start_date": "1955-01-01",
+        "jurisdiction": "us",
+        "rights_basis": "copyright",
+        "rights_granted": [],
+        "copyright_status": "copyrighted",
+        "determination_date": "2021-06-22"
+      }, {
+        "end_date": null,
+        "basis_note": "These materials have an online embargo period of 50 years.",
+        "start_date": "2021-01-01",
+        "other_basis": "policy",
+        "rights_basis": "other",
+        "rights_granted": [{
+          "act": "publish",
+          "end_date": "2006-12-31",
+          "start_date": "1955-01-01",
+          "granted_note": "",
+          "grant_restriction": "disallow"
+        }]
+      }]
+    },
+    "created": "2021-10-26T16:26:23.285Z",
+    "last_modified": "2021-10-26T16:26:23.285Z",
+    "archivematica_uuid": null
+  }
+}]
