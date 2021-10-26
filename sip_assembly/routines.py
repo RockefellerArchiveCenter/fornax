@@ -83,7 +83,8 @@ class SIPActions(ArchivematicaRoutine):
 
     def create_package(self):
         """Starts and approves a transfer in Archivematica."""
-        msg = "No transfers to start.",
+
+        msg = "No transfers to start.", None
         if len(SIP.objects.filter(process_status=SIP.ASSEMBLED)):
             next_queued = SIP.objects.filter(
                 process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
@@ -93,7 +94,7 @@ class SIPActions(ArchivematicaRoutine):
             try:
                 if last_started and client.get_unit_status(
                         last_started.archivematica_uuid) == 'PROCESSING':
-                    msg = "Another transfer is processing, waiting until it finishes.",
+                    msg = "Another transfer is processing, waiting until it finishes.", None
                 else:
                     client.transfer_directory = "{}.tar.gz".format(
                         next_queued.bag_identifier)
@@ -128,10 +129,7 @@ class SIPActions(ArchivematicaRoutine):
 
 
 class CleanupRequester:
-    """
-    Requests that cleanup of SIP files in the source directory be performed by
-    another service.
-    """
+    """Requests cleanup of SIP files in the source directory by another service."""
 
     def run(self):
         sip_ids = []
@@ -143,6 +141,7 @@ class CleanupRequester:
             if r.status_code != 200:
                 raise Exception(r.reason, sip.bag_identifier)
             sip.process_status = SIP.CLEANED_UP
+            sip_ids.append(sip.bag_identifier)
             sip.save()
         message = "Requests sent to clean up SIPs." if len(
             sip_ids) else "No SIPS to clean up."
@@ -154,15 +153,14 @@ class CleanupRoutine:
 
     def __init__(self, identifier):
         self.identifier = identifier
-        self.dest_dir = settings.DEST_DIR
         if not self.identifier:
             raise Exception(
-                "No identifier submitted, unable to perform CleanupRoutine.",)
+                "No identifier submitted, unable to perform CleanupRoutine.", None)
 
     def run(self):
         try:
             self.filepath = "{}.tar.gz".format(
-                join(self.dest_dir, self.identifier))
+                join(settings.DEST_DIR, self.identifier))
             if isfile(self.filepath):
                 remove(self.filepath)
                 return "Transfer removed.", self.identifier
