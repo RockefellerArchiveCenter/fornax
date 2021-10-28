@@ -1,0 +1,36 @@
+{
+    "identifier": "89bff2c5-80a3-4a80-a3d6-5a08a2eae043",
+    "origin": "digitization",
+    "bag_data": {
+        "origin": "digitization",
+        "identifier": "89bff2c5-80a3-4a80-a3d6-5a08a2eae043",
+        "rights_statements": [
+            {
+                "end_date": "2086-12-31",
+                "basis_note": "Copyright term 120 years from date of creation.",
+                "start_date": "1966-01-01",
+                "jurisdiction": "us",
+                "rights_basis": "copyright",
+                "rights_granted": [],
+                "copyright_status": "copyrighted",
+                "determination_date": "2021-06-22"
+            },
+            {
+                "end_date": null,
+                "basis_note": "These materials have an online embargo period of 50 years.",
+                "start_date": "2021-01-01",
+                "other_basis": "policy",
+                "rights_basis": "other",
+                "rights_granted": [
+                    {
+                        "act": "publish",
+                        "end_date": "2016-12-31",
+                        "start_date": "1966-01-01",
+                        "granted_note": "",
+                        "grant_restriction": "disallow"
+                    }
+                ]
+            }
+        ]
+    }
+}
