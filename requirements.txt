@@ -42,15 +42,11 @@ gitpython==3.1.18
 health-check==3.4.1
     # via -r requirements.in
 idna==3.2
-    # via
-    #   requests
-    #   yarl
+    # via requests
 importlib-metadata==4.8.1
     # via jsonschema
 jsonschema==3.2.0
     # via -r requirements.in
-multidict==5.1.0
-    # via yarl
 odin==1.7.2
     # via asterism
 psycopg2-binary==2.9.1
@@ -62,9 +58,7 @@ pyrsistent==0.18.0
 pytz==2021.1
     # via django
 pyyaml==5.4.1
-    # via
-    #   health-check
-    #   vcrpy
+    # via health-check
 requests==2.26.0
     # via
     #   -r requirements.in
@@ -74,7 +68,6 @@ six==1.16.0
     #   amclient
     #   jsonschema
     #   odin
-    #   vcrpy
 smmap==4.0.0
     # via gitdb
 sqlparse==0.4.2
@@ -84,19 +77,12 @@ typing-extensions==3.10.0.2
     #   asgiref
     #   gitpython
     #   importlib-metadata
-    #   yarl
 uritemplate==3.0.1
     # via -r requirements.in
 urllib3==1.26.6
     # via
     #   amclient
     #   requests
-vcrpy==4.1.1
-    # via -r requirements.in
-wrapt==1.12.1
-    # via vcrpy
-yarl==1.6.3
-    # via vcrpy
 zipp==3.5.0
     # via importlib-metadata
 
