@@ -102,9 +102,8 @@ class RoutineTests(TestCase):
         mock_processing_config.return_value = config_contents
         message, sip_ids = SIPAssembler().run()
         self.assertEqual(message, "All SIPs assembled.")
-        self.assertEqual(len(sip_ids), len(SIP.objects.all()))
-        for sip in SIP.objects.all():
-            self.assertEqual(sip.process_status, SIP.ASSEMBLED)
+        self.assertEqual(len(sip_ids), 1)
+        for sip in SIP.objects.filter(process_status=SIP.ASSEMBLED):
             self.assertEqual(join(settings.DEST_DIR, f"{sip.bag_identifier}.tar.gz"), sip.bag_path)
             self.assertTrue(isfile(sip.bag_path))
             self.assert_files_not_removed(sip)

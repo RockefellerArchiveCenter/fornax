@@ -45,8 +45,8 @@ class SIPAssembler(ArchivematicaRoutine):
                 raise Exception("Directory does not exist", dir)
 
     def run(self):
-        sip_ids = []
-        for sip in SIP.objects.filter(process_status=SIP.CREATED):
+        sip = SIP.objects.filter(process_status=SIP.CREATED).first()
+        if sip:
             client = self.get_client(sip.origin)
             try:
                 tmp_path = join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier))
@@ -68,14 +68,14 @@ class SIPAssembler(ArchivematicaRoutine):
                 sip.process_status = SIP.ASSEMBLED
                 sip.bag_path = destination_path
                 sip.save()
+                message = "All SIPs assembled.", [sip.bag_identifier]
             except Exception as e:
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, "{}.tar.gz".format(sip.bag_identifier)))
                 file_helpers.remove_file_or_dir(join(self.tmp_dir, sip.bag_identifier))
                 raise Exception("Error assembling SIP: {}".format(e), sip.bag_identifier)
-
-            sip_ids.append(sip.bag_identifier)
-
-        return "All SIPs assembled." if len(sip_ids) else "No SIPS to assemble.", sip_ids
+        else:
+            message = "No SIPS to assemble.", None
+        return message
 
 
 class SIPActions(ArchivematicaRoutine):
