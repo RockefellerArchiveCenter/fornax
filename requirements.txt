@@ -26,7 +26,7 @@ colorlog==3.2.0
     # via clinner
 csvvalidator==1.2
     # via -r requirements.in
-django==3.2.7
+django==3.2.9
     # via
     #   -r requirements.in
     #   asterism
@@ -43,8 +43,6 @@ health-check==3.4.1
     # via -r requirements.in
 idna==3.2
     # via requests
-importlib-metadata==4.8.1
-    # via jsonschema
 jsonschema==3.2.0
     # via -r requirements.in
 odin==1.7.2
@@ -72,19 +70,12 @@ smmap==4.0.0
     # via gitdb
 sqlparse==0.4.2
     # via django
-typing-extensions==3.10.0.2
-    # via
-    #   asgiref
-    #   gitpython
-    #   importlib-metadata
 uritemplate==3.0.1
     # via -r requirements.in
 urllib3==1.26.6
     # via
     #   amclient
     #   requests
-zipp==3.5.0
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
