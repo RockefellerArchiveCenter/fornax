@@ -1,4 +1,4 @@
-amclient==1.1.1
+amclient==1.2.0
 asterism==0.7.2
 bagit==1.8.1
 csvvalidator==1.2

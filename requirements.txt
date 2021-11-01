@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-amclient==1.1.1
+amclient==1.2.0
     # via -r requirements.in
 asgiref==3.4.1
     # via django
@@ -43,8 +43,6 @@ health-check==3.4.1
     # via -r requirements.in
 idna==3.2
     # via requests
-importlib-metadata==4.8.1
-    # via jsonschema
 jsonschema==3.2.0
     # via -r requirements.in
 odin==1.7.2
@@ -72,19 +70,12 @@ smmap==4.0.0
     # via gitdb
 sqlparse==0.4.2
     # via django
-typing-extensions==3.10.0.2
-    # via
-    #   asgiref
-    #   gitpython
-    #   importlib-metadata
 uritemplate==3.0.1
     # via -r requirements.in
 urllib3==1.26.6
     # via
     #   amclient
     #   requests
-zipp==3.5.0
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
