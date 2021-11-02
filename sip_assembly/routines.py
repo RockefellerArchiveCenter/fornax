@@ -89,10 +89,10 @@ class SIPActions(ArchivematicaRoutine):
             next_queued = SIP.objects.filter(
                 process_status=SIP.ASSEMBLED).order_by('last_modified')[0]
             last_started = next(
-                iter(SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP]).order_by('-last_modified')), None)
+                iter(SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP], origin=next_queued.origin).order_by('-last_modified')), None)
             client = self.get_client(next_queued.origin)
             try:
-                if last_started and client.get_unit_status(
+                if getattr(last_started, "archivematica_uuid", None) and client.get_unit_status(
                         last_started.archivematica_uuid) == 'PROCESSING':
                     msg = "Another transfer is processing, waiting until it finishes.", None
                 else:
