@@ -13,9 +13,11 @@ from fornax import settings
 
 from .csv_creator import CsvCreator
 from .models import SIP
-from .routines import (CleanupRequester, CleanupRoutine, SIPActions,
-                       SIPAssembler)
-from .routines_helpers import extract_all
+from .routines import (AssemblePackageRoutine, BaseRoutine,
+                       CleanupPackageRequester, CleanupPackageRoutine,
+                       ExtractPackageRoutine, RemoveCompletedIngestsRoutine,
+                       RemoveCompletedTransfersRoutine,
+                       RestructurePackageRoutine, StartPackageRoutine)
 
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
@@ -83,97 +85,140 @@ class RoutineTests(TestCase):
     def assert_files_not_removed(self, sip):
         """Asserts that existing files are not preserved and moved to the correct directory."""
         source_tar = tarfile.open(join(bag_fixture_dir, f"{sip.bag_identifier}.tar.gz"))
-        processed_tar = tarfile.open(join(settings.DEST_DIR, f"{sip.bag_identifier}.tar.gz"))
         source_members = source_tar.getnames()
-        processed_members = processed_tar.getnames()
         for source_dir, processed_dir in [
                 (f"{sip.bag_identifier}/data/metadata/submissionDocumentation/", f"{sip.bag_identifier}/data/objects/metadata/submissionDocumentation/"),
                 (f"{sip.bag_identifier}/objects/", f"{sip.bag_identifier}/data/objects/")]:
             source_files = [basename(m) for m in source_members if source_dir in m]
-            processed_files = [basename(p) for p in processed_members if processed_dir in p]
-            self.assertTrue(all([f in processed_files for f in source_files]))
+            if source_files:
+                processed_files = [basename(p) for p in listdir(join(settings.TMP_DIR, processed_dir))]
+                self.assertTrue(all([f in processed_files for f in source_files]))
+
+    @patch("sip_assembly.routines.BaseRoutine.process_sip")
+    def test_base_routine(self, mock_process):
+        """Assert BaseRoutine delivers expected messages and raises expected exceptions."""
+        expected_success_message = "foo"
+        expected_idle_message = "bar"
+        expected_exception = "baz"
+        mock_process.return_value = expected_success_message
+        self.set_process_status(SIP.CREATED)
+        routine = BaseRoutine()
+        routine.start_status = SIP.CREATED
+        routine.end_status = SIP.ASSEMBLED
+        routine.idle_message = expected_idle_message
+
+        message, sip_id = routine.run()
+        self.assertEqual(message, expected_success_message)
+        self.assertEqual(len(sip_id), 1)
+
+        routine.start_status = SIP.APPROVED
+        message, sip_id = routine.run()
+        self.assertEqual(message, expected_idle_message)
+        self.assertEqual(sip_id, None)
+
+        routine.start_status = SIP.CREATED
+        mock_process.side_effect = Exception(expected_exception)
+        with self.assertRaises(Exception) as exc:
+            message, sip_id = routine.run()
+        self.assertIn(expected_exception, str(exc.exception))
+
+    def test_extract_sip(self):
+        """Asserts the ExtractPackageRoutine extracts the package and sets the bag_path."""
+        self.set_process_status(SIP.CREATED)
+        message, sip_id = ExtractPackageRoutine().run()
+        self.assertEqual(message, "SIP extracted.")
+        self.assertEqual(len(sip_id), 1)
+        for sip in SIP.objects.filter(process_status=SIP.ASSEMBLED):
+            self.assertTrue(isdir(sip.bag_path))
+            self.assertEqual(sip.bag_path, join(settings.TMP_DIR, sip.bag_identifier))
 
     @patch("sip_assembly.routines.AMClient.get_processing_config")
-    @patch("asterism.file_helpers.remove_file_or_dir")
-    def test_process_sip(self, mock_remove_file_or_dir, mock_processing_config):
-        self.set_process_status(SIP.CREATED)
+    def test_restructure_sip(self, mock_processing_config):
+        """Asserts the RestructurePackageRoutine adds expected data and does not replace files."""
         with open(join("processing_configs", "processingMCP.xml"), "r") as config_file:
             config_contents = config_file.read()
         mock_processing_config.return_value = config_contents
-        message, sip_ids = SIPAssembler().run()
-        self.assertEqual(message, "All SIPs assembled.")
-        self.assertEqual(len(sip_ids), 1)
+        self.set_process_status(SIP.CREATED)
+        total_sips = len(SIP.objects.all())
+        extracted = 0
+        while extracted < total_sips:
+            ExtractPackageRoutine().run()
+            extracted += 1
+        restructured = 0
+        while restructured < total_sips:
+            message, sip_id = RestructurePackageRoutine().run()
+            self.assertEqual(message, "SIP restructured.")
+            self.assertEqual(len(sip_id), 1)
+            restructured += 1
+        for sip in SIP.objects.filter(process_status=SIP.RESTRUCTURED):
+            bag = bagit.Bag(sip.bag_path)
+            self.assertEqual(sip.bag_identifier, bag.info["Internal-Sender-Identifier"])
+            self.assertTrue(isfile(join(sip.bag_path, "processingMCP.xml")))
+            self.assert_files_not_removed(sip)
+
+    def test_assemble_sip(self):
+        """Asserts that the AssemblePackageView creates the expected tarfile."""
+        self.set_process_status(SIP.CREATED)
+        ExtractPackageRoutine().run()
+        self.set_process_status(SIP.RESTRUCTURED)
+        message, sip_id = AssemblePackageRoutine().run()
+        self.assertEqual(message, "SIP assembled.")
+        self.assertEqual(len(sip_id), 1)
         for sip in SIP.objects.filter(process_status=SIP.ASSEMBLED):
             self.assertEqual(join(settings.DEST_DIR, f"{sip.bag_identifier}.tar.gz"), sip.bag_path)
             self.assertTrue(isfile(sip.bag_path))
-            self.assert_files_not_removed(sip)
-        for sip_path in listdir(settings.DEST_DIR):
-            sip_identifier = sip_path.split(".")[0]
-            extracted_path = extract_all(join(settings.DEST_DIR, sip_path), sip_identifier, settings.DEST_DIR)
-            self.assertTrue(isfile(join(extracted_path, "processingMCP.xml")))
-            bag = bagit.Bag(extracted_path)
-            self.assertEqual(sip_identifier, bag.info["Internal-Sender-Identifier"])
-
-        self.set_process_status(SIP.CREATED)
-        mock_processing_config.side_effect = Exception()
-        with self.assertRaises(Exception) as e:
-            SIPAssembler().run()
-        self.assertIn("Error assembling SIP", str(e.exception))
-        self.assertEqual(mock_remove_file_or_dir.call_count, 2)
 
     def test_cleanup_sip(self):
-        """Asserts that the CleanupRoutine removes binaries and does not throw
+        """Asserts that the CleanupPackageRoutine removes binaries and does not throw
         an exception if a bag has already been cleaned up."""
         shutil.rmtree(settings.DEST_DIR)
         shutil.copytree(bag_fixture_dir, settings.DEST_DIR)
         for sip in SIP.objects.all():
-            message, _ = CleanupRoutine(sip.bag_identifier).run()
+            message, _ = CleanupPackageRoutine(sip.bag_identifier).run()
             self.assertEqual(message, "Transfer removed.")
         self.assertEqual(0, len(listdir(settings.DEST_DIR)))
         for sip in SIP.objects.all():
-            message, _ = CleanupRoutine(sip.bag_identifier).run()
+            message, _ = CleanupPackageRoutine(sip.bag_identifier).run()
             self.assertEqual(message, "Transfer was not found.")
 
     @patch("sip_assembly.routines.requests.post")
     def test_request_cleanup(self, mock_post):
-        """Asserts that the CleanupRequester returns expected values and handles exceptions."""
+        """Asserts that the CleanupPackageRequester returns expected values and handles exceptions."""
         self.set_process_status(SIP.APPROVED)
         mock_post.return_value.status_code = 200
-        message, sip_ids = CleanupRequester().run()
-        self.assertEqual(message, "Requests sent to clean up SIPs.")
-        self.assertEqual(len(sip_ids), len(SIP.objects.all()))
-        self.assertTrue(all([s.process_status == SIP.CLEANED_UP for s in SIP.objects.all()]))
+        message, sip_id = CleanupPackageRequester().run()
+        self.assertEqual(message, "Request sent to clean up SIP.")
+        self.assertEqual(len(sip_id), 1)
 
         self.set_process_status(SIP.APPROVED)
         mock_post.return_value.status_code = 400
         reason = "foobar"
         mock_post.return_value.reason = reason
         with self.assertRaises(Exception) as e:
-            message, sip_ids = CleanupRequester().run()
+            message, _ = CleanupPackageRequester().run()
         self.assertIn(reason, str(e.exception))
 
     @patch("sip_assembly.routines.AMClient.get_unit_status")
     @patch("sip_assembly.routines.AMClient.create_package")
     def test_create_package(self, mock_create, mock_status):
-        """Asserts packge is successfully created if another package is not
-        processing in Archivematica."""
+        """Asserts package is successfully created if another package is not processing in Archivematica."""
         self.set_process_status(SIP.ASSEMBLED)
         mock_create.return_value = {"id": "12345"}
         mock_status.return_value = "STORED"
-        message, sip_ids = SIPActions().create_package()
-        self.assertEqual(message, "Transfer started")
-        self.assertEqual(sip_ids, ["12345"])
+        message, sip_id = StartPackageRoutine().run()
+        self.assertEqual(message, "Transfer started.")
+        self.assertEqual(len(sip_id), 1)
         mock_create.assert_called_once()
-        mock_create.assert_called_with()
 
         self.set_process_status(SIP.ASSEMBLED)
         last_started = random.choice(SIP.objects.all())
         last_started.process_status = SIP.APPROVED
+        last_started.archivematica_uuid = "12345"
         last_started.save()
         mock_status.return_value = "PROCESSING"
-        message, sip_ids = SIPActions().create_package()
+        message, sip_id = StartPackageRoutine().run()
         self.assertEqual(message, "Another transfer is processing, waiting until it finishes.")
-        self.assertEqual(sip_ids, None)
+        self.assertEqual(len(sip_id), 1)
 
     @patch("sip_assembly.routines.AMClient.close_completed_transfers")
     @patch("sip_assembly.routines.AMClient.close_completed_ingests")
@@ -182,15 +227,15 @@ class RoutineTests(TestCase):
         mock_close_ingests.return_value = {}
         mock_close_transfers.return_value = {}
 
-        SIPActions().remove_completed("transfers")
+        RemoveCompletedTransfersRoutine().run()
         self.assertEqual(mock_close_transfers.call_count, 3)
 
-        SIPActions().remove_completed("ingests")
+        RemoveCompletedIngestsRoutine().run()
         self.assertEqual(mock_close_ingests.call_count, 3)
 
         mock_close_ingests.return_value = {"close_failed": "12345"}
         with self.assertRaises(Exception) as e:
-            SIPActions().remove_completed("ingests")
+            RemoveCompletedIngestsRoutine().run()
         self.assertIn("Error removing ingests from Archivematica dashboard", str(e.exception))
         self.assertIn("12345", str(e.exception))
 
@@ -225,46 +270,58 @@ class ViewTests(TestCase):
                     settings.SRC_DIR,
                     f"{source_data['identifier']}.tar.gz"))
 
-    @patch('sip_assembly.routines.SIPActions.create_package')
+    @patch('sip_assembly.routines.StartPackageRoutine.run')
     def test_archivematica_create_view(self, mock_create):
         """Tests view which creates a package in Archivematica."""
-        self.assert_status_code("post", reverse("create-transfer"), 200)
+        self.assert_status_code("post", reverse("start-sip"), 200)
         mock_create.assert_called_once()
         self.assertEqual(mock_create.call_count, 1)
 
-    @patch('sip_assembly.routines.SIPActions.remove_completed')
+    @patch('sip_assembly.routines.RemoveCompletedTransfersRoutine.run')
     def test_archivematica_close_transfer_view(self, mock_remove):
         """Tests view which closes transfers in Archivematica"""
         self.assert_status_code("post", reverse("remove-transfers"), 200)
         mock_remove.assert_called_once()
-        mock_remove.assert_called_with('transfers')
 
-    @patch('sip_assembly.routines.SIPActions.remove_completed')
+    @patch('sip_assembly.routines.RemoveCompletedIngestsRoutine.run')
     def test_archivematica_close_ingests_view(self, mock_remove):
         """Tests view which closes ingests in Archivematica"""
         self.assert_status_code("post", reverse("remove-ingests"), 200)
         mock_remove.assert_called_once()
-        mock_remove.assert_called_with('ingests')
 
-    @patch('sip_assembly.routines.SIPAssembler.__init__')
-    @patch('sip_assembly.routines.SIPAssembler.run')
-    def test_sip_assembly_view(self, mock_assemble, mock_init):
-        """Tests the SIPAssemblyView."""
+    @patch('sip_assembly.routines.ExtractPackageRoutine.__init__')
+    @patch('sip_assembly.routines.ExtractPackageRoutine.run')
+    def test_extract_sip_view(self, mock_extract, mock_init):
+        """Tests view which extracts SIPs"""
         mock_init.return_value = None
+        self.assert_status_code("post", reverse("extract-sip"), 200)
+        mock_extract.assert_called_once()
+
+    @patch('sip_assembly.routines.RestructurePackageRoutine.__init__')
+    @patch('sip_assembly.routines.RestructurePackageRoutine.run')
+    def test_restructure_sip_view(self, mock_restructure, mock_init):
+        """Tests view restructures SIPs"""
+        mock_init.return_value = None
+        self.assert_status_code("post", reverse("restructure-sip"), 200)
+        mock_restructure.assert_called_once()
+
+    @patch('sip_assembly.routines.AssemblePackageRoutine.run')
+    def test_assemble_sip_view(self, mock_assemble):
+        """Tests view which assembles a SIP tarfile."""
         self.assert_status_code("post", reverse("assemble-sip"), 200)
         mock_assemble.assert_called_once()
 
-    @patch('sip_assembly.routines.CleanupRoutine.__init__')
-    @patch('sip_assembly.routines.CleanupRoutine.run')
+    @patch('sip_assembly.routines.CleanupPackageRoutine.__init__')
+    @patch('sip_assembly.routines.CleanupPackageRoutine.run')
     def test_cleanup_view(self, mock_cleanup, mock_init):
         """Tests the CleanupRoutineView."""
         mock_init.return_value = None
         identifier = "12345"
-        self.assert_status_code("post", reverse("cleanup"), 200, {"identifier": identifier})
+        self.assert_status_code("post", reverse("cleanup-sip"), 200, {"identifier": identifier})
         mock_cleanup.assert_called_once()
         mock_init.assert_called_with(identifier)
 
-    @patch('sip_assembly.routines.CleanupRequester.run')
+    @patch('sip_assembly.routines.CleanupPackageRequester.run')
     def test_request_cleanup_view(self, mock_request):
         """Tests the CleanupRequestView."""
         self.assert_status_code("post", reverse("request-cleanup"), 200)
