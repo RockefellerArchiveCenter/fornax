@@ -156,14 +156,14 @@ class RemoveCompletedIngestsRoutine(ArchivematicaClientMixin):
     """Removes completed ingests from the Archivematica dashboard."""
 
     def run(self):
-        self.remove_completed("ingests")
+        return self.remove_completed("ingests")
 
 
 class RemoveCompletedTransfersRoutine(ArchivematicaClientMixin):
     """Removes completed transfers from the Archivematica dashboard."""
 
     def run(self):
-        self.remove_completed("transfers")
+        return self.remove_completed("transfers")
 
 
 class CleanupPackageRequester(BaseRoutine):
