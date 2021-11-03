@@ -17,10 +17,12 @@ from django.conf.urls import url
 from django.urls import include
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
-from sip_assembly.views import (CleanupRequestView, CleanupRoutineView,
-                                CreatePackageView, RemoveCompletedIngestsView,
-                                RemoveCompletedTransfersView, SIPAssemblyView,
-                                SIPViewSet)
+from sip_assembly.views import (AssemblePackageView, CleanupPackageRequestView,
+                                CleanupPackageRoutineView, ExtractPackageView,
+                                RemoveCompletedIngestsView,
+                                RemoveCompletedTransfersView,
+                                RestructurePackageView, SIPViewSet,
+                                StartPackageView)
 
 router = routers.DefaultRouter()
 router.register(r'sips', SIPViewSet)
@@ -31,17 +33,19 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^assemble/', SIPAssemblyView.as_view(), name="assemble-sip"),
-    url(r'^start/', CreatePackageView.as_view(), name="create-transfer"),
+    url(r'^extract/', ExtractPackageView.as_view(), name="extract-sip"),
+    url(r'^restructure/', RestructurePackageView.as_view(), name="restructure-sip"),
+    url(r'^assemble/', AssemblePackageView.as_view(), name="assemble-sip"),
+    url(r'^start/', StartPackageView.as_view(), name="start-sip"),
     url(r'^remove-transfers/',
         RemoveCompletedTransfersView.as_view(),
         name="remove-transfers"),
     url(r'^remove-ingests/',
         RemoveCompletedIngestsView.as_view(),
         name="remove-ingests"),
-    url(r'^cleanup/', CleanupRoutineView.as_view(), name="cleanup"),
+    url(r'^cleanup/', CleanupPackageRoutineView.as_view(), name="cleanup-sip"),
     url(r'^request-cleanup/',
-        CleanupRequestView.as_view(),
+        CleanupPackageRequestView.as_view(),
         name="request-cleanup"),
     url(r'^status/', include('health_check.api.urls')),
     url(r'^schema/', schema_view, name='schema'),
