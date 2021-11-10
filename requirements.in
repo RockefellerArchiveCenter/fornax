@@ -1,11 +1,11 @@
-amclient==1.1.1
-asterism==0.7.2
+amclient==1.2.0
+asterism==0.7.4
 bagit==1.8.1
 csvvalidator==1.2
-Django==3.2.7
+Django==3.2.9
 djangorestframework==3.12.4
 health-check==3.4.1
 jsonschema==3.2.0
 psycopg2-binary==2.9.1
 requests==2.26.0
-uritemplate==3.0.1
+uritemplate==4.1.1

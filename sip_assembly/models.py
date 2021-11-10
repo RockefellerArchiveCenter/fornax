@@ -4,6 +4,8 @@ from django.db import models
 
 class SIP(BasePackage):
     CREATED = 10
+    EXTRACTED = 11
+    RESTRUCTURED = 12
     ASSEMBLED = 20
     STARTED = 30
     APPROVED = 40

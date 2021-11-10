@@ -4,8 +4,14 @@ from asterism.views import BaseServiceView, RoutineView
 from fornax import settings
 from rest_framework.viewsets import ModelViewSet
 from sip_assembly.models import SIP
-from sip_assembly.routines import (CleanupRequester, CleanupRoutine,
-                                   SIPActions, SIPAssembler)
+from sip_assembly.routines import (AssemblePackageRoutine,
+                                   CleanupPackageRequester,
+                                   CleanupPackageRoutine,
+                                   ExtractPackageRoutine,
+                                   RemoveCompletedIngestsRoutine,
+                                   RemoveCompletedTransfersRoutine,
+                                   RestructurePackageRoutine,
+                                   StartPackageRoutine)
 from sip_assembly.serializers import SIPListSerializer, SIPSerializer
 
 
@@ -41,40 +47,44 @@ class SIPViewSet(ModelViewSet):
         return super().create(request)
 
 
-class CreatePackageView(BaseServiceView):
+class ExtractPackageView(RoutineView):
+    """Extracts compressed SIPS."""
+    routine = ExtractPackageRoutine
+
+
+class RestructurePackageView(RoutineView):
+    """Restructures SIPS."""
+    routine = RestructurePackageRoutine
+
+
+class AssemblePackageView(RoutineView):
+    """Packages SIPs."""
+    routine = AssemblePackageRoutine
+
+
+class StartPackageView(RoutineView):
     """Approves transfers in Archivematica. Accepts POST requests only."""
-
-    def get_service_response(self, request):
-        return SIPActions().create_package()
+    routine = StartPackageRoutine
 
 
-class RemoveCompletedTransfersView(BaseServiceView):
+class RemoveCompletedTransfersView(RoutineView):
     """Removes completed transfers from Archivematica dashboard. Accepts POST requests only."""
-
-    def get_service_response(self, request):
-        return SIPActions().remove_completed('transfers')
+    routine = RemoveCompletedTransfersRoutine
 
 
-class RemoveCompletedIngestsView(BaseServiceView):
+class RemoveCompletedIngestsView(RoutineView):
     """Removes completed ingests from Archivematica dashboard. Accepts POST requests only."""
-
-    def get_service_response(self, request):
-        return SIPActions().remove_completed('ingests')
+    routine = RemoveCompletedIngestsRoutine
 
 
-class SIPAssemblyView(RoutineView):
-    """Runs the AssembleSIPs cron job. Accepts POST requests only."""
-    routine = SIPAssembler
-
-
-class CleanupRequestView(RoutineView):
+class CleanupPackageRequestView(RoutineView):
     """Sends request to previous microservice to clean up source directory."""
-    routine = CleanupRequester
+    routine = CleanupPackageRequester
 
 
-class CleanupRoutineView(BaseServiceView):
+class CleanupPackageRoutineView(BaseServiceView):
     """Removes a transfer from the destination directory. Accepts POST requests only."""
 
     def get_service_response(self, request):
         identifier = request.data.get('identifier')
-        return CleanupRoutine(identifier).run()
+        return CleanupPackageRoutine(identifier).run()
