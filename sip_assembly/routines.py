@@ -17,7 +17,7 @@ class ArchivematicaClientMixin:
 
     def get_client(self, origin):
         """Instantiates an Archivematica client based on SIP origin"""
-        am_settings = settings.ARCHIVEMATICA[origin]
+        am_settings = settings.ARCHIVEMATICA_ORIGINS[origin]
         return AMClient(
             am_api_key=am_settings['api_key'],
             am_user_name=am_settings['username'],
@@ -37,8 +37,8 @@ class ArchivematicaClientMixin:
         """Removes completed transfers and ingests from Archivematica dashboard."""
         all_completed = []
         dashboards = []
-        for origin in settings.ARCHIVEMATICA:
-            if settings.ARCHIVEMATICA[origin].get("close_completed"):
+        for origin in settings.ARCHIVEMATICA_ORIGINS:
+            if settings.ARCHIVEMATICA_ORIGINS[origin].get("close_completed"):
                 client = self.get_client(origin)
                 completed = getattr(client, 'close_completed_{}'.format((type)))()
                 dashboards.append(origin)

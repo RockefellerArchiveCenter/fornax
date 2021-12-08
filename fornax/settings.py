@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from fornax import config as CF
+from fornax import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&0-xb06z0kd7m%dic^wn9wdgft&yqdb_m)3uq54p+r%=5l!k$q'
+SECRET_KEY = config.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = CF.DEBUG
+DEBUG = config.DJANGO_DEBUG
 
-ALLOWED_HOSTS = CF.ALLOWED_HOSTS
+ALLOWED_HOSTS = config.DJANGO_ALLOWED_HOSTS
 
 # Application definition
 
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'fornax.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'sip_assembly', 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,7 +74,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fornax.wsgi.application'
 
-DATABASES = CF.DATABASES
+DATABASES = {
+    "default": {
+        "ENGINE": config.SQL_ENGINE,
+        "NAME": config.SQL_DATABASE,
+        "USER": config.SQL_USER,
+        "PASSWORD": config.SQL_PASSWORD,
+        "HOST": config.SQL_HOST,
+        "PORT": config.SQL_PORT,
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -113,21 +122,45 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATIC_ROOT = CF.STATIC_ROOT
-
-SRC_DIR = CF.SRC_DIR
-TMP_DIR = CF.TMP_DIR
-DEST_DIR = CF.DEST_DIR
-PROCESSING_CONFIG_DIR = CF.PROCESSING_CONFIG_DIR
-PROCESSING_CONFIG = CF.PROCESSING_CONFIG
-ARCHIVEMATICA = CF.ARCHIVEMATICA
-ARCHIVEMATICA_VERSION = CF.ARCHIVEMATICA_VERSION
-CLEANUP_URL = CF.CLEANUP_URL
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 25,
+}
+
+SRC_DIR = os.path.join(config.STORAGE_ROOT, config.STORAGE_SRC_DIR)
+TMP_DIR = os.path.join(config.STORAGE_ROOT, config.STORAGE_TMP_DIR)
+DEST_DIR = os.path.join(config.STORAGE_ROOT, config.STORAGE_DEST_DIR)
+
+CLEANUP_URL = config.CLEANUP_URL
+
+ARCHIVEMATICA_VERSION = config.AM_VERSION
+ARCHIVEMATICA_ORIGINS = {
+    "aurora": {
+        "baseurl": config.AM_PL_AURORA_BASEURL,
+        "username": config.AM_PL_AURORA_USERNAME,
+        "api_key": config.AM_PL_AURORA_API_KEY,
+        "location_uuid": config.AM_PL_AURORA_LOCATION_UUID,
+        "processing_config": config.AM_PL_AURORA_PROCESSING_CONFIG,
+        "close_completed": config.AM_PL_AURORA_CLOSE_COMPLETED,
+    },
+    "digitization": {
+        "baseurl": config.AM_PL_DIGITIZATION_BASEURL,
+        "username": config.AM_PL_DIGITIZATION_USERNAME,
+        "api_key": config.AM_PL_DIGITIZATION_API_KEY,
+        "location_uuid": config.AM_PL_DIGITIZATION_LOCATION_UUID,
+        "processing_config": config.AM_PL_DIGITIZATION_PROCESSING_CONFIG,
+        "close_completed": config.AM_PL_DIGITIZATION_CLOSE_COMPLETED,
+    },
+    "legacy_digital": {
+        "baseurl": config.AM_PL_LEGACY_DIGITAL_BASEURL,
+        "username": config.AM_PL_LEGACY_DIGITAL_USERNAME,
+        "api_key": config.AM_PL_LEGACY_DIGITAL_API_KEY,
+        "location_uuid": config.AM_PL_LEGACY_DIGITAL_LOCATION_UUID,
+        "processing_config": config.AM_PL_LEGACY_DIGITAL_PROCESSING_CONFIG,
+        "close_completed": config.AM_PL_LEGACY_DIGITAL_CLOSE_COMPLETED,
+    }
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
