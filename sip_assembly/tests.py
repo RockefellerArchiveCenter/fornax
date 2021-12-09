@@ -105,6 +105,7 @@ class RoutineTests(TestCase):
         self.set_process_status(SIP.CREATED)
         routine = BaseRoutine()
         routine.start_status = SIP.CREATED
+        routine.in_process_status = SIP.ASSEMBLING
         routine.end_status = SIP.ASSEMBLED
         routine.idle_message = expected_idle_message
 
