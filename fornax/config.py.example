@@ -1,55 +1,41 @@
-DEBUG = True
+DJANGO_DEBUG = True  # run Django in debug mode, which outputs stack traces to the UI, set to False for production (boolean)
+DJANGO_SECRET_KEY = "&0-xb06z0kd7m%dic^wn9wdgft&yqdb_m)3uq54p+r%=5l!k$q"  # used by Django to create hashes (string)
+DJANGO_ALLOWED_HOSTS = ["localhost", "fornax-web"]  # hosts Scorpio will respond to (list of strings)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'fornax-db',
-        'PORT': 5432,
-    }
-}
+SQL_ENGINE = "django.db.backends.postgresql"  # the database engine used by Scorpio (string, one of django.db.backends)
+SQL_DATABASE = "postgres"  # name of the application database (string)
+SQL_USER = "postgres"  # name of the application database user (string)
+SQL_PASSWORD = "postgres"  # password for the application database (string)
+SQL_HOST = "fornax-db"  # host for the application database (string)
+SQL_PORT = 5432  # port on which the application database can be reached (integer)
 
-ALLOWED_HOSTS = ['fornax-web', 'localhost']
+STORAGE_ROOT = "/"  # absolute path to root of attached file storage (string)
+STORAGE_SRC_DIR = "src"  # source directory for transfers, relative to storage root (string)
+STORAGE_TMP_DIR = "tmp"  # temporary directory for transfers, relative to storage root (string)
+STORAGE_DEST_DIR = "dest"  # destination directory for transfers, relative to storage root (string)
 
-BASE_DIR = ''
+CLEANUP_URL = "http://ursa-major-web:8005/cleanup/"  # URL for cleanup service in previous app (string)
 
-SRC_DIR = '{}/src'.format(BASE_DIR)
-TMP_DIR = '{}/tmp'.format(BASE_DIR)
-DEST_DIR = '{}/dest'.format(BASE_DIR)
+AM_VERSION = "1.11.2"  # The version of Archivematica to which transfers should be delivered (string)
 
-PROCESSING_CONFIG_DIR = 'processing_configs'
-PROCESSING_CONFIG = 'processingMCP.xml'
+# The settings below are specific to individual Archivematica pipelines
+AM_PL_AURORA_BASEURL = "http://archivematica-dashboard:8000"  # Base URL for the Archivematica Dashboard API (string)
+AM_PL_AURORA_USERNAME = "test"  # Archivematica user with sufficient privileges to start a transfer (string)
+AM_PL_AURORA_API_KEY = "test"  # API Key for the Archivematica user (string)
+AM_PL_AURORA_LOCATION_UUID = "ed37e81d-2af3-45a3-aa30-a60a12c95bbe"  # UUID for Transfer Source location (string)
+AM_PL_AURORA_PROCESSING_CONFIG = "automated"  # name of Archivematica processing config to use (string)
+AM_PL_AURORA_CLOSE_COMPLETED = True  # Indicates whether completed ingests and transfers should be closed (boolean)
 
-ARCHIVEMATICA = {
-  "aurora": {
-    "baseurl": "http://archivematica-dashboard:8000",
-    "username": "test",
-    "api_key": "test",
-    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
-    "processing_config": "automated",
-    "close_completed": True,
-  },
-  "digitization": {
-    "baseurl": "http://archivematica-dashboard:8000",
-    "username": "test",
-    "api_key": "test",
-    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
-    "processing_config": "automated",
-    "close_completed": True,
-  },
-  "legacy_digital": {
-    "baseurl": "http://archivematica-dashboard:8000",
-    "username": "test",
-    "api_key": "test",
-    "location_uuid": "ed37e81d-2af3-45a3-aa30-a60a12c95bbe",
-    "processing_config": "automated",
-    "close_completed": True,
-  }
-}
+AM_PL_DIGITIZATION_BASEURL = "http://archivematica-dashboard:8000"  # Base URL for the Archivematica Dashboard API (string)
+AM_PL_DIGITIZATION_USERNAME = "test"  # Archivematica user with sufficient privileges to start a transfer (string)
+AM_PL_DIGITIZATION_API_KEY = "test"  # API Key for the Archivematica user (string)
+AM_PL_DIGITIZATION_LOCATION_UUID = "ed37e81d-2af3-45a3-aa30-a60a12c95bbe"  # UUID for Transfer Source location (string)
+AM_PL_DIGITIZATION_PROCESSING_CONFIG = "automated"  # name of Archivematica processing config to use (string)
+AM_PL_DIGITIZATION_CLOSE_COMPLETED = True  # Indicates whether completed ingests and transfers should be closed (boolean)
 
-ARCHIVEMATICA_VERSION = "1.11.2"
-
-STATIC_ROOT = "/static"
-
-CLEANUP_URL = "http://ursa-major-web:8005/cleanup/"
+AM_PL_LEGACY_DIGITAL_BASEURL = "http://archivematica-dashboard:8000"  # Base URL for the Archivematica Dashboard API (string)
+AM_PL_LEGACY_DIGITAL_USERNAME = "test"  # Archivematica user with sufficient privileges to start a transfer (string)
+AM_PL_LEGACY_DIGITAL_API_KEY = "test"  # API Key for the Archivematica user (string)
+AM_PL_LEGACY_DIGITAL_LOCATION_UUID = "ed37e81d-2af3-45a3-aa30-a60a12c95bbe"  # UUID for Transfer Source location (string)
+AM_PL_LEGACY_DIGITAL_PROCESSING_CONFIG = "automated"  # name of Archivematica processing config to use (string)
+AM_PL_LEGACY_DIGITAL_CLOSE_COMPLETED = True  # Indicates whether completed ingests and transfers should be closed (boolean)
