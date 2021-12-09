@@ -63,12 +63,12 @@ class BaseRoutine(object):
                 sip.save()
                 try:
                     message = self.process_sip(sip)
-                    sip.process_status = self.end_status
-                    sip.save()
                 except Exception as e:
                     sip.process_status = self.start_status
                     sip.save()
                     raise Exception(str(e), sip.bag_identifier)
+                sip.process_status = self.end_status
+                sip.save()
             else:
                 message = self.idle_message
         else:
