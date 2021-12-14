@@ -17,7 +17,7 @@ class ArchivematicaClientMixin:
 
     def get_client(self, origin):
         """Instantiates an Archivematica client based on SIP origin"""
-        am_settings = settings.ARCHIVEMATICA[origin]
+        am_settings = settings.ARCHIVEMATICA_ORIGINS[origin]
         return AMClient(
             am_api_key=am_settings['api_key'],
             am_user_name=am_settings['username'],
@@ -37,8 +37,8 @@ class ArchivematicaClientMixin:
         """Removes completed transfers and ingests from Archivematica dashboard."""
         all_completed = []
         dashboards = []
-        for origin in settings.ARCHIVEMATICA:
-            if settings.ARCHIVEMATICA[origin].get("close_completed"):
+        for origin in settings.ARCHIVEMATICA_ORIGINS:
+            if settings.ARCHIVEMATICA_ORIGINS[origin].get("close_completed"):
                 client = self.get_client(origin)
                 completed = getattr(client, 'close_completed_{}'.format((type)))()
                 dashboards.append(origin)
@@ -56,16 +56,23 @@ class BaseRoutine(object):
     """Base routine which contains main run method."""
 
     def run(self):
-        sip = SIP.objects.filter(process_status=self.start_status).first()
-        if sip:
-            try:
-                message = self.process_sip(sip)
+        if not SIP.objects.filter(process_status=self.in_process_status).exists():
+            sip = SIP.objects.filter(process_status=self.start_status).first()
+            if sip:
+                sip.process_status = self.in_process_status
+                sip.save()
+                try:
+                    message = self.process_sip(sip)
+                except Exception as e:
+                    sip.process_status = self.start_status
+                    sip.save()
+                    raise Exception(str(e), sip.bag_identifier)
                 sip.process_status = self.end_status
                 sip.save()
-            except Exception as e:
-                raise Exception(str(e), sip.bag_identifier)
+            else:
+                message = self.idle_message
         else:
-            message = self.idle_message
+            message = "Service currently running"
         return (message, [sip.bag_identifier] if sip else None)
 
     def process_sip(self, sip):
@@ -75,6 +82,7 @@ class BaseRoutine(object):
 class ExtractPackageRoutine(BaseRoutine):
     """Extracts compressed SIPs."""
     start_status = SIP.CREATED
+    in_process_status = SIP.EXTRACTING
     end_status = SIP.EXTRACTED
     idle_message = "No SIPs to extract."
 
@@ -97,6 +105,7 @@ class ExtractPackageRoutine(BaseRoutine):
 class RestructurePackageRoutine(BaseRoutine, ArchivematicaClientMixin):
     """Restructures SIPs."""
     start_status = SIP.EXTRACTED
+    in_process_status = SIP.RESTRUCTURING
     end_status = SIP.RESTRUCTURED
     idle_message = "No SIPs to restructure."
 
@@ -118,6 +127,7 @@ class RestructurePackageRoutine(BaseRoutine, ArchivematicaClientMixin):
 class AssemblePackageRoutine(BaseRoutine):
     """Packages SIPs."""
     start_status = SIP.RESTRUCTURED
+    in_process_status = SIP.ASSEMBLING
     end_status = SIP.ASSEMBLED
     idle_message = "No SIPs to assemble."
 
@@ -132,6 +142,7 @@ class AssemblePackageRoutine(BaseRoutine):
 class StartPackageRoutine(BaseRoutine, ArchivematicaClientMixin):
     """Starts Archivematica transfer."""
     start_status = SIP.ASSEMBLED
+    in_process_status = SIP.APPROVING
     end_status = SIP.APPROVED
     idle_message = "No transfers to start."
 
@@ -169,6 +180,7 @@ class RemoveCompletedTransfersRoutine(ArchivematicaClientMixin):
 class CleanupPackageRequester(BaseRoutine):
     """Requests cleanup of SIP files in the source directory by another service."""
     start_status = SIP.APPROVED
+    in_process_status = SIP.CLEANING_UP
     end_status = SIP.CLEANED_UP
     idle_message = "No SIPs to clean up."
 

@@ -22,6 +22,7 @@ from .routines import (AssemblePackageRoutine, BaseRoutine,
 data_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'json')
 bag_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'bags')
 csv_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'csv_creation')
+processing_config_fixture_dir = join(settings.BASE_DIR, 'fixtures', 'processing_configs')
 
 
 class CsvCreatorTests(TestCase):
@@ -104,6 +105,7 @@ class RoutineTests(TestCase):
         self.set_process_status(SIP.CREATED)
         routine = BaseRoutine()
         routine.start_status = SIP.CREATED
+        routine.in_process_status = SIP.ASSEMBLING
         routine.end_status = SIP.ASSEMBLED
         routine.idle_message = expected_idle_message
 
@@ -135,7 +137,7 @@ class RoutineTests(TestCase):
     @patch("sip_assembly.routines.AMClient.get_processing_config")
     def test_restructure_sip(self, mock_processing_config):
         """Asserts the RestructurePackageRoutine adds expected data and does not replace files."""
-        with open(join("processing_configs", "processingMCP.xml"), "r") as config_file:
+        with open(join(processing_config_fixture_dir, "processingMCP.xml"), "r") as config_file:
             config_contents = config_file.read()
         mock_processing_config.return_value = config_contents
         self.set_process_status(SIP.CREATED)

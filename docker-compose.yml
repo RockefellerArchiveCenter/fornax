@@ -8,10 +8,12 @@ services:
   fornax-web:
     build: .
     entrypoint: /code/entrypoint.sh
+    environment:
+      - APPLICATION_PORT=${APPLICATION_PORT:-8003}
     volumes:
       - .:/code
     ports:
-      - "8003:8003"
+      - "${APPLICATION_PORT:-8003}:${APPLICATION_PORT:-8003}"
     depends_on:
       - fornax-db
 
