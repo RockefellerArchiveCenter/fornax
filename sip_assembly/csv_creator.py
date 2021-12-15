@@ -1,14 +1,13 @@
 import csv
-import datetime
 from os import makedirs, path, walk
 
-from csvvalidator import CSVValidator, RecordError, enumeration
+from amclient.errors import ERR_INVALID_RESPONSE, error_lookup
 
 
 class CsvCreator:
     """Creates and validates Archivematica-compliant CSV containing PREMIS rights"""
 
-    def __init__(self, am_version):
+    def __init__(self, am_version, client):
         self.field_names = [
             'file', 'basis', 'status', 'determination_date', 'jurisdiction',
             'start_date', 'end_date', 'terms', 'citation', 'note', 'grant_act',
@@ -16,24 +15,22 @@ class CsvCreator:
             'grant_note', 'doc_id_type', 'doc_id_value', 'doc_id_role']
         split_version = am_version.split(".")
         self.skip_no_act = True if (int(split_version[0]) <= 1 and int(split_version[1]) < 13) else False
+        self.client = client
 
     def create_rights_csv(self, bag_path, rights_statements):
         self.bag_path = bag_path
         self.rights_statements = rights_statements
         self.csv_filepath = path.join(bag_path, 'data', 'metadata', 'rights.csv')
-        try:
-            csvfile, csvwriter = self.setup_csv_file()
-            for (dirpath, dirnames, filenames) in walk(path.join(self.bag_path, 'data', 'objects')):
-                for file in filenames:
-                    rights_rows = self.get_rights_rows(dirpath, file)
-                    for rights_row in rights_rows:
-                        csvwriter.writerow(rights_row)
-            csvfile.close()
-            self.validate_rights_csv()
-            csvfile.close()
-            return "CSV {} created.".format(self.csv_filepath)
-        except Exception as e:
-            print(e)
+        csvfile, csvwriter = self.setup_csv_file()
+        for (dirpath, dirnames, filenames) in walk(path.join(self.bag_path, 'data', 'objects')):
+            for file in filenames:
+                rights_rows = self.get_rights_rows(dirpath, file)
+                for rights_row in rights_rows:
+                    csvwriter.writerow(rights_row)
+        csvfile.close()
+        self.validate_rights_csv()
+        csvfile.close()
+        return "CSV {} created.".format(self.csv_filepath)
 
     def setup_csv_file(self):
         """
@@ -115,49 +112,10 @@ class CsvCreator:
         return rows
 
     def validate_rights_csv(self):
-        """Validate a CSV to ensure it complies with Archivematica validation"""
-        validator = CSVValidator(self.field_names)
-
-        validator.add_header_check('EX1', 'bad header')
-        validator.add_record_length_check('EX2', 'unexpected record length')
-        validator.add_value_check(
-            'basis', enumeration(
-                'copyright', 'Copyright', 'statute', 'Statute', 'license',
-                'License', 'other', 'Other'), 'EX3', 'invalid basis')
-        for field in ['file', 'note']:
-            validator.add_value_check(field, str, 'EX5', 'field must exist')
-
-        def check_dates(r):
-            for field in [r['determination_date'], r['start_date'],
-                          r['end_date'], r['grant_start_date'], r['grant_end_date']]:
-                if r.get(field):
-                    format = True
-                    try:
-                        datetime.datetime.strptime(field, '%Y-%m-%d')
-                    except ValueError:
-                        format = False
-                    valid = (format or field.lower() == 'open')
-                    if not valid:
-                        raise RecordError('EX6', 'invalid date format')
-        validator.add_record_check(check_dates)
-
-        def check_restriction(r):
-            grant_fields = ['grant_act', 'grant_restriction', 'grant_start_date', 'grant_end_date', 'grant_note']
-            if [g for g in grant_fields if r[g]]:
-                if r['grant_act'].lower() not in ['publish', 'disseminate', 'replicate', 'migrate', 'modify', 'use', 'delete']:
-                    raise RecordError('EX7', 'invalid act')
-                elif r['grant_restriction'].lower() not in ['disallow', 'conditional', 'allow']:
-                    raise RecordError('EX8', 'invalid restriction')
-        validator.add_record_check(check_restriction)
-
-        def check_copyright_status(r):
-            if r['basis'].lower() == 'copyright':
-                if r['status'].lower() not in ['copyrighted', 'public domain', 'unknown']:
-                    raise RecordError('EX4', 'invalid copyright status')
-        validator.add_record_check(check_copyright_status)
-
-        with open(self.csv_filepath, 'r') as csvfile:
-            data = csv.reader(csvfile)
-            problems = validator.validate(data)
-            if problems:
-                raise Exception("{} errors: {}".format(len(problems), problems))
+        file_obj = open(self.csv_filepath, "r")
+        result = self.client.validate_csv("rights", file_obj)
+        if isinstance(result, int):
+            message = error_lookup(result)
+            if result == ERR_INVALID_RESPONSE:
+                message = result.message
+            raise Exception("Error validating CSV: {}".format(message))
