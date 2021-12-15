@@ -7,15 +7,17 @@ from os.path import basename, isdir, isfile, join
 from unittest.mock import patch
 
 import bagit
+from amclient import errors, utils
 from django.test import TestCase
 from django.urls import reverse
 from fornax import settings
 
 from .csv_creator import CsvCreator
 from .models import SIP
-from .routines import (AssemblePackageRoutine, BaseRoutine,
-                       CleanupPackageRequester, CleanupPackageRoutine,
-                       ExtractPackageRoutine, RemoveCompletedIngestsRoutine,
+from .routines import (ArchivematicaClientMixin, AssemblePackageRoutine,
+                       BaseRoutine, CleanupPackageRequester,
+                       CleanupPackageRoutine, ExtractPackageRoutine,
+                       RemoveCompletedIngestsRoutine,
                        RemoveCompletedTransfersRoutine,
                        RestructurePackageRoutine, StartPackageRoutine)
 
@@ -36,18 +38,22 @@ class CsvCreatorTests(TestCase):
         for directory in ['aurora_example', 'digitization_example']:
             shutil.copytree(join(csv_fixture_dir, directory), join(self.tmp_dir, directory))
 
-    def test_create_rights_csv(self):
+    @patch('amclient.AMClient.validate_csv')
+    def test_create_rights_csv(self, mock_validate):
+        mock_validate.return_value = {"valid": "true"}
         with open(join(csv_fixture_dir, "{}.json".format("aurora_example")), 'r') as json_file:
             json_data = json.load(json_file)
-        created_csv = CsvCreator("1.11.2").create_rights_csv(
+        created_csv = CsvCreator("1.11.2", ArchivematicaClientMixin().get_client("aurora")).create_rights_csv(
             join(self.tmp_dir, "aurora_example"),
             json_data["bag_data"]["rights_statements"])
         self.assertEqual(
             created_csv, "CSV {} created.".format(join(self.tmp_dir, 'aurora_example', 'data', 'metadata', 'rights.csv')))
 
-    def test_get_rights_rows(self):
+    @patch('amclient.AMClient.validate_csv')
+    def test_get_rights_rows(self, mock_validate):
         for am_version in ["1.12", "1.13.1"]:
-            csv_creator = CsvCreator(am_version)
+            mock_validate.return_value = {"valid": "true"}
+            csv_creator = CsvCreator(am_version, ArchivematicaClientMixin().get_client("digitization"))
             csv_creator.bag_path = join(self.tmp_dir, 'digitization_example')
             with open(join(csv_fixture_dir, "{}.json".format("digitization_example")), 'r') as json_file:
                 json_data = json.load(json_file)
@@ -59,6 +65,18 @@ class CsvCreatorTests(TestCase):
                 self.assertEqual(len(rights_rows), 1)
             for row in rights_rows:
                 self.assertEqual(len(row), 18)
+
+    @patch('amclient.AMClient.validate_csv')
+    def test_invalid_csv(self, mock_validate):
+        message = "error message for invalid CSV."
+        mock_validate.return_value = utils.Error(errors.ERR_INVALID_RESPONSE, message=message)
+        with open(join(csv_fixture_dir, "{}.json".format("aurora_example")), 'r') as json_file:
+            json_data = json.load(json_file)
+        with self.assertRaises(Exception) as err:
+            CsvCreator("1.11.2", ArchivematicaClientMixin().get_client("aurora")).create_rights_csv(
+                join(self.tmp_dir, "aurora_example"),
+                json_data["bag_data"]["rights_statements"])
+        self.assertIn(message, str(err.exception))
 
     def tearDown(self):
         if isdir(self.tmp_dir):
@@ -135,11 +153,13 @@ class RoutineTests(TestCase):
             self.assertEqual(sip.bag_path, join(settings.TMP_DIR, sip.bag_identifier))
 
     @patch("sip_assembly.routines.AMClient.get_processing_config")
-    def test_restructure_sip(self, mock_processing_config):
+    @patch('amclient.AMClient.validate_csv')
+    def test_restructure_sip(self, mock_validate, mock_processing_config):
         """Asserts the RestructurePackageRoutine adds expected data and does not replace files."""
         with open(join(processing_config_fixture_dir, "processingMCP.xml"), "r") as config_file:
             config_contents = config_file.read()
         mock_processing_config.return_value = config_contents
+        mock_validate.return_value = {"valid": "true"}
         self.set_process_status(SIP.CREATED)
         total_sips = len(SIP.objects.all())
         extracted = 0
