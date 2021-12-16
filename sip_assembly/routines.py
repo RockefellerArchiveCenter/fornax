@@ -116,7 +116,7 @@ class RestructurePackageRoutine(BaseRoutine, ArchivematicaClientMixin):
         helpers.move_objects_dir(sip.bag_path)
         helpers.create_structure(sip.bag_path)
         if sip.data['rights_statements']:
-            CsvCreator(settings.ARCHIVEMATICA_VERSION).create_rights_csv(sip.bag_path, sip.data.get('rights_statements'))
+            CsvCreator(settings.ARCHIVEMATICA_VERSION, client).create_rights_csv(sip.bag_path, sip.data.get('rights_statements'))
         helpers.add_processing_config(
             sip.bag_path, self.get_processing_config(client))
         bagit_helpers.update_bag_info(

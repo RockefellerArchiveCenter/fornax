@@ -24,8 +24,6 @@ clinner==1.12.3
     # via health-check
 colorlog==3.2.0
     # via clinner
-csvvalidator==1.2
-    # via -r requirements.in
 django==3.2.10
     # via
     #   -r requirements.in
