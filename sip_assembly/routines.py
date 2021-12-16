@@ -71,6 +71,7 @@ class BaseRoutine(object):
                 sip.save()
             else:
                 message = self.idle_message
+                sip = None
         else:
             message = "Service currently running"
         return (message, [sip.bag_identifier] if sip else None)
