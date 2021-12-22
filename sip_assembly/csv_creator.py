@@ -1,7 +1,7 @@
 import csv
 from os import makedirs, path, walk
 
-from amclient.errors import ERR_INVALID_RESPONSE, error_lookup
+from amclient.errors import error_lookup
 
 
 class CsvCreator:
@@ -115,7 +115,5 @@ class CsvCreator:
         file_obj = open(self.csv_filepath, "r")
         result = self.client.validate_csv("rights", file_obj)
         if isinstance(result, int):
-            message = error_lookup(result)
-            if result == ERR_INVALID_RESPONSE:
-                message = result.message
+            message = getattr(result, "message", error_lookup(result))
             raise Exception("Error validating CSV: {}".format(message))
