@@ -4,13 +4,13 @@
 #
 #    pip-compile
 #
-amclient==1.2.0
+amclient==1.2.1
     # via -r requirements.in
 asgiref==3.4.1
     # via django
 asterism==0.7.4
     # via -r requirements.in
-attrs==21.2.0
+attrs==21.4.0
     # via jsonschema
 bagit==1.8.1
     # via
@@ -18,7 +18,7 @@ bagit==1.8.1
     #   asterism
 certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.9
+charset-normalizer==2.0.10
     # via requests
 clinner==1.12.3
     # via health-check
@@ -29,7 +29,7 @@ django==3.2.10
     #   -r requirements.in
     #   asterism
     #   djangorestframework
-djangorestframework==3.12.4
+djangorestframework==3.13.1
     # via
     #   -r requirements.in
     #   asterism
@@ -41,20 +41,22 @@ health-check==3.4.1
     # via -r requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.8.2
+importlib-metadata==4.8.3
     # via jsonschema
 jsonschema==3.2.0
     # via -r requirements.in
 odin==1.7.3
     # via asterism
-psycopg2-binary==2.9.2
+psycopg2-binary==2.9.3
     # via
     #   -r requirements.in
     #   asterism
 pyrsistent==0.18.0
     # via jsonschema
 pytz==2021.3
-    # via django
+    # via
+    #   django
+    #   djangorestframework
 pyyaml==6.0
     # via health-check
 requests==2.26.0
@@ -77,7 +79,7 @@ typing-extensions==4.0.1
     #   importlib-metadata
 uritemplate==4.1.1
     # via -r requirements.in
-urllib3==1.26.7
+urllib3==1.26.8
     # via
     #   amclient
     #   requests
