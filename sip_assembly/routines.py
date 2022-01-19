@@ -71,9 +71,9 @@ class BaseRoutine(object):
                 sip.save()
             else:
                 message = self.idle_message
-                sip = None
         else:
             message = "Service currently running"
+            sip = None
         return (message, [sip.bag_identifier] if sip else None)
 
     def process_sip(self, sip):
@@ -149,7 +149,7 @@ class StartPackageRoutine(BaseRoutine, ArchivematicaClientMixin):
 
     def process_sip(self, sip):
         """Starts and approves a transfer in Archivematica."""
-        last_started = SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP], origin=sip.origin).first()
+        last_started = SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP], origin=sip.origin).last()
         client = self.get_client(sip.origin)
         if getattr(last_started, "archivematica_uuid", None) and client.get_unit_status(
                 last_started.archivematica_uuid) == 'PROCESSING':
