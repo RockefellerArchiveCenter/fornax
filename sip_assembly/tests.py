@@ -237,7 +237,7 @@ class RoutineTests(TestCase):
         last_started.process_status = SIP.APPROVED
         last_started.archivematica_uuid = "12345"
         last_started.save()
-        mock_status.return_value = "PROCESSING"
+        mock_status.return_value = {'type': 'transfer', 'path': '/var/archivematica/sharedDirectory/currentlyProcessing/59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'directory': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'name': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'uuid': '1651add2-d21b-445a-abd4-444450648ba9', 'microservice': 'Extract zipped bag transfer', 'status': 'PROCESSING', 'message': 'Fetched status for 1651add2-d21b-445a-abd4-444450648ba9 successfully.'}
         message, sip_id = StartPackageRoutine().run()
         self.assertEqual(message, "Another transfer is processing, waiting until it finishes.")
         self.assertEqual(len(sip_id), 1)
