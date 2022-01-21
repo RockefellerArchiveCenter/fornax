@@ -151,8 +151,7 @@ class StartPackageRoutine(BaseRoutine, ArchivematicaClientMixin):
         """Starts and approves a transfer in Archivematica."""
         last_started = SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP], origin=sip.origin).last()
         client = self.get_client(sip.origin)
-        if getattr(last_started, "archivematica_uuid", None) and client.get_unit_status(
-                last_started.archivematica_uuid) == 'PROCESSING':
+        if getattr(last_started, "archivematica_uuid", None) and client.get_unit_status(last_started.archivematica_uuid)['status'] == 'PROCESSING':
             return "Another transfer is processing, waiting until it finishes."
         else:
             client.transfer_directory = "{}.tar.gz".format(
