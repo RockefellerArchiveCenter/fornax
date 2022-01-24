@@ -67,6 +67,10 @@ class BaseRoutine(object):
                 sip.save()
                 try:
                     message = self.process_sip(sip)
+                except ProcessingException as e:
+                    sip.process_status = self.start_status
+                    sip.save()
+                    message = str(e)
                 except Exception as e:
                     sip.process_status = self.start_status
                     sip.save()
