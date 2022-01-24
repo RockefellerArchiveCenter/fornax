@@ -12,6 +12,10 @@ from .csv_creator import CsvCreator
 from .models import SIP
 
 
+class ProcessingException(Exception):
+    pass
+
+
 class ArchivematicaClientMixin:
     """Mixin to handle communication with Archivematica."""
 
@@ -152,7 +156,7 @@ class StartPackageRoutine(BaseRoutine, ArchivematicaClientMixin):
         last_started = SIP.objects.filter(process_status__in=[SIP.APPROVED, SIP.CLEANED_UP], origin=sip.origin).last()
         client = self.get_client(sip.origin)
         if getattr(last_started, "archivematica_uuid", None) and client.get_unit_status(last_started.archivematica_uuid)['status'] == 'PROCESSING':
-            return "Another transfer is processing, waiting until it finishes."
+            raise ProcessingException("Another transfer is processing, waiting until it finishes.")
         else:
             client.transfer_directory = "{}.tar.gz".format(
                 sip.bag_identifier)
