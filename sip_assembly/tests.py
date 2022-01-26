@@ -209,8 +209,10 @@ class RoutineTests(TestCase):
         self.set_process_status(SIP.APPROVED)
         mock_post.return_value.status_code = 200
         message, sip_id = CleanupPackageRequester().run()
+        sip = SIP.objects.get(bag_identifier=sip_id[0])
         self.assertEqual(message, "Request sent to clean up SIP.")
         self.assertEqual(len(sip_id), 1)
+        self.assertEqual(sip.process_status, SIP.CLEANED_UP)
 
         self.set_process_status(SIP.APPROVED)
         mock_post.return_value.status_code = 400
@@ -228,9 +230,11 @@ class RoutineTests(TestCase):
         mock_create.return_value = {"id": "12345"}
         mock_status.return_value = {'type': 'transfer', 'path': '/var/archivematica/sharedDirectory/currentlyProcessing/59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'directory': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'name': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'uuid': '1651add2-d21b-445a-abd4-444450648ba9', 'microservice': 'Extract zipped bag transfer', 'status': 'STORED', 'message': 'Fetched status for 1651add2-d21b-445a-abd4-444450648ba9 successfully.'}
         message, sip_id = StartPackageRoutine().run()
+        sip = SIP.objects.get(bag_identifier=sip_id[0])
         self.assertEqual(message, "Transfer started.")
         self.assertEqual(len(sip_id), 1)
         mock_create.assert_called_once()
+        self.assertEqual(sip.process_status, SIP.APPROVED)
 
         self.set_process_status(SIP.ASSEMBLED)
         last_started = random.choice(SIP.objects.all())
@@ -239,8 +243,10 @@ class RoutineTests(TestCase):
         last_started.save()
         mock_status.return_value = {'type': 'transfer', 'path': '/var/archivematica/sharedDirectory/currentlyProcessing/59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'directory': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'name': '59193ace-30c3-4a3b-a656-9232ebc7ce0e.tar.gz', 'uuid': '1651add2-d21b-445a-abd4-444450648ba9', 'microservice': 'Extract zipped bag transfer', 'status': 'PROCESSING', 'message': 'Fetched status for 1651add2-d21b-445a-abd4-444450648ba9 successfully.'}
         message, sip_id = StartPackageRoutine().run()
+        sip = SIP.objects.get(bag_identifier=sip_id[0])
         self.assertEqual(message, "Another transfer is processing, waiting until it finishes.")
         self.assertEqual(len(sip_id), 1)
+        self.assertEqual(sip.process_status, SIP.ASSEMBLED)
 
     @patch("sip_assembly.routines.AMClient.close_completed_transfers")
     @patch("sip_assembly.routines.AMClient.close_completed_ingests")
