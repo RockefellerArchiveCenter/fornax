@@ -18,7 +18,7 @@ bagit==1.8.1
     #   asterism
 certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.10
+charset-normalizer==2.0.11
     # via requests
 clinner==1.12.3
     # via health-check
@@ -59,7 +59,7 @@ pytz==2021.3
     #   djangorestframework
 pyyaml==6.0
     # via health-check
-requests==2.26.0
+requests==2.27.1
     # via
     #   -r requirements.in
     #   amclient
