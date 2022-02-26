@@ -1,8 +1,9 @@
 from os.path import join
 
 from asterism.views import BaseServiceView, RoutineView
-from fornax import settings
 from rest_framework.viewsets import ModelViewSet
+
+from fornax import settings
 from sip_assembly.models import SIP
 from sip_assembly.routines import (AssemblePackageRoutine,
                                    CleanupPackageRequester,
