@@ -1,5 +1,5 @@
 amclient==1.2.1
-asterism==0.8
+asterism==0.9.0
 bagit==1.8.1
 Django==4.0.2
 djangorestframework==3.13.1
