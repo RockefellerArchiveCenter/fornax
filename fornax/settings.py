@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sip_assembly',
     'rest_framework',
-    'health_check',
     'asterism',
 ]
 
