@@ -109,6 +109,7 @@ class ExtractPackageRoutine(BaseRoutine):
         file_helpers.copy_file_or_dir(sip.bag_path, tmp_path)
         extracted_path = helpers.extract_all(tmp_path, sip.bag_identifier, self.tmp_dir)
         sip.bag_path = extracted_path
+        bagit_helpers.validate(sip.bag_path)
         return "SIP extracted."
 
 
@@ -121,7 +122,6 @@ class RestructurePackageRoutine(BaseRoutine, ArchivematicaClientMixin):
 
     def process_sip(self, sip):
         client = self.get_client(sip.origin)
-        bagit_helpers.validate(sip.bag_path)
         helpers.move_objects_dir(sip.bag_path)
         helpers.create_structure(sip.bag_path)
         if sip.data['rights_statements']:
@@ -131,6 +131,7 @@ class RestructurePackageRoutine(BaseRoutine, ArchivematicaClientMixin):
         bagit_helpers.update_bag_info(
             sip.bag_path, {'Internal-Sender-Identifier': sip.bag_identifier})
         bagit_helpers.update_manifests(sip.bag_path)
+        bagit_helpers.validate(sip.bag_path)
         return "SIP restructured."
 
 
