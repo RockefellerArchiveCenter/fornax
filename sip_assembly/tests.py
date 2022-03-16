@@ -10,6 +10,7 @@ import bagit
 from amclient import errors, utils
 from django.test import TestCase
 from django.urls import reverse
+
 from fornax import settings
 
 from .csv_creator import CsvCreator
@@ -361,4 +362,4 @@ class ViewTests(TestCase):
 
     def test_health_check_view(self):
         """Tests the health check view."""
-        self.assert_status_code("get", reverse("api_health_ping"), 200)
+        self.assert_status_code("get", reverse("ping"), 200)
