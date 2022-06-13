@@ -6,7 +6,7 @@
 #
 amclient==1.2.1
     # via -r requirements.in
-asgiref==3.5.1
+asgiref==3.5.2
     # via django
 asterism==0.9.0
     # via -r requirements.in
@@ -16,11 +16,11 @@ bagit==1.8.1
     # via
     #   -r requirements.in
     #   asterism
-certifi==2021.10.8
+certifi==2022.5.18.1
     # via requests
 charset-normalizer==2.0.12
     # via requests
-django==4.0.4
+django==4.0.5
     # via
     #   -r requirements.in
     #   asterism
