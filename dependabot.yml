@@ -1,7 +1,0 @@
-version: 2
-updates:
-  - package-ecosystem: "pip"
-    directory: "/" # unless requirements.txt is not in this location
-    schedule:
-      interval: "monthly"
-    target-branch: "development" # if this branch exists
