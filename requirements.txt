@@ -31,7 +31,7 @@ djangorestframework==3.13.1
     #   asterism
 idna==3.3
     # via requests
-jsonschema==4.6.2
+jsonschema==4.7.2
     # via -r requirements.in
 odin==1.8.1
     # via asterism
