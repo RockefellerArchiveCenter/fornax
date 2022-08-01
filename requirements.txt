@@ -10,7 +10,7 @@ asgiref==3.5.2
     # via django
 asterism==0.9.0
     # via -r requirements.in
-attrs==21.4.0
+attrs==22.1.0
     # via jsonschema
 bagit==1.8.1
     # via
@@ -31,7 +31,7 @@ djangorestframework==3.13.1
     #   asterism
 idna==3.3
     # via requests
-jsonschema==4.7.2
+jsonschema==4.9.0
     # via -r requirements.in
 odin==1.8.1
     # via asterism
@@ -55,7 +55,7 @@ sqlparse==0.4.2
     # via django
 uritemplate==4.1.1
     # via -r requirements.in
-urllib3==1.26.10
+urllib3==1.26.11
     # via
     #   amclient
     #   requests
