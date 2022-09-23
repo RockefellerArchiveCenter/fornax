@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-amclient==1.2.2
+amclient==1.2.3
     # via -r requirements.in
 asgiref==3.5.2
     # via django
@@ -16,7 +16,7 @@ bagit==1.8.1
     # via
     #   -r requirements.in
     #   asterism
-certifi==2022.6.15
+certifi==2022.9.14
     # via requests
 charset-normalizer==2.1.1
     # via requests
@@ -25,13 +25,13 @@ django==4.0.7
     #   -r requirements.in
     #   asterism
     #   djangorestframework
-djangorestframework==3.13.1
+djangorestframework==3.14.0
     # via
     #   -r requirements.in
     #   asterism
-idna==3.3
+idna==3.4
     # via requests
-jsonschema==4.15.0
+jsonschema==4.16.0
     # via -r requirements.in
 odin==1.8.1
     # via asterism
