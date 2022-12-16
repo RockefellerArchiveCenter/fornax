@@ -109,6 +109,7 @@ class ExtractPackageRoutine(BaseRoutine):
         file_helpers.copy_file_or_dir(sip.bag_path, tmp_path)
         extracted_path = helpers.extract_all(tmp_path, sip.bag_identifier, self.tmp_dir)
         sip.bag_path = extracted_path
+        helpers.recursive_chmod(sip.bag_path)
         bagit_helpers.validate(sip.bag_path)
         return "SIP extracted."
 

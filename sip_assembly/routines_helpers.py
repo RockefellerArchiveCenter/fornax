@@ -60,3 +60,12 @@ def create_targz_package(sip_path):
     file_helpers.make_tarfile(
         sip_path, tar_path, compressed=True, remove_src=True)
     return tar_path
+
+
+def recursive_chmod(dir, mode=0o775):
+    """Sets file and directory permissions recursively."""
+    for root, dirs, files in os.walk(dir):
+        for d in dirs:
+            os.chmod(os.path.join(root, d), mode)
+        for f in files:
+            os.chmod(os.path.join(root, f), mode)
