@@ -101,7 +101,7 @@ class CsvCreator:
 
         Checks for grant or restriction field to be represented by 'restriction' or 'grant_restriction' key
         """
-        if not(len(rights_granted_list)):
+        if not len(rights_granted_list):
             return [[''] * 5]
         rows = []
         for rights_granted in rights_granted_list:
