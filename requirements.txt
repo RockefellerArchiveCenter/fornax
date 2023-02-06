@@ -20,7 +20,7 @@ certifi==2022.12.7
     # via requests
 charset-normalizer==3.0.1
     # via requests
-django==4.0.8
+django==4.0.9
     # via
     #   -r requirements.in
     #   asterism
@@ -33,7 +33,7 @@ idna==3.4
     # via requests
 jsonschema==4.17.3
     # via -r requirements.in
-odin==2.1
+odin==2.2
     # via asterism
 psycopg2-binary==2.9.5
     # via
