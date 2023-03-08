@@ -33,7 +33,7 @@ idna==3.4
     # via requests
 jsonschema==4.17.3
     # via -r requirements.in
-odin==2.2
+odin==2.4
     # via asterism
 psycopg2-binary==2.9.5
     # via
