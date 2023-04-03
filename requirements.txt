@@ -18,7 +18,7 @@ bagit==1.8.1
     #   asterism
 certifi==2022.12.7
     # via requests
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
     # via requests
 django==4.1.7
     # via
@@ -33,7 +33,7 @@ idna==3.4
     # via requests
 jsonschema==4.17.3
     # via -r requirements.in
-odin==2.4
+odin==2.6
     # via asterism
 psycopg2-binary==2.9.5
     # via
@@ -41,7 +41,7 @@ psycopg2-binary==2.9.5
     #   asterism
 pyrsistent==0.19.3
     # via jsonschema
-pytz==2022.7.1
+pytz==2023.3
     # via djangorestframework
 pyyaml==6.0
     # via -r requirements.in
@@ -55,7 +55,7 @@ sqlparse==0.4.3
     # via django
 uritemplate==4.1.1
     # via -r requirements.in
-urllib3==1.26.14
+urllib3==1.26.15
     # via
     #   amclient
     #   requests
