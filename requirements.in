@@ -1,10 +1,10 @@
 amclient~=1.2
-asterism~=0.9
+asterism~=1.0
 bagit~=1.8
 Django~=4.1
 djangorestframework~=3.14
 jsonschema~=4.6
-psycopg2-binary~=2.9
+psycopg2~=2.9
 PyYAML~=6.0
 requests~=2.28
 uritemplate~=4.1
