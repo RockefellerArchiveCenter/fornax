@@ -33,6 +33,13 @@ AM_PL_DIGITIZATION_LOCATION_UUID = "ed37e81d-2af3-45a3-aa30-a60a12c95bbe"  # UUI
 AM_PL_DIGITIZATION_PROCESSING_CONFIG = "automated"  # name of Archivematica processing config to use (string)
 AM_PL_DIGITIZATION_CLOSE_COMPLETED = True  # Indicates whether completed ingests and transfers should be closed (boolean)
 
+AM_PL_AV_DIGITIZATION_BASEURL = "http://archivematica-dashboard:8000"  # Base URL for the Archivematica Dashboard API (string)
+AM_PL_AV_DIGITIZATION_USERNAME = "test"  # Archivematica user with sufficient privileges to start a transfer (string)
+AM_PL_AV_DIGITIZATION_API_KEY = "test"  # API Key for the Archivematica user (string)
+AM_PL_AV_DIGITIZATION_LOCATION_UUID = "ed37e81d-2af3-45a3-aa30-a60a12c95bbe"  # UUID for Transfer Source location (string)
+AM_PL_AV_DIGITIZATION_PROCESSING_CONFIG = "automated"  # name of Archivematica processing config to use (string)
+AM_PL_AV_DIGITIZATION_CLOSE_COMPLETED = True  # Indicates whether completed ingests and transfers should be closed (boolean)
+
 AM_PL_LEGACY_DIGITAL_BASEURL = "http://archivematica-dashboard:8000"  # Base URL for the Archivematica Dashboard API (string)
 AM_PL_LEGACY_DIGITAL_USERNAME = "test"  # Archivematica user with sufficient privileges to start a transfer (string)
 AM_PL_LEGACY_DIGITAL_API_KEY = "test"  # API Key for the Archivematica user (string)

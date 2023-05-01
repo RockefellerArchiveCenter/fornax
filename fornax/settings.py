@@ -152,6 +152,14 @@ ARCHIVEMATICA_ORIGINS = {
         "processing_config": config.AM_PL_DIGITIZATION_PROCESSING_CONFIG,
         "close_completed": config.AM_PL_DIGITIZATION_CLOSE_COMPLETED,
     },
+    "av_digitization": {
+        "baseurl": config.AM_PL_AV_DIGITIZATION_BASEURL,
+        "username": config.AM_PL_AV_DIGITIZATION_USERNAME,
+        "api_key": config.AM_PL_AV_DIGITIZATION_API_KEY,
+        "location_uuid": config.AM_PL_AV_DIGITIZATION_LOCATION_UUID,
+        "processing_config": config.AM_PL_AV_DIGITIZATION_PROCESSING_CONFIG,
+        "close_completed": config.AM_PL_AV_DIGITIZATION_CLOSE_COMPLETED,
+    },
     "legacy_digital": {
         "baseurl": config.AM_PL_LEGACY_DIGITAL_BASEURL,
         "username": config.AM_PL_LEGACY_DIGITAL_USERNAME,

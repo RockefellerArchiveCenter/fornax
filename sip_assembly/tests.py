@@ -257,10 +257,10 @@ class RoutineTests(TestCase):
         mock_close_transfers.return_value = {}
 
         RemoveCompletedTransfersRoutine().run()
-        self.assertEqual(mock_close_transfers.call_count, 3)
+        self.assertEqual(mock_close_transfers.call_count, 4)
 
         RemoveCompletedIngestsRoutine().run()
-        self.assertEqual(mock_close_ingests.call_count, 3)
+        self.assertEqual(mock_close_ingests.call_count, 4)
 
         mock_close_ingests.return_value = {"close_failed": "12345"}
         with self.assertRaises(Exception) as e:
