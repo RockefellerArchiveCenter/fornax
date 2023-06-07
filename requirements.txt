@@ -6,7 +6,7 @@
 #
 amclient==1.2.3
     # via -r requirements.in
-asgiref==3.6.0
+asgiref==3.7.2
     # via django
 asterism==1.1.0
     # via -r requirements.in
@@ -16,11 +16,11 @@ bagit==1.8.1
     # via
     #   -r requirements.in
     #   asterism
-certifi==2022.12.7
+certifi==2023.5.7
     # via requests
 charset-normalizer==3.1.0
     # via requests
-django==4.2
+django==4.2.1
     # via
     #   -r requirements.in
     #   asterism
@@ -41,7 +41,7 @@ pytz==2023.3
     # via djangorestframework
 pyyaml==6.0
     # via -r requirements.in
-requests==2.29.0
+requests==2.31.0
     # via
     #   -r requirements.in
     #   amclient
@@ -49,9 +49,11 @@ six==1.16.0
     # via amclient
 sqlparse==0.4.4
     # via django
+typing-extensions==4.6.2
+    # via asgiref
 uritemplate==4.1.1
     # via -r requirements.in
-urllib3==1.26.15
+urllib3==1.26.16
     # via
     #   amclient
     #   requests
