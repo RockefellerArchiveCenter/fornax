@@ -20,7 +20,7 @@ certifi==2023.5.7
     # via requests
 charset-normalizer==3.1.0
     # via requests
-django==4.2.1
+django==4.2.2
     # via
     #   -r requirements.in
     #   asterism
@@ -49,7 +49,7 @@ six==1.16.0
     # via amclient
 sqlparse==0.4.4
     # via django
-typing-extensions==4.6.2
+typing-extensions==4.7.0
     # via asgiref
 uritemplate==4.1.1
     # via -r requirements.in
