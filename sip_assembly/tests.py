@@ -356,10 +356,6 @@ class ViewTests(TestCase):
         self.assert_status_code("post", reverse("request-cleanup"), 200)
         mock_request.assert_called_once()
 
-    def test_schema_view(self):
-        """Tests the OpenAPI schema view."""
-        self.assert_status_code("get", reverse("schema"), 200)
-
     def test_health_check_view(self):
         """Tests the health check view."""
         self.assert_status_code("get", reverse("ping"), 200)

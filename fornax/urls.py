@@ -16,7 +16,6 @@ Including another URLconf
 from asterism.views import PingView
 from django.urls import include, re_path
 from rest_framework import routers
-from rest_framework.schemas import get_schema_view
 
 from sip_assembly.views import (AssemblePackageView, CleanupPackageRequestView,
                                 CleanupPackageRoutineView, ExtractPackageView,
@@ -27,10 +26,6 @@ from sip_assembly.views import (AssemblePackageView, CleanupPackageRequestView,
 
 router = routers.DefaultRouter()
 router.register(r'sips', SIPViewSet)
-schema_view = get_schema_view(
-    title="Fornax API",
-    description="Endpoints for Fornax microservice application."
-)
 
 urlpatterns = [
     re_path(r'^', include(router.urls)),
@@ -49,5 +44,4 @@ urlpatterns = [
             CleanupPackageRequestView.as_view(),
             name="request-cleanup"),
     re_path(r'^status/', PingView.as_view(), name='ping'),
-    re_path(r'^schema/', schema_view, name='schema'),
 ]
