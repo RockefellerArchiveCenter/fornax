@@ -31,9 +31,9 @@ djangorestframework==3.15.1
     # via
     #   -r requirements.in
     #   asterism
-idna==3.6
+idna==3.7
     # via requests
-jsonschema==4.21.1
+jsonschema==4.22.0
     # via -r requirements.in
 jsonschema-specifications==2023.12.1
     # via jsonschema
@@ -41,7 +41,7 @@ psycopg2==2.9.9
     # via -r requirements.in
 pyyaml==6.0.1
     # via -r requirements.in
-referencing==0.34.0
+referencing==0.35.0
     # via
     #   jsonschema
     #   jsonschema-specifications
@@ -53,9 +53,9 @@ rpds-py==0.18.0
     # via
     #   jsonschema
     #   referencing
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via django
-typing-extensions==4.10.0
+typing-extensions==4.11.0
     # via asgiref
 uritemplate==4.1.1
     # via -r requirements.in
