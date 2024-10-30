@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   fornax-db:
     image: postgres:14.4
