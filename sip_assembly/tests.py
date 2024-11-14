@@ -380,7 +380,7 @@ class ArchivematicaIntegrationTests(SimpleTestCase):
 
     def test_close_packages(self):
         """Ensure packages are closed as expected."""
-        for type in ['transfer', 'ingest']:
+        for type in ['transfers', 'ingests']:
             removed = ArchivematicaClientMixin().remove_completed(type)
             self.assertIsInstance(removed, tuple)
             self.assertIn(type, removed[0])
