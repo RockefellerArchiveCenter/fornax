@@ -49,11 +49,11 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   amclient
-rpds-py==0.20.1
+rpds-py==0.21.0
     # via
     #   jsonschema
     #   referencing
-sqlparse==0.5.1
+sqlparse==0.5.2
     # via django
 typing-extensions==4.12.2
     # via asgiref
