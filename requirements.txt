@@ -18,7 +18,7 @@ bagit==1.8.1
     # via
     #   -r requirements.in
     #   asterism
-certifi==2025.1.31
+certifi==2025.4.26
     # via requests
 charset-normalizer==3.4.1
     # via requests
@@ -35,7 +35,7 @@ idna==3.10
     # via requests
 jsonschema==4.23.0
     # via -r requirements.in
-jsonschema-specifications==2024.10.1
+jsonschema-specifications==2025.4.1
     # via jsonschema
 psycopg2==2.9.10
     # via -r requirements.in
@@ -55,13 +55,13 @@ rpds-py==0.24.0
     #   referencing
 sqlparse==0.5.3
     # via django
-typing-extensions==4.13.0
+typing-extensions==4.13.2
     # via
     #   asgiref
     #   referencing
 uritemplate==4.1.1
     # via -r requirements.in
-urllib3==2.3.0
+urllib3==2.4.0
     # via
     #   amclient
     #   requests
