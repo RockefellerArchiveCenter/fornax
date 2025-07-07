@@ -14,15 +14,15 @@ attrs==25.3.0
     # via
     #   jsonschema
     #   referencing
-bagit==1.8.1
+bagit==1.9.0
     # via
     #   -r requirements.in
     #   asterism
-certifi==2025.4.26
+certifi==2025.6.15
     # via requests
 charset-normalizer==3.4.2
     # via requests
-django==4.2.21
+django==4.2.23
     # via
     #   -r requirements.in
     #   asterism
@@ -45,7 +45,7 @@ referencing==0.36.2
     # via
     #   jsonschema
     #   jsonschema-specifications
-requests==2.32.3
+requests==2.32.4
     # via
     #   -r requirements.in
     #   amclient
@@ -55,13 +55,13 @@ rpds-py==0.25.1
     #   referencing
 sqlparse==0.5.3
     # via django
-typing-extensions==4.13.2
+typing-extensions==4.14.0
     # via
     #   asgiref
     #   referencing
-uritemplate==4.1.1
+uritemplate==4.2.0
     # via -r requirements.in
-urllib3==2.4.0
+urllib3==2.5.0
     # via
     #   amclient
     #   requests
